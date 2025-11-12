@@ -30,6 +30,18 @@ To learn more about Next.js, take a look at the following resources:
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
 ## Deploy on Vercel
+## Local HTTPS for tablet camera (mkcert)
+
+Camera access on tablets requires HTTPS. Without a public domain, use mkcert on the host:
+
+1) Install mkcert on macOS: `brew install mkcert`
+2) Create a local CA: `mkcert -install`
+3) Generate a cert for your LAN IP/host: `mkcert 192.168.1.10`
+4) Configure your reverse proxy (Caddy/Nginx) to serve HTTPS on 443 using the generated cert/key and proxy to `127.0.0.1:3000`.
+5) Install the mkcert root CA on iPad/Android so the LAN cert is trusted.
+
+This enables the Login page camera scanner over your LAN.
+
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 

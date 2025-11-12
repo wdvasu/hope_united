@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import Home from './page';
-it('renders the starter text', () => {
+it('renders primary actions', () => {
   render(<Home />);
-  expect(screen.getByText(/To get started, edit the page\.tsx file\./i)).toBeInTheDocument();
+  expect(screen.getByText(/Open Registration Form/i)).toBeInTheDocument();
+  expect(screen.getByText(/Tablet Login/i)).toBeInTheDocument();
 });

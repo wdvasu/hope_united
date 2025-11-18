@@ -160,6 +160,23 @@ export default function RegisterPage() {
       setUid(j.uid);
       setMessage("Registration saved.");
       try { localStorage.removeItem(STORAGE_KEY); } catch {}
+      // Reset the form to blanks/defaults after successful submit
+      setFullName("");
+      setZipCode("");
+      setVeteranStatus("REFUSED");
+      setDrugs([]);
+      setDrugOther("");
+      setSexual("REFUSED");
+      setSexualOther("");
+      setGender("REFUSED");
+      setGenderOther("");
+      setRace("REFUSED");
+      setRaceOther("");
+      setEthnicity("REFUSED");
+      setCounty("REFUSED");
+      setCountyOther("");
+      setWaiver(false);
+      setSignature("");
     }
   };
 

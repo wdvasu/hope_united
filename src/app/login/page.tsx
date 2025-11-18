@@ -10,12 +10,16 @@ export default function LoginPage() {
   );
 }
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function LoginClient() {
   const [deviceId, setDeviceId] = useState('');
   const [deviceSecret, setDeviceSecret] = useState('');
   const [message, setMessage] = useState<string | null>(null);
+  const [scanning, setScanning] = useState(false);
+  const [scanError, setScanError] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const codeReaderRef = useRef<unknown>(null);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,42 +34,82 @@ function LoginClient() {
     else setMessage(j.error || 'Login failed');
   };
 
-  const onScanText = async (text: string) => {
+  const onScanText = (text: string) => {
     try {
       const data = JSON.parse(text);
       if (data.deviceId && data.deviceSecret) {
         setDeviceId(data.deviceId);
         setDeviceSecret(data.deviceSecret);
+        setMessage('Scanned. You can press Login now.');
+      }
+    } catch {
+      setScanError('QR not recognized.');
+    }
+  };
+
+  const stopScanner = () => {
+    setScanning(false);
+    setScanError(null);
+    try {
+      if (codeReaderRef.current && typeof (codeReaderRef.current as { reset?: () => void }).reset === 'function') {
+        (codeReaderRef.current as { reset: () => void }).reset();
+      }
+      const v = videoRef.current;
+      if (v && v.srcObject) {
+        (v.srcObject as MediaStream).getTracks().forEach((t) => t.stop());
+        v.srcObject = null;
       }
     } catch {}
   };
 
+  const startScanner = async () => {
+    setScanError(null);
+    try {
+      const { BrowserQRCodeReader } = await import('@zxing/browser');
+      const codeReader = new BrowserQRCodeReader();
+      codeReaderRef.current = codeReader;
+      const video = videoRef.current!;
+      // Request environment (rear) camera; requires user gesture on iOS
+      await codeReader.decodeFromConstraints(
+        { audio: false, video: { facingMode: { ideal: 'environment' } } },
+        video,
+        (result, _err) => {
+          if (result) {
+            onScanText(result.getText());
+            stopScanner();
+          }
+        }
+      );
+      setScanning(true);
+    } catch (_e: unknown) {
+      setScanError('Camera unavailable. Ensure HTTPS and allow camera access.');
+    }
+  };
+
   useEffect(() => {
-    let active = true;
-    (async () => {
-      // Lazy import ZXing only on client to avoid SSR bundling issues
-      try {
-        const { BrowserQRCodeReader } = await import('@zxing/browser');
-        const codeReader = new BrowserQRCodeReader();
-        const videoInputDevices = await BrowserQRCodeReader.listVideoInputDevices();
-        if (!active || videoInputDevices.length === 0) return;
-        const deviceIdCam = videoInputDevices[0].deviceId;
-        const result = await codeReader.decodeOnceFromVideoDevice(deviceIdCam, 'video');
-        if (result?.getText()) onScanText(result.getText());
-      } catch {
-        // camera may be blocked without HTTPS; ignore
-      }
-    })();
-    return () => {
-      active = false;
-    };
+    return () => stopScanner();
   }, []);
 
   return (
     <div className="space-y-4">
       <div className="aspect-video bg-black/5 rounded flex items-center justify-center overflow-hidden">
-        <video id="video" className="w-full h-full object-cover" />
+        <video
+          id="video"
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          playsInline
+          muted
+          autoPlay
+        />
       </div>
+      <div className="flex gap-2">
+        {!scanning ? (
+          <button type="button" onClick={startScanner} className="px-4 py-2 rounded border">Start scanner</button>
+        ) : (
+          <button type="button" onClick={stopScanner} className="px-4 py-2 rounded border">Stop scanner</button>
+        )}
+      </div>
+      {scanError && <p className="text-sm text-red-600">{scanError}</p>}
       <form onSubmit={onSubmit} className="space-y-3">
         <input className="w-full border rounded px-3 py-2" placeholder="Device ID" value={deviceId} onChange={(e)=>setDeviceId(e.target.value)} />
         <input className="w-full border rounded px-3 py-2" placeholder="Device Secret" value={deviceSecret} onChange={(e)=>setDeviceSecret(e.target.value)} />

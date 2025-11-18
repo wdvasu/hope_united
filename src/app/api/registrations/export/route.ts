@@ -4,8 +4,24 @@ import { prisma } from '@/lib/db';
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const format = searchParams.get('format') || 'csv';
-  // Simple last 1000 export for now
-  const regs = await prisma.registration.findMany({ orderBy: { createdAt: 'desc' }, take: 1000 });
+
+  // Optional filters
+  const start = searchParams.get('start');
+  const end = searchParams.get('end');
+  const drug = searchParams.get('drug');
+  const county = searchParams.get('county');
+
+  const where: Record<string, unknown> = {};
+  if (start || end) {
+    const s = start ? new Date(start) : undefined;
+    const e = end ? new Date(end) : undefined;
+    if (e) e.setHours(23,59,59,999);
+    where.createdAt = { ...(s ? { gte: s } : {}), ...(e ? { lte: e } : {}) };
+  }
+  if (county) where.county = county;
+  if (drug) where.drugs = { has: drug };
+
+  const regs = await prisma.registration.findMany({ where, orderBy: { createdAt: 'desc' }, take: 5000 });
 
   if (format === 'csv') {
     const header = [

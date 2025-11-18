@@ -12,17 +12,18 @@ type SearchParams = {
   pageSize?: string;
 };
 
-export default async function AdminRegistrationsPage({ searchParams }: { searchParams: SearchParams }) {
-  const pageSize = Math.max(1, Math.min(200, Number(searchParams.pageSize ?? '25')));
-  const page = Math.max(1, Number(searchParams.page ?? '1'));
-  const start = searchParams.start ? new Date(searchParams.start) : null;
-  const end = searchParams.end ? new Date(searchParams.end) : null;
+export default async function AdminRegistrationsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const sp = await searchParams;
+  const pageSize = Math.max(1, Math.min(200, Number(sp.pageSize ?? '25')));
+  const page = Math.max(1, Number(sp.page ?? '1'));
+  const start = sp.start ? new Date(sp.start) : null;
+  const end = sp.end ? new Date(sp.end) : null;
   if (end) end.setHours(23,59,59,999);
 
   const where: Record<string, unknown> = {};
   if (start || end) where.createdAt = { ...(start ? { gte: start } : {}), ...(end ? { lte: end } : {}) };
-  if (searchParams.county) where.county = searchParams.county;
-  if (searchParams.drug) where.drugs = { has: searchParams.drug };
+  if (sp.county) where.county = sp.county;
+  if (sp.drug) where.drugs = { has: sp.drug };
 
   const regs = await prisma.registration.findMany({
     where,
@@ -39,15 +40,15 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
       <form className="flex flex-wrap gap-2 items-end">
         <div className="flex flex-col">
           <label className="text-xs">Start</label>
-          <input name="start" type="date" defaultValue={searchParams.start || ''} className="border rounded px-2 py-1" />
+          <input name="start" type="date" defaultValue={sp.start || ''} className="border rounded px-2 py-1" />
         </div>
         <div className="flex flex-col">
           <label className="text-xs">End</label>
-          <input name="end" type="date" defaultValue={searchParams.end || ''} className="border rounded px-2 py-1" />
+          <input name="end" type="date" defaultValue={sp.end || ''} className="border rounded px-2 py-1" />
         </div>
         <div className="flex flex-col">
           <label className="text-xs">Drug</label>
-          <select name="drug" defaultValue={searchParams.drug || ''} className="border rounded px-2 py-1">
+          <select name="drug" defaultValue={sp.drug || ''} className="border rounded px-2 py-1">
             <option value="">Any</option>
             <option value="ALCOHOL">Alcohol</option>
             <option value="OPIOIDS_HEROIN">Opioids/Heroin</option>
@@ -60,7 +61,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
         </div>
         <div className="flex flex-col">
           <label className="text-xs">County</label>
-          <select name="county" defaultValue={searchParams.county || ''} className="border rounded px-2 py-1">
+          <select name="county" defaultValue={sp.county || ''} className="border rounded px-2 py-1">
             <option value="">Any</option>
             <option value="SUMMIT">Summit</option>
             <option value="STARK">Stark</option>
@@ -79,7 +80,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
         <Link className="px-3 py-2 rounded border" href="/admin/registrations">Reset</Link>
         <Link
           className="ml-auto px-3 py-2 rounded bg-black text-white"
-          href={`/api/registrations/export?format=csv${searchParamsToQuery(searchParams)}`}
+          href={`/api/registrations/export?format=csv${searchParamsToQuery(sp)}`}
         >
           Download CSV
         </Link>
@@ -146,10 +147,10 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
         <div>Page {page}</div>
         <div className="flex gap-2">
           {page > 1 && (
-            <Link className="px-3 py-2 rounded border" href={`/admin/registrations${searchParamsToQuery({ ...searchParams, page: String(page - 1) })}`}>Prev</Link>
+            <Link className="px-3 py-2 rounded border" href={`/admin/registrations${searchParamsToQuery({ ...sp, page: String(page - 1) })}`}>Prev</Link>
           )}
           {hasNext && (
-            <Link className="px-3 py-2 rounded border" href={`/admin/registrations${searchParamsToQuery({ ...searchParams, page: String(page + 1) })}`}>Next</Link>
+            <Link className="px-3 py-2 rounded border" href={`/admin/registrations${searchParamsToQuery({ ...sp, page: String(page + 1) })}`}>Next</Link>
           )}
         </div>
       </div>

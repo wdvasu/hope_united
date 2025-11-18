@@ -1,0 +1,11 @@
+{
+  "name": "Hope United Registration",
+  "short_name": "Registration",
+  "start_url": "/register",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "orientation": "portrait-primary",
+  "id": "/register"
+}

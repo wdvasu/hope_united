@@ -47,8 +47,8 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
           Download CSV
         </Link>
       </div>
-      <div className="overflow-auto border rounded">
-        <table className="min-w-full text-sm">
+      <div className="overflow-x-auto border rounded">
+        <table className="min-w-[1400px] text-sm whitespace-nowrap">
           <thead className="bg-zinc-50">
             <tr>
               <th className="text-left p-2">Created</th>

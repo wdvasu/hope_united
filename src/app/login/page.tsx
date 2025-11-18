@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   return (
@@ -13,6 +14,7 @@ export default function LoginPage() {
 import { useEffect, useRef, useState } from 'react';
 
 function LoginClient() {
+  const router = useRouter();
   const [deviceId, setDeviceId] = useState('');
   const [deviceSecret, setDeviceSecret] = useState('');
   const [message, setMessage] = useState<string | null>(null);
@@ -30,7 +32,10 @@ function LoginClient() {
       body: JSON.stringify({ deviceId, deviceSecret }),
     });
     const j = await res.json();
-    if (res.ok) setMessage('Login successful.');
+    if (res.ok) {
+      setMessage('Login successful. Redirecting…');
+      router.replace('/register');
+    }
     else setMessage(j.error || 'Login failed');
   };
 

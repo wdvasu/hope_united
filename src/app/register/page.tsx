@@ -400,9 +400,6 @@ export default function RegisterPage() {
       </section>
 
       <section className="space-y-3">
-        <div className="rounded border border-foreground/30 text-foreground/90 p-3 text-sm">
-          I have read and agree to the Facility Waiver.
-        </div>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={waiver} onChange={(e)=>setWaiver(e.target.checked)} />
           I have read and agree to the Facility Waiver.

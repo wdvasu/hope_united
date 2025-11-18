@@ -36,7 +36,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
   const rows = hasNext ? regs.slice(0, pageSize) : regs;
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-4">
+    <div className="max-w-screen-2xl mx-auto p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Recent Registrations</h1>
       <FilterBar start={sp.start} end={sp.end} drug={sp.drug} county={sp.county} pageSize={pageSize} />
       <div className="flex items-center gap-2">

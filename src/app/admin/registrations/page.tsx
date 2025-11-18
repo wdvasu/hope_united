@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import { prisma } from '@/lib/db';
 import Link from 'next/link';
+import { FilterBar } from './FilterBar';
 
 type SearchParams = {
   start?: string;
@@ -37,54 +38,15 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Recent Registrations</h1>
-      <form className="flex flex-wrap gap-2 items-end">
-        <div className="flex flex-col">
-          <label className="text-xs">Start</label>
-          <input name="start" type="date" defaultValue={sp.start || ''} className="border rounded px-2 py-1" />
-        </div>
-        <div className="flex flex-col">
-          <label className="text-xs">End</label>
-          <input name="end" type="date" defaultValue={sp.end || ''} className="border rounded px-2 py-1" />
-        </div>
-        <div className="flex flex-col">
-          <label className="text-xs">Drug</label>
-          <select name="drug" defaultValue={sp.drug || ''} className="border rounded px-2 py-1">
-            <option value="">Any</option>
-            <option value="ALCOHOL">Alcohol</option>
-            <option value="OPIOIDS_HEROIN">Opioids/Heroin</option>
-            <option value="COCAINE_CRACK">Cocaine/Crack</option>
-            <option value="METHAMPHETAMINE">Methamphetamine</option>
-            <option value="MARIJUANA">Marijuana</option>
-            <option value="OTHER">Other</option>
-            <option value="REFUSED">Refused</option>
-          </select>
-        </div>
-        <div className="flex flex-col">
-          <label className="text-xs">County</label>
-          <select name="county" defaultValue={sp.county || ''} className="border rounded px-2 py-1">
-            <option value="">Any</option>
-            <option value="SUMMIT">Summit</option>
-            <option value="STARK">Stark</option>
-            <option value="PORTAGE">Portage</option>
-            <option value="CUYAHOGA">Cuyahoga</option>
-            <option value="OTHER_OH_COUNTY">Other OH County</option>
-            <option value="OUT_OF_STATE">Out of State</option>
-            <option value="REFUSED">Refused</option>
-          </select>
-        </div>
-        <div className="flex flex-col">
-          <label className="text-xs">Page size</label>
-          <input name="pageSize" type="number" min={1} max={200} defaultValue={String(pageSize)} className="border rounded px-2 py-1 w-24" />
-        </div>
-        <button className="px-3 py-2 rounded bg-black text-white" type="submit">Apply</button>
-        <Link className="px-3 py-2 rounded border" href="/admin/registrations">Reset</Link>
+      <FilterBar start={sp.start} end={sp.end} drug={sp.drug} county={sp.county} pageSize={pageSize} />
+      <div className="flex items-center gap-2">
         <Link
           className="ml-auto px-3 py-2 rounded bg-black text-white"
           href={`/api/registrations/export?format=csv${searchParamsToQuery(sp)}`}
         >
           Download CSV
         </Link>
-      </form>
+      </div>
       <div className="overflow-auto border rounded">
         <table className="min-w-full text-sm">
           <thead className="bg-zinc-50">

@@ -175,7 +175,7 @@ export default function RegisterPage() {
     <button
       type="button"
       onClick={onClick}
-      className={`px-3 py-1 rounded-full border text-sm transition-colors ${
+      className={`px-4 py-2 rounded-full border text-base transition-colors ${
         selected
           ? "bg-foreground text-background border-foreground"
           : "bg-transparent border-foreground/30 text-foreground hover:bg-foreground/5"
@@ -196,19 +196,19 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-8">
+    <div className="max-w-3xl mx-auto p-6 space-y-8 text-[18px]">
       <h1 className="text-2xl font-semibold">New Participant Registration</h1>
 
       <section className="space-y-3">
         <h2 className="font-medium">Personal & Contact Info</h2>
         <input
-          className="w-full border rounded px-3 py-2 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
+          className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
           placeholder="Full Name"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
         />
         <input
-          className="w-full border rounded px-3 py-2 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
+          className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
           placeholder="Zip Code (5 digits)"
           inputMode="numeric"
           pattern="^\\d{5}$"
@@ -220,7 +220,7 @@ export default function RegisterPage() {
       <section className="space-y-3">
         <h2 className="font-medium">Demographic Data (for Grant Funding)</h2>
         <div className="space-y-2">
-          <div className="text-sm text-foreground/80">Veteran Status</div>
+          <div className="text-base text-foreground/80">Veteran Status</div>
           <div className="flex flex-wrap gap-2">
             {["YES", "NO", "REFUSED"].map((v) => (
               <Chip
@@ -234,7 +234,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-2">
-          <div className="text-sm text-foreground/80">Drug/Substance of Choice (multi)</div>
+          <div className="text-base text-foreground/80">Drug/Substance of Choice (multi)</div>
           <div className="flex flex-wrap gap-2">
             {[
               ["ALCOHOL", "Alcohol"],
@@ -255,7 +255,7 @@ export default function RegisterPage() {
           </div>
           {drugs.includes("OTHER") && (
             <input
-              className="w-full border rounded px-3 py-2 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
+              className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
               placeholder="If Other, please specify"
               value={drugOther}
               onChange={(e) => setDrugOther(e.target.value)}
@@ -264,7 +264,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-2">
-          <div className="text-sm text-foreground/80">Sexual Orientation</div>
+          <div className="text-base text-foreground/80">Sexual Orientation</div>
           <div className="flex flex-wrap gap-2">
             {[
               ["HETEROSEXUAL", "Heterosexual"],
@@ -283,7 +283,7 @@ export default function RegisterPage() {
           </div>
           {sexualOrientation === "OTHER" && (
             <input
-              className="w-full border rounded px-3 py-2 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
+              className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
               placeholder="If Other, please specify"
               value={sexualOther}
               onChange={(e) => setSexualOther(e.target.value)}
@@ -292,7 +292,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-2">
-          <div className="text-sm text-foreground/80">Gender</div>
+          <div className="text-base text-foreground/80">Gender</div>
           <div className="flex flex-wrap gap-2">
             {[
               ["FEMALE", "Female"],
@@ -312,7 +312,7 @@ export default function RegisterPage() {
           </div>
           {gender === "OTHER" && (
             <input
-              className="w-full border rounded px-3 py-2 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
+              className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
               placeholder="If Other, please specify"
               value={genderOther}
               onChange={(e) => setGenderOther(e.target.value)}
@@ -321,7 +321,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-2">
-          <div className="text-sm text-foreground/80">Race</div>
+          <div className="text-base text-foreground/80">Race</div>
           <div className="flex flex-wrap gap-2">
             {[
               ["WHITE", "White"],
@@ -342,7 +342,7 @@ export default function RegisterPage() {
           </div>
           {race === "OTHER" && (
             <input
-              className="w-full border rounded px-3 py-2 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
+              className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
               placeholder="If Other, please specify"
               value={raceOther}
               onChange={(e) => setRaceOther(e.target.value)}
@@ -351,7 +351,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-2">
-          <div className="text-sm text-foreground/80">Ethnicity</div>
+          <div className="text-base text-foreground/80">Ethnicity</div>
           <div className="flex flex-wrap gap-2">
             {[
               ["HISPANIC_LATINO", "Hispanic or Latino"],
@@ -369,7 +369,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-2">
-          <div className="text-sm text-foreground/80">County of Residence</div>
+          <div className="text-base text-foreground/80">County of Residence</div>
           <div className="flex flex-wrap gap-2">
             {[
               ["SUMMIT", "Summit"],
@@ -390,7 +390,7 @@ export default function RegisterPage() {
           </div>
           {county === "OTHER_OH_COUNTY" && (
             <input
-              className="w-full border rounded px-3 py-2 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
+              className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
               placeholder="If Other OH County, please specify"
               value={countyOther}
               onChange={(e) => setCountyOther(e.target.value)}
@@ -400,12 +400,12 @@ export default function RegisterPage() {
       </section>
 
       <section className="space-y-3">
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-center gap-2 text-base">
           <input type="checkbox" checked={waiver} onChange={(e)=>setWaiver(e.target.checked)} />
           I have read and agree to the Facility Waiver.
         </label>
         <input
-          className="w-full border rounded px-3 py-2 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
+          className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
           placeholder="E‑Signature (Type Full Name)"
           value={signature}
           onChange={(e) => setSignature(e.target.value)}
@@ -413,7 +413,7 @@ export default function RegisterPage() {
       </section>
 
       <button
-        className="w-full h-12 rounded bg-indigo-600 text-white font-medium disabled:opacity-50"
+        className="w-full h-14 rounded bg-indigo-600 text-white font-medium disabled:opacity-50"
         disabled={!fullName || !/^\d{5}$/.test(zipCode) || !waiver || !signature || drugs.length===0}
         onClick={submit}
       >

@@ -16,6 +16,14 @@ export const metadata: Metadata = {
   title: "Hope United Registration",
   description: "Participant registration",
   manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [
+      { url: "/window.svg", type: "image/svg+xml" },
+    ],
+    shortcut: [
+      { url: "/window.svg", type: "image/svg+xml" },
+    ],
+  },
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },

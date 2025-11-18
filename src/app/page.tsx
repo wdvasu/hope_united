@@ -1,6 +1,15 @@
- 
+"use client";
+import { useEffect } from "react";
 
 export default function Home() {
+  useEffect(() => {
+    const nav = window.navigator as unknown as { standalone?: boolean };
+    const isStandalone = window.matchMedia?.("(display-mode: standalone)").matches || !!nav.standalone;
+    if (isStandalone) {
+      // If launched from Home Screen, go directly to the registration flow
+      window.location.replace("/register");
+    }
+  }, []);
   return (
     <div className="min-h-screen flex items-center justify-center p-8">
       <main className="w-full max-w-xl space-y-6 text-center">

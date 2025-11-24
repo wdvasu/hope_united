@@ -7,7 +7,6 @@ import { FilterBar } from './FilterBar';
 type SearchParams = {
   start?: string;
   end?: string;
-  drug?: string;
   county?: string;
   page?: string;
   pageSize?: string;
@@ -24,7 +23,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
   const where: Record<string, unknown> = {};
   if (start || end) where.createdAt = { ...(start ? { gte: start } : {}), ...(end ? { lte: end } : {}) };
   if (sp.county) where.county = sp.county;
-  if (sp.drug) where.drugs = { has: sp.drug };
+  // drug filter removed
 
   const regs = await prisma.registration.findMany({
     where,
@@ -38,7 +37,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
   return (
     <div className="max-w-screen-2xl mx-auto p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Recent Registrations</h1>
-      <FilterBar start={sp.start} end={sp.end} drug={sp.drug} county={sp.county} pageSize={pageSize} />
+      <FilterBar start={sp.start} end={sp.end} county={sp.county} pageSize={pageSize} />
       <div className="flex items-center gap-2">
         <Link
           className="ml-auto px-3 py-2 rounded bg-black text-white"
@@ -56,8 +55,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
               <th className="text-left p-2">Full Name</th>
               <th className="text-left p-2">ZIP</th>
               <th className="text-left p-2">Veteran</th>
-              <th className="text-left p-2">Drugs</th>
-              <th className="text-left p-2">Drug Other</th>
+              {/** drug columns removed */}
               <th className="text-left p-2">Sexual Orientation</th>
               <th className="text-left p-2">Sexual Other</th>
               <th className="text-left p-2">Gender</th>
@@ -83,8 +81,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
                 <td className="p-2">{r.fullName}</td>
                 <td className="p-2">{r.zipCode}</td>
                 <td className="p-2">{r.veteranStatus}</td>
-                <td className="p-2">{(r.drugs || []).join(', ')}</td>
-                <td className="p-2">{r.drugOther || ''}</td>
+                {/** removed */}
                 <td className="p-2">{r.sexualOrientation}</td>
                 <td className="p-2">{r.sexualOther || ''}</td>
                 <td className="p-2">{r.gender}</td>
@@ -124,7 +121,7 @@ function searchParamsToQuery(sp: SearchParams) {
   const params = new URLSearchParams();
   if (sp.start) params.set('start', sp.start);
   if (sp.end) params.set('end', sp.end);
-  if (sp.drug) params.set('drug', sp.drug);
+  // removed drug param
   if (sp.county) params.set('county', sp.county);
   if (sp.pageSize) params.set('pageSize', sp.pageSize);
   if (sp.page) params.set('page', sp.page!);

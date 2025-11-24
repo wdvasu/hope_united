@@ -3,14 +3,6 @@
 import { useEffect, useState } from "react";
 
 type Veteran = "YES" | "NO" | "REFUSED";
-type Drug =
-  | "ALCOHOL"
-  | "OPIOIDS_HEROIN"
-  | "COCAINE_CRACK"
-  | "METHAMPHETAMINE"
-  | "MARIJUANA"
-  | "OTHER"
-  | "REFUSED";
 type Sexual = "HETEROSEXUAL" | "GAY_LESBIAN" | "BISEXUAL" | "OTHER" | "REFUSED";
 type Gender = "FEMALE" | "MALE" | "TRANSGENDER" | "NON_BINARY" | "OTHER" | "REFUSED";
 type Race =
@@ -39,8 +31,6 @@ export default function RegisterPage() {
   const [birthYear, setBirthYear] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [veteranStatus, setVeteranStatus] = useState<Veteran>("REFUSED");
-  const [drugs, setDrugs] = useState<Drug[]>([]);
-  const [drugOther, setDrugOther] = useState("");
   const [sexualOrientation, setSexual] = useState<Sexual>("REFUSED");
   const [sexualOther, setSexualOther] = useState("");
   const [gender, setGender] = useState<Gender>("REFUSED");
@@ -55,11 +45,7 @@ export default function RegisterPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [uid, setUid] = useState<string | null>(null);
 
-  const toggleDrug = (d: Drug) => {
-    setDrugs((prev) =>
-      prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]
-    );
-  };
+  // removed: drugs selection
 
   // Load draft from localStorage on mount
   useEffect(() => {
@@ -72,8 +58,7 @@ export default function RegisterPage() {
           setZipCode(data.zipCode || "");
           setBirthYear(data.birthYear || "");
           setVeteranStatus(data.veteranStatus || "REFUSED");
-          setDrugs(Array.isArray(data.drugs) ? data.drugs : []);
-          setDrugOther(data.drugOther || "");
+          // removed: drugs
           setSexual(data.sexualOrientation || "REFUSED");
           setSexualOther(data.sexualOther || "");
           setGender(data.gender || "REFUSED");
@@ -109,8 +94,6 @@ export default function RegisterPage() {
       zipCode,
       birthYear,
       veteranStatus,
-      drugs,
-      drugOther,
       sexualOrientation,
       sexualOther,
       gender,
@@ -124,7 +107,7 @@ export default function RegisterPage() {
       eSignatureName: signature,
     };
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch {}
-  }, [fullName, zipCode, birthYear, veteranStatus, drugs, drugOther, sexualOrientation, sexualOther, gender, genderOther, race, raceOther, ethnicity, county, countyOther, waiver, signature]);
+  }, [fullName, zipCode, birthYear, veteranStatus, sexualOrientation, sexualOther, gender, genderOther, race, raceOther, ethnicity, county, countyOther, waiver, signature]);
 
   const submit = async () => {
     setMessage(null);
@@ -133,8 +116,6 @@ export default function RegisterPage() {
       zipCode,
       birthYear,
       veteranStatus,
-      drugs,
-      drugOther: drugs.includes("OTHER") ? drugOther || null : null,
       sexualOrientation,
       sexualOther: sexualOrientation === "OTHER" ? sexualOther || null : null,
       gender,
@@ -168,8 +149,6 @@ export default function RegisterPage() {
       setFullName("");
       setZipCode("");
       setVeteranStatus("REFUSED");
-      setDrugs([]);
-      setDrugOther("");
       setSexual("REFUSED");
       setSexualOther("");
       setGender("REFUSED");
@@ -255,35 +234,7 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <div className="text-base text-foreground/80">Drug/Substance of Choice (multi)</div>
-          <div className="flex flex-wrap gap-2">
-            {[
-              ["ALCOHOL", "Alcohol"],
-              ["OPIOIDS_HEROIN", "Opioids/Heroin"],
-              ["COCAINE_CRACK", "Cocaine/Crack"],
-              ["METHAMPHETAMINE", "Methamphetamine"],
-              ["MARIJUANA", "Marijuana"],
-              ["OTHER", "Other"],
-              ["REFUSED", "Refused"],
-            ].map(([k, label]) => (
-              <Chip
-                key={k}
-                selected={drugs.includes(k as Drug)}
-                label={label as string}
-                onClick={() => toggleDrug(k as Drug)}
-              />
-            ))}
-          </div>
-          {drugs.includes("OTHER") && (
-            <input
-              className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
-              placeholder="If Other, please specify"
-              value={drugOther}
-              onChange={(e) => setDrugOther(e.target.value)}
-            />
-          )}
-        </div>
+        {/* Drug/Substance question removed per request */}
 
         <div className="space-y-2">
           <div className="text-base text-foreground/80">Sexual Orientation</div>
@@ -436,7 +387,7 @@ export default function RegisterPage() {
 
       <button
         className="w-full h-14 rounded bg-indigo-600 text-white font-medium disabled:opacity-50"
-        disabled={!fullName || !/^\d{5}$/.test(zipCode) || birthYear.length!==4 || !waiver || !signature || drugs.length===0}
+        disabled={!fullName || !/^\d{5}$/.test(zipCode) || birthYear.length!==4 || !waiver || !signature}
         onClick={submit}
       >
         Complete Registration & Check‑In

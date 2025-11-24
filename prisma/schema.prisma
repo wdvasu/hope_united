@@ -92,8 +92,6 @@ model Registration {
 
   veteranStatus     VeteranStatus
 
-  drugs             String[]          // multi-select of allowed values, validated in app layer
-  drugOther         String?
 
   sexualOrientation SexualOrientation
   sexualOther       String?

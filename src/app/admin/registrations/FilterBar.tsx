@@ -4,13 +4,11 @@ import { useRef } from "react";
 export function FilterBar({
   start,
   end,
-  drug,
   county,
   pageSize,
 }: {
   start?: string;
   end?: string;
-  drug?: string;
   county?: string;
   pageSize: number;
 }) {
@@ -33,19 +31,7 @@ export function FilterBar({
         <label className="text-xs">End</label>
         <input name="end" type="date" defaultValue={end || ''} className="border rounded px-2 py-1" />
       </div>
-      <div className="flex flex-col">
-        <label className="text-xs">Drug</label>
-        <select name="drug" defaultValue={drug || ''} className="border rounded px-2 py-1">
-          <option value="">Any</option>
-          <option value="ALCOHOL">Alcohol</option>
-          <option value="OPIOIDS_HEROIN">Opioids/Heroin</option>
-          <option value="COCAINE_CRACK">Cocaine/Crack</option>
-          <option value="METHAMPHETAMINE">Methamphetamine</option>
-          <option value="MARIJUANA">Marijuana</option>
-          <option value="OTHER">Other</option>
-          <option value="REFUSED">Refused</option>
-        </select>
-      </div>
+      {/* Drug filter removed per request */}
       <div className="flex flex-col">
         <label className="text-xs">County</label>
         <select name="county" defaultValue={county || ''} className="border rounded px-2 py-1">

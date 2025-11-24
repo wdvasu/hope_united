@@ -5,16 +5,6 @@ import { getSession } from '@/lib/auth';
 import { z } from 'zod';
 import { VeteranStatus, SexualOrientation, Gender, Race, Ethnicity, County } from '@prisma/client';
 
-const Drug = z.enum([
-  'ALCOHOL',
-  'OPIOIDS_HEROIN',
-  'COCAINE_CRACK',
-  'METHAMPHETAMINE',
-  'MARIJUANA',
-  'OTHER',
-  'REFUSED',
-]);
-
 const schema = z.object({
   fullName: z.string().min(1),
   firstName: z.string().min(1).optional().nullable(),
@@ -25,8 +15,6 @@ const schema = z.object({
     .transform((s) => parseInt(s, 10)),
   zipCode: z.string().regex(/^\d{5}$/),
   veteranStatus: z.enum(['YES', 'NO', 'REFUSED']),
-  drugs: z.array(Drug).nonempty(),
-  drugOther: z.string().optional().nullable(),
   sexualOrientation: z.enum(['HETEROSEXUAL', 'GAY_LESBIAN', 'BISEXUAL', 'OTHER', 'REFUSED']),
   sexualOther: z.string().optional().nullable(),
   gender: z.enum(['FEMALE', 'MALE', 'TRANSGENDER', 'NON_BINARY', 'OTHER', 'REFUSED']),
@@ -75,8 +63,6 @@ export async function POST(req: Request) {
       birthYear: parsed.data.birthYear ?? null,
       zipCode: parsed.data.zipCode,
       veteranStatus: parsed.data.veteranStatus as VeteranStatus,
-      drugs: parsed.data.drugs,
-      drugOther: parsed.data.drugOther || null,
       sexualOrientation: parsed.data.sexualOrientation as SexualOrientation,
       sexualOther: parsed.data.sexualOther || null,
       gender: parsed.data.gender as Gender,

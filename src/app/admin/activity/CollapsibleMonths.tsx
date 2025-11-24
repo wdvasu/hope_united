@@ -1,8 +1,10 @@
 "use client";
 import { useState } from 'react';
-import { ACTIVITY_CATEGORIES } from '@/lib/activityCategories';
+import { ACTIVITY_CATEGORIES, ActivityCategory } from '@/lib/activityCategories';
 
-export function CollapsibleMonths({ year, counts }: { year: number; counts: Record<string, number[]> }) {
+type ActivityEvent = { category: ActivityCategory; createdAt: string };
+
+export function CollapsibleMonths({ year, counts, events }: { year: number; counts: Record<string, number[]>; events: ActivityEvent[] }) {
   const [open, setOpen] = useState<boolean[]>(Array(12).fill(false));
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   return (
@@ -14,19 +16,58 @@ export function CollapsibleMonths({ year, counts }: { year: number; counts: Reco
             {name} {year}
           </button>
           {open[i] && (
-            <div className="p-3">
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                {ACTIVITY_CATEGORIES.map((c) => (
-                  <div key={c} className="flex items-center justify-between border rounded px-3 py-2">
-                    <span>{c}</span>
-                    <span className="tabular-nums">{counts[c][i]}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <MonthDetailTable year={year} monthIndex={i} events={events} />
           )}
         </div>
       ))}
+    </div>
+  );
+}
+
+function MonthDetailTable({ year, monthIndex, events }: { year: number; monthIndex: number; events: ActivityEvent[] }) {
+  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate(); // local time
+  const byCategory: Record<ActivityCategory, number[]> = Object.fromEntries(
+    ACTIVITY_CATEGORIES.map((c) => [c, Array(daysInMonth).fill(0)])
+  ) as Record<ActivityCategory, number[]>;
+  for (const ev of events) {
+    const d = new Date(ev.createdAt);
+    if (d.getFullYear() === year && d.getMonth() === monthIndex) {
+      const di = d.getDate() - 1; // 0-based index
+      if (byCategory[ev.category]) byCategory[ev.category][di] += 1;
+    }
+  }
+  const totalsPerDay: number[] = Array(daysInMonth).fill(0);
+  for (let di = 0; di < daysInMonth; di++) {
+    totalsPerDay[di] = ACTIVITY_CATEGORIES.reduce((acc, c) => acc + byCategory[c][di], 0);
+  }
+  return (
+    <div className="p-3 overflow-x-auto">
+      <table className="min-w-[800px] text-xs">
+        <thead>
+          <tr>
+            <th className="text-left p-2">Category</th>
+            {Array.from({ length: daysInMonth }, (_, d) => (
+              <th key={d} className="text-right p-2">{d + 1}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {ACTIVITY_CATEGORIES.map((c) => (
+            <tr key={c} className="border-t">
+              <td className="p-2 whitespace-nowrap">{c}</td>
+              {byCategory[c].map((n, di) => (
+                <td key={di} className="p-2 text-right tabular-nums">{n || ''}</td>
+              ))}
+            </tr>
+          ))}
+          <tr className="border-t bg-zinc-50 font-medium">
+            <td className="p-2">Daily Total</td>
+            {totalsPerDay.map((n, di) => (
+              <td key={di} className="p-2 text-right tabular-nums">{n || ''}</td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }

@@ -15,6 +15,8 @@ type SearchParams = {
 //   return { start, end };
 // }
 
+type ActivityEvent = { category: ActivityCategory; createdAt: string };
+
 export default async function AdminActivityPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams;
   const now = new Date();
@@ -27,6 +29,10 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
     where: { createdAt: { gte: yearStart, lte: yearEnd } },
     select: { category: true, createdAt: true },
   });
+  const events: ActivityEvent[] = acts.map((a) => ({
+    category: a.category as ActivityCategory,
+    createdAt: a.createdAt.toISOString(),
+  }));
 
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const counts: Record<string, number[]> = {};
@@ -85,7 +91,7 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
         </table>
       </div>
 
-      <CollapsibleMonths year={year} counts={counts} />
+      <CollapsibleMonths year={year} counts={counts} events={events} />
     </div>
   );
 }

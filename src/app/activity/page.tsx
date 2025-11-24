@@ -1,19 +1,7 @@
 "use client";
 import { useState } from "react";
 
-const CATEGORIES = [
-  "Wellness",
-  "Recovery Meeting",
-  "Drop-In",
-  "Veteran Programming",
-  "Social Event",
-  "Volunteer",
-  "Peer Support",
-  "Family Support",
-  "Art",
-  "Training/Focus Group",
-  "Tour/Outreach",
-] as const;
+import { ACTIVITY_CATEGORIES } from "@/lib/activityCategories";
 
 export default function ActivityPage() {
   const [category, setCategory] = useState<string>("");
@@ -67,7 +55,7 @@ export default function ActivityPage() {
       <section className="space-y-3">
         <h2 className="font-medium">Choose a category</h2>
         <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map((c) => (
+          {ACTIVITY_CATEGORIES.map((c) => (
             <Chip key={c} selected={category === c} label={c} onClick={() => setCategory(c)} />
           ))}
         </div>

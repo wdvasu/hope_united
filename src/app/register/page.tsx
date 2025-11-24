@@ -45,6 +45,7 @@ export default function RegisterPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [uid, setUid] = useState<string | null>(null);
   const [waiverOpen, setWaiverOpen] = useState(false);
+  const [waiverShownOnce, setWaiverShownOnce] = useState(false);
 
   // removed: drugs selection
 
@@ -375,7 +376,18 @@ export default function RegisterPage() {
 
       <section className="space-y-3">
         <label className="flex items-center gap-2 text-base">
-          <input type="checkbox" checked={waiver} onChange={(e)=>setWaiver(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={waiver}
+            onChange={(e)=>{
+              const checked = e.target.checked;
+              setWaiver(checked);
+              if (checked && !waiverShownOnce) {
+                setWaiverOpen(true);
+                setWaiverShownOnce(true);
+              }
+            }}
+          />
           I have read and agree to the
           <button type="button" className="underline text-indigo-600 hover:text-indigo-700" onClick={()=>setWaiverOpen(true)}>
             Facility Waiver

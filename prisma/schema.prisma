@@ -69,6 +69,7 @@ model Device {
 
   sessions       Session[]
   registrations  Registration[]
+  activities     Activity[]
 }
 
 model Session {
@@ -115,4 +116,14 @@ model Registration {
   createdAt         DateTime          @default(now())
   createdIp         String?
   userAgent         String?
+}
+
+model Activity {
+  id        String   @id @default(uuid())
+  deviceId  String
+  device    Device   @relation(fields: [deviceId], references: [id])
+  category  String
+  createdAt DateTime @default(now())
+  createdIp String?
+  userAgent String?
 }

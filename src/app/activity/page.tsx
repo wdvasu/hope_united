@@ -17,15 +17,13 @@ const CATEGORIES = [
 
 export default function ActivityPage() {
   const [category, setCategory] = useState<string>("");
-  const [other, setOther] = useState("");
-  const [notes, setNotes] = useState("");
+  const [submittedAt, setSubmittedAt] = useState<Date | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
   const submit = async () => {
     setMessage(null);
     const payload = {
       category,
-      notes: notes || null,
       at: new Date().toISOString(),
     };
     try {
@@ -39,10 +37,10 @@ export default function ActivityPage() {
         return;
       }
       if (!res.ok) throw new Error("Failed");
+      const j = await res.json();
       setMessage("Activity recorded.");
+      setSubmittedAt(j.createdAt ? new Date(j.createdAt) : new Date());
       setCategory("");
-      setOther("");
-      setNotes("");
     } catch {
       setMessage("Could not save activity.");
     }
@@ -76,15 +74,12 @@ export default function ActivityPage() {
         {/* No "Other" in fixed category list */}
       </section>
 
-      <section className="space-y-3">
-        <h2 className="font-medium">Notes (optional)</h2>
-        <textarea
-          className="w-full min-h-[100px] border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
-          placeholder="Add any details"
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-        />
-      </section>
+      {submittedAt && (
+        <div className="rounded border border-foreground/20 p-3 text-sm">
+          <div className="font-medium">Submitted</div>
+          <div>{submittedAt.toLocaleString()}</div>
+        </div>
+      )}
 
       <button
         className="w-full h-14 rounded bg-indigo-600 text-white font-medium disabled:opacity-50"

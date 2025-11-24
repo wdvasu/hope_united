@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
+import { prisma } from '@/lib/db';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -18,6 +19,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
   }
 
-  // Placeholder: accept and acknowledge. Storage can be added later.
-  return NextResponse.json({ ok: true });
+  const createdIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || undefined;
+  const userAgent = req.headers.get('user-agent') || undefined;
+
+  const rec = await prisma.activity.create({
+    data: {
+      deviceId: session.deviceId,
+      category: parsed.data.category,
+      createdAt: parsed.data.at,
+      createdIp: createdIp || null,
+      userAgent: userAgent || null,
+    },
+  });
+  return NextResponse.json({ id: rec.id, createdAt: rec.createdAt });
 }

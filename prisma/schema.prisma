@@ -85,6 +85,9 @@ model Registration {
   uid               String            @unique
 
   fullName          String
+  firstName         String?
+  lastInitial       String?
+  birthYear         Int?
   zipCode           String
 
   veteranStatus     VeteranStatus

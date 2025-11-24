@@ -2,11 +2,16 @@
 import { useMemo, useState } from "react";
 
 import { ACTIVITY_CATEGORIES } from "@/lib/activityCategories";
+import { useEffect } from "react";
 
 export default function ActivityPage() {
   const [category, setCategory] = useState<string>("");
   const [submittedAt, setSubmittedAt] = useState<Date | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [attendeeOk, setAttendeeOk] = useState<boolean | null>(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastInitial, setLastInitial] = useState("");
+  const [birthYear, setBirthYear] = useState("");
   const todayLabel = useMemo(() => {
     const now = new Date();
     try {
@@ -19,6 +24,17 @@ export default function ActivityPage() {
     } catch {
       return now.toDateString();
     }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/activity/attendee", { cache: "no-store" });
+        setAttendeeOk(res.ok);
+      } catch {
+        setAttendeeOk(false);
+      }
+    })();
   }, []);
 
   const submit = async () => {
@@ -47,6 +63,26 @@ export default function ActivityPage() {
     }
   };
 
+  const attendeeLogin = async () => {
+    setMessage(null);
+    try {
+      const res = await fetch("/api/activity/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firstName, lastInitial, birthYear: Number(birthYear) }),
+      });
+      if (!res.ok) {
+        setMessage("Not found. Check name/initial/year.");
+        setAttendeeOk(false);
+      } else {
+        setAttendeeOk(true);
+        setMessage(null);
+      }
+    } catch {
+      setMessage("Login failed");
+    }
+  };
+
   const Chip = ({ selected, label, onClick }: { selected: boolean; label: string; onClick: () => void }) => (
     <button
       type="button"
@@ -60,6 +96,21 @@ export default function ActivityPage() {
       {label}
     </button>
   );
+
+  if (attendeeOk === false || attendeeOk === null) {
+    return (
+      <div className="max-w-md mx-auto p-6 space-y-6 text-[18px]">
+        <h1 className="text-2xl font-semibold">Activity Login</h1>
+        <div className="space-y-3">
+          <input className="w-full border rounded px-4 py-3 border-foreground/20" placeholder="First Name" value={firstName} onChange={(e)=>setFirstName(e.target.value)} />
+          <input className="w-full border rounded px-4 py-3 border-foreground/20" placeholder="Last Initial" value={lastInitial} onChange={(e)=>setLastInitial(e.target.value.slice(0,1))} />
+          <input className="w-full border rounded px-4 py-3 border-foreground/20" placeholder="Birth Year (YYYY)" inputMode="numeric" value={birthYear} onChange={(e)=>setBirthYear(e.target.value.replace(/[^0-9]/g, '').slice(0,4))} />
+          <button className="w-full h-14 rounded bg-indigo-600 text-white font-medium disabled:opacity-50" disabled={!firstName || !lastInitial || birthYear.length!==4} onClick={attendeeLogin}>Continue</button>
+          {message && <p className="text-sm">{message}</p>}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-8 text-[18px]">

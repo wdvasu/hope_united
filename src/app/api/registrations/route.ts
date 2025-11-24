@@ -17,6 +17,14 @@ const Drug = z.enum([
 
 const schema = z.object({
   fullName: z.string().min(1),
+  firstName: z.string().min(1).optional().nullable(),
+  lastInitial: z.string().min(1).max(1).optional().nullable(),
+  birthYear: z
+    .string()
+    .regex(/^\d{4}$/)
+    .transform((s) => parseInt(s, 10))
+    .optional()
+    .nullable(),
   zipCode: z.string().regex(/^\d{5}$/),
   veteranStatus: z.enum(['YES', 'NO', 'REFUSED']),
   drugs: z.array(Drug).nonempty(),
@@ -47,11 +55,26 @@ export async function POST(req: Request) {
   const createdIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || undefined;
   const userAgent = req.headers.get('user-agent') || undefined;
 
+  // Derive firstName and lastInitial from fullName if not supplied
+  let firstName: string | null | undefined = parsed.data.firstName ?? null;
+  let lastInitial: string | null | undefined = parsed.data.lastInitial ?? null;
+  if (!firstName || !lastInitial) {
+    const parts = parsed.data.fullName.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      firstName = firstName || parts[0];
+      const last = parts[parts.length - 1];
+      lastInitial = lastInitial || (last ? last[0] : undefined);
+    }
+  }
+
   const r = await prisma.registration.create({
     data: {
       uid,
       deviceId: session.deviceId,
       fullName: parsed.data.fullName,
+      firstName: firstName ? firstName.trim() : null,
+      lastInitial: lastInitial ? lastInitial.trim().slice(0, 1) : null,
+      birthYear: parsed.data.birthYear ?? null,
       zipCode: parsed.data.zipCode,
       veteranStatus: parsed.data.veteranStatus as VeteranStatus,
       drugs: parsed.data.drugs,

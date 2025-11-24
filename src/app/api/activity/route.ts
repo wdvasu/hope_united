@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
+import { cookies } from 'next/headers';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 
@@ -12,6 +13,9 @@ const schema = z.object({
 export async function POST(req: Request) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const cookieStore = await cookies();
+  const attendee = cookieStore.get('attendee')?.value;
+  if (!attendee) return NextResponse.json({ error: 'Attendee login required' }, { status: 401 });
 
   const body = await req.json();
   const parsed = schema.safeParse(body);

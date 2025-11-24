@@ -149,6 +149,7 @@ export default function RegisterPage() {
       try { localStorage.removeItem(STORAGE_KEY); } catch {}
       // Reset the form to blanks/defaults after successful submit
       setFullName("");
+      setBirthYear("");
       setZipCode("");
       setVeteranStatus("REFUSED");
       setSexual("REFUSED");

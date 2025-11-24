@@ -22,9 +22,7 @@ const schema = z.object({
   birthYear: z
     .string()
     .regex(/^\d{4}$/)
-    .transform((s) => parseInt(s, 10))
-    .optional()
-    .nullable(),
+    .transform((s) => parseInt(s, 10)),
   zipCode: z.string().regex(/^\d{5}$/),
   veteranStatus: z.enum(['YES', 'NO', 'REFUSED']),
   drugs: z.array(Drug).nonempty(),

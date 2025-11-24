@@ -36,8 +36,6 @@ const STORAGE_KEY = ["hopeunited", "register", "draft", "v1"].join(":");
 export default function RegisterPage() {
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [fullName, setFullName] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastInitial, setLastInitial] = useState("");
   const [birthYear, setBirthYear] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [veteranStatus, setVeteranStatus] = useState<Veteran>("REFUSED");
@@ -72,8 +70,6 @@ export default function RegisterPage() {
         setTimeout(() => {
           setFullName(data.fullName || "");
           setZipCode(data.zipCode || "");
-          setFirstName(data.firstName || "");
-          setLastInitial(data.lastInitial || "");
           setBirthYear(data.birthYear || "");
           setVeteranStatus(data.veteranStatus || "REFUSED");
           setDrugs(Array.isArray(data.drugs) ? data.drugs : []);
@@ -111,8 +107,6 @@ export default function RegisterPage() {
     const payload = {
       fullName,
       zipCode,
-      firstName,
-      lastInitial,
       birthYear,
       veteranStatus,
       drugs,
@@ -130,16 +124,14 @@ export default function RegisterPage() {
       eSignatureName: signature,
     };
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch {}
-  }, [fullName, zipCode, veteranStatus, drugs, drugOther, sexualOrientation, sexualOther, gender, genderOther, race, raceOther, ethnicity, county, countyOther, waiver, signature]);
+  }, [fullName, zipCode, birthYear, veteranStatus, drugs, drugOther, sexualOrientation, sexualOther, gender, genderOther, race, raceOther, ethnicity, county, countyOther, waiver, signature]);
 
   const submit = async () => {
     setMessage(null);
     const payload = {
       fullName,
       zipCode,
-      firstName: firstName || undefined,
-      lastInitial: lastInitial || undefined,
-      birthYear: birthYear || undefined,
+      birthYear,
       veteranStatus,
       drugs,
       drugOther: drugs.includes("OTHER") ? drugOther || null : null,
@@ -236,11 +228,7 @@ export default function RegisterPage() {
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
         />
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <input className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20" placeholder="First Name" value={firstName} onChange={(e)=>setFirstName(e.target.value)} />
-          <input className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20" placeholder="Last Initial" value={lastInitial} onChange={(e)=>setLastInitial(e.target.value.slice(0,1))} />
-          <input className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20" placeholder="Birth Year (YYYY)" inputMode="numeric" value={birthYear} onChange={(e)=>setBirthYear(e.target.value.replace(/[^0-9]/g,'').slice(0,4))} />
-        </div>
+        <input className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20" placeholder="Birth Year (YYYY)" inputMode="numeric" value={birthYear} onChange={(e)=>setBirthYear(e.target.value.replace(/[^0-9]/g,'').slice(0,4))} />
         <input
           className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
           placeholder="Zip Code (5 digits)"
@@ -448,7 +436,7 @@ export default function RegisterPage() {
 
       <button
         className="w-full h-14 rounded bg-indigo-600 text-white font-medium disabled:opacity-50"
-        disabled={!fullName || !/^\d{5}$/.test(zipCode) || !waiver || !signature || drugs.length===0}
+        disabled={!fullName || !/^\d{5}$/.test(zipCode) || birthYear.length!==4 || !waiver || !signature || drugs.length===0}
         onClick={submit}
       >
         Complete Registration & Check‑In

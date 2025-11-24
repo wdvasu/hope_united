@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { ACTIVITY_CATEGORIES } from "@/lib/activityCategories";
 
@@ -7,6 +7,19 @@ export default function ActivityPage() {
   const [category, setCategory] = useState<string>("");
   const [submittedAt, setSubmittedAt] = useState<Date | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const todayLabel = useMemo(() => {
+    const now = new Date();
+    try {
+      return now.toLocaleDateString(undefined, {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch {
+      return now.toDateString();
+    }
+  }, []);
 
   const submit = async () => {
     setMessage(null);
@@ -53,6 +66,10 @@ export default function ActivityPage() {
       <h1 className="text-2xl font-semibold">Daily Activity</h1>
 
       <section className="space-y-3">
+        <div className="rounded border border-foreground/20 p-3 text-sm">
+          <div className="font-medium">Date</div>
+          <div>{todayLabel}</div>
+        </div>
         <h2 className="font-medium">Choose a category</h2>
         <div className="flex flex-wrap gap-2">
           {ACTIVITY_CATEGORIES.map((c) => (

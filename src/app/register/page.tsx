@@ -44,6 +44,7 @@ export default function RegisterPage() {
   const [signature, setSignature] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [uid, setUid] = useState<string | null>(null);
+  const [waiverOpen, setWaiverOpen] = useState(false);
 
   // removed: drugs selection
 
@@ -375,7 +376,11 @@ export default function RegisterPage() {
       <section className="space-y-3">
         <label className="flex items-center gap-2 text-base">
           <input type="checkbox" checked={waiver} onChange={(e)=>setWaiver(e.target.checked)} />
-          I have read and agree to the Facility Waiver.
+          I have read and agree to the
+          <button type="button" className="underline text-indigo-600 hover:text-indigo-700" onClick={()=>setWaiverOpen(true)}>
+            Facility Waiver
+          </button>
+          .
         </label>
         <input
           className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
@@ -400,6 +405,23 @@ export default function RegisterPage() {
         </div>
       )}
       {message && <p className="text-sm">{message}</p>}
+
+      {waiverOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50" onClick={()=>setWaiverOpen(false)} />
+          <div role="dialog" aria-modal="true" className="relative z-10 w-[min(92vw,720px)] max-h-[80vh] overflow-auto rounded-lg bg-background text-foreground shadow-lg border border-foreground/20 p-6 space-y-4">
+            <div className="flex items-start justify-between gap-4">
+              <h3 className="text-xl font-semibold">Tyler&apos;s Redemption Place Facility Waiver</h3>
+              <button type="button" onClick={()=>setWaiverOpen(false)} className="px-3 py-1 rounded border">Close</button>
+            </div>
+            <div className="space-y-3 leading-relaxed text-base">
+              <p>
+                I, the participant, understand and agree that my use of the facilities (gym, sauna, cold plunge, salt cave, and premises) is voluntary and done at my own risk. I release Tyler&apos;s Redemption Place and its staff from all liability for any injuries or accidents that may occur while on the premises. I acknowledge that I have read and understood this waiver.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

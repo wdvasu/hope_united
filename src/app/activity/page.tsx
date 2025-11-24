@@ -2,12 +2,17 @@
 import { useState } from "react";
 
 const CATEGORIES = [
-  "Supplies Pickup",
-  "Harm Reduction Education",
-  "Support Group",
-  "Counseling",
-  "Naloxone Distribution",
-  "Other",
+  "Wellness",
+  "Recovery Meeting",
+  "Drop-In",
+  "Veteran Programming",
+  "Social Event",
+  "Volunteer",
+  "Peer Support",
+  "Family Support",
+  "Art",
+  "Training/Focus Group",
+  "Tour/Outreach",
 ] as const;
 
 export default function ActivityPage() {
@@ -19,7 +24,7 @@ export default function ActivityPage() {
   const submit = async () => {
     setMessage(null);
     const payload = {
-      category: category === "Other" ? (other || "Other") : category,
+      category,
       notes: notes || null,
       at: new Date().toISOString(),
     };
@@ -68,14 +73,7 @@ export default function ActivityPage() {
             <Chip key={c} selected={category === c} label={c} onClick={() => setCategory(c)} />
           ))}
         </div>
-        {category === "Other" && (
-          <input
-            className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
-            placeholder="If Other, please specify"
-            value={other}
-            onChange={(e) => setOther(e.target.value)}
-          />
-        )}
+        {/* No "Other" in fixed category list */}
       </section>
 
       <section className="space-y-3">
@@ -90,7 +88,7 @@ export default function ActivityPage() {
 
       <button
         className="w-full h-14 rounded bg-indigo-600 text-white font-medium disabled:opacity-50"
-        disabled={!category || (category === "Other" && !other.trim())}
+        disabled={!category}
         onClick={submit}
       >
         Save Activity

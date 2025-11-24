@@ -6,8 +6,8 @@ export default function Home() {
     const nav = window.navigator as unknown as { standalone?: boolean };
     const isStandalone = window.matchMedia?.("(display-mode: standalone)").matches || !!nav.standalone;
     if (isStandalone) {
-      // If launched from Home Screen, go directly to the registration flow
-      window.location.replace("/register");
+      // If launched from Home Screen, go to the choice screen
+      window.location.replace("/start");
     }
   }, []);
   return (

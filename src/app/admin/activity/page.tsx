@@ -61,7 +61,7 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
               {months.map((m) => (
                 <th key={m} className="text-right p-2">{m}</th>
               ))}
-              <th className="text-right p-2">Year Total</th>
+              <th className="text-right p-2">Grand Total</th>
             </tr>
           </thead>
           <tbody>

@@ -23,7 +23,7 @@ export async function GET(req: Request) {
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
   const data: (string | number)[][] = [];
-  data.push(['Category', ...months, 'Year Total']);
+  data.push(['Category', ...months, 'Grand Total']);
   for (const c of ACTIVITY_CATEGORIES) {
     const row = counts[c];
     const total = row.reduce((a,b)=>a+b,0);

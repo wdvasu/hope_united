@@ -47,56 +47,56 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
         </Link>
       </div>
       <div className="overflow-x-auto border rounded">
-        <table className="min-w-[1400px] text-sm whitespace-nowrap">
+        <table className="min-w-[1400px] text-sm whitespace-nowrap leading-tight">
           <thead className="bg-zinc-50">
             <tr>
-              <th className="text-left p-2">Created</th>
-              <th className="text-left p-2">UID</th>
-              <th className="text-left p-2">Full Name</th>
-              <th className="text-left p-2">ZIP</th>
-              <th className="text-left p-2">Veteran</th>
+              <th className="text-left px-2 py-1">Created</th>
+              <th className="text-left px-2 py-1">UID</th>
+              <th className="text-left px-2 py-1">Full Name</th>
+              <th className="text-left px-2 py-1">ZIP</th>
+              <th className="text-left px-2 py-1">Veteran</th>
               {/** drug columns removed */}
-              <th className="text-left p-2">Sexual Orientation</th>
-              <th className="text-left p-2">Sexual Other</th>
-              <th className="text-left p-2">Gender</th>
-              <th className="text-left p-2">Gender Other</th>
-              <th className="text-left p-2">Race</th>
-              <th className="text-left p-2">Race Other</th>
-              <th className="text-left p-2">Ethnicity</th>
-              <th className="text-left p-2">County</th>
-              <th className="text-left p-2">County Other</th>
-              <th className="text-left p-2">Waiver Agreed</th>
-              <th className="text-left p-2">E‑Sign Name</th>
-              <th className="text-left p-2">E‑Sign At</th>
-              <th className="text-left p-2">Device ID</th>
-              <th className="text-left p-2">Created IP</th>
-              <th className="text-left p-2">User Agent</th>
+              <th className="text-left px-2 py-1">Sexual Orientation</th>
+              <th className="text-left px-2 py-1">Sexual Other</th>
+              <th className="text-left px-2 py-1">Gender</th>
+              <th className="text-left px-2 py-1">Gender Other</th>
+              <th className="text-left px-2 py-1">Race</th>
+              <th className="text-left px-2 py-1">Race Other</th>
+              <th className="text-left px-2 py-1">Ethnicity</th>
+              <th className="text-left px-2 py-1">County</th>
+              <th className="text-left px-2 py-1">County Other</th>
+              <th className="text-left px-2 py-1">Waiver Agreed</th>
+              <th className="text-left px-2 py-1">E‑Sign Name</th>
+              <th className="text-left px-2 py-1">E‑Sign At</th>
+              <th className="text-left px-2 py-1">Device ID</th>
+              <th className="text-left px-2 py-1">Created IP</th>
+              <th className="text-left px-2 py-1">User Agent</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
               <tr key={r.id} className="border-t">
-                <td className="p-2">{new Date(r.createdAt).toLocaleString()}</td>
-                <td className="p-2 font-mono">{r.uid}</td>
-                <td className="p-2">{r.fullName}</td>
-                <td className="p-2">{r.zipCode}</td>
-                <td className="p-2">{r.veteranStatus}</td>
+                <td className="px-2 py-1">{new Date(r.createdAt).toLocaleString()}</td>
+                <td className="px-2 py-1 font-mono">{r.uid}</td>
+                <td className="px-2 py-1">{r.fullName}</td>
+                <td className="px-2 py-1">{r.zipCode}</td>
+                <td className="px-2 py-1">{r.veteranStatus}</td>
                 {/** removed */}
-                <td className="p-2">{r.sexualOrientation}</td>
-                <td className="p-2">{r.sexualOther || ''}</td>
-                <td className="p-2">{r.gender}</td>
-                <td className="p-2">{r.genderOther || ''}</td>
-                <td className="p-2">{r.race}</td>
-                <td className="p-2">{r.raceOther || ''}</td>
-                <td className="p-2">{r.ethnicity}</td>
-                <td className="p-2">{r.county}</td>
-                <td className="p-2">{r.countyOther || ''}</td>
-                <td className="p-2">{r.waiverAgreed ? 'Yes' : 'No'}</td>
-                <td className="p-2">{r.eSignatureName}</td>
-                <td className="p-2">{new Date(r.eSignatureAt).toLocaleString()}</td>
-                <td className="p-2 font-mono">{r.deviceId}</td>
-                <td className="p-2">{r.createdIp || ''}</td>
-                <td className="p-2 max-w-[320px] whitespace-pre-wrap break-words text-xs">{r.userAgent || ''}</td>
+                <td className="px-2 py-1">{r.sexualOrientation}</td>
+                <td className="px-2 py-1">{r.sexualOther || ''}</td>
+                <td className="px-2 py-1">{r.gender}</td>
+                <td className="px-2 py-1">{r.genderOther || ''}</td>
+                <td className="px-2 py-1">{r.race}</td>
+                <td className="px-2 py-1">{r.raceOther || ''}</td>
+                <td className="px-2 py-1">{r.ethnicity}</td>
+                <td className="px-2 py-1">{r.county}</td>
+                <td className="px-2 py-1">{r.countyOther || ''}</td>
+                <td className="px-2 py-1">{r.waiverAgreed ? 'Yes' : 'No'}</td>
+                <td className="px-2 py-1">{r.eSignatureName}</td>
+                <td className="px-2 py-1">{new Date(r.eSignatureAt).toLocaleString()}</td>
+                <td className="px-2 py-1 font-mono">{r.deviceId}</td>
+                <td className="px-2 py-1">{r.createdIp || ''}</td>
+                <td className="px-2 py-1 max-w-[320px] whitespace-pre-wrap break-words text-xs">{r.userAgent || ''}</td>
               </tr>
             ))}
           </tbody>

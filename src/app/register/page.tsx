@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Veteran = "YES" | "NO" | "REFUSED";
 type Sexual = "HETEROSEXUAL" | "GAY_LESBIAN" | "BISEXUAL" | "OTHER" | "REFUSED";
@@ -26,6 +27,7 @@ type County =
 const STORAGE_KEY = ["hopeunited", "register", "draft", "v1"].join(":");
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [fullName, setFullName] = useState("");
   const [birthYear, setBirthYear] = useState("");
@@ -163,6 +165,7 @@ export default function RegisterPage() {
       setCountyOther("");
       setWaiver(false);
       setSignature("");
+      router.replace("/start");
     }
   };
 

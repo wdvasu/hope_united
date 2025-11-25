@@ -1,10 +1,12 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { ACTIVITY_CATEGORIES } from "@/lib/activityCategories";
 import { useEffect } from "react";
 
 export default function ActivityPage() {
+  const router = useRouter();
   const [category, setCategory] = useState<string>("");
   const [submittedAt, setSubmittedAt] = useState<Date | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -58,6 +60,7 @@ export default function ActivityPage() {
       setMessage("Activity recorded.");
       setSubmittedAt(j.createdAt ? new Date(j.createdAt) : new Date());
       setCategory("");
+      router.replace("/start");
     } catch {
       setMessage("Could not save activity.");
     }

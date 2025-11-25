@@ -70,7 +70,6 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
               <th className="text-left px-2 py-1">E‑Sign At</th>
               <th className="text-left px-2 py-1">Device ID</th>
               <th className="text-left px-2 py-1">Created IP</th>
-              <th className="text-left px-2 py-1">User Agent</th>
             </tr>
           </thead>
           <tbody>
@@ -96,7 +95,6 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
                 <td className="px-2 py-1">{new Date(r.eSignatureAt).toLocaleString()}</td>
                 <td className="px-2 py-1 font-mono">{r.deviceId}</td>
                 <td className="px-2 py-1">{r.createdIp || ''}</td>
-                <td className="px-2 py-1 max-w-[320px] whitespace-pre-wrap break-words text-xs">{r.userAgent || ''}</td>
               </tr>
             ))}
           </tbody>

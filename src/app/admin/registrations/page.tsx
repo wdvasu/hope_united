@@ -53,6 +53,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
               <th className="text-left px-2 py-1">Created</th>
               <th className="text-left px-2 py-1">UID</th>
               <th className="text-left px-2 py-1">Full Name</th>
+              <th className="text-left px-2 py-1">Birth Year</th>
               <th className="text-left px-2 py-1">ZIP</th>
               <th className="text-left px-2 py-1">Veteran</th>
               {/** drug columns removed */}
@@ -78,6 +79,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
                 <td className="px-2 py-1">{new Date(r.createdAt).toLocaleString()}</td>
                 <td className="px-2 py-1 font-mono">{r.uid}</td>
                 <td className="px-2 py-1">{r.fullName}</td>
+                <td className="px-2 py-1">{r.birthYear ?? ''}</td>
                 <td className="px-2 py-1">{r.zipCode}</td>
                 <td className="px-2 py-1">{r.veteranStatus}</td>
                 {/** removed */}

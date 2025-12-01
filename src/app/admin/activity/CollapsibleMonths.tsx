@@ -113,13 +113,19 @@ function EditableCell({ value, onSave }: { value: number; onSave: (v: number)=>v
   return (
     <div className="inline-block min-w-[48px] text-right">
       {!editing ? (
-        <button type="button" className="px-1 py-0.5 rounded hover:bg-foreground/5 w-full text-right" onClick={()=>{ setText(String(value || '')); setEditing(true); }}>
-          {value || ''}
+        <button
+          type="button"
+          className="px-1 py-0.5 rounded hover:bg-foreground/5 w-full text-right"
+          title="Click to edit"
+          onClick={()=>{ setText(String(value || '')); setEditing(true); }}
+        >
+          {value === 0 ? <span className="text-foreground/30">Add</span> : value}
         </button>
       ) : (
         <input
           className="w-16 text-right border rounded px-1 py-0.5"
           inputMode="numeric"
+          placeholder="0"
           autoFocus
           value={text}
           onChange={(e)=>setText(e.target.value.replace(/[^0-9]/g,''))}

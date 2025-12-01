@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import SignaturePad from "signature_pad";
 import { useRouter } from "next/navigation";
 
 type Veteran = "YES" | "NO" | "REFUSED";
@@ -43,8 +44,42 @@ export default function RegisterPage() {
   const [county, setCounty] = useState<County>("REFUSED");
   const [countyOther, setCountyOther] = useState("");
   const [waiver, setWaiver] = useState(false);
-  const [signature, setSignature] = useState("");
+  const [signatureData, setSignatureData] = useState<string>("");
   const [message, setMessage] = useState<string | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const sigRef = useRef<SignaturePad | null>(null);
+
+  // Initialize signature pad
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const resize = () => {
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.floor(rect.width * ratio);
+      canvas.height = Math.floor(200 * ratio);
+      const ctx = canvas.getContext('2d');
+      if (ctx) ctx.scale(ratio, ratio);
+      // Clear existing content on resize
+      sigRef.current?.clear();
+      setSignatureData("");
+    };
+    const pad = new SignaturePad(canvas, { minWidth: 0.5, maxWidth: 2.5 });
+    sigRef.current = pad;
+    const onEnd = () => {
+      if (!pad.isEmpty()) setSignatureData(pad.toDataURL('image/png'));
+    };
+    // signature_pad v5: use event listener (typings don't include it)
+    (pad as any).addEventListener?.('endStroke', onEnd);
+    resize();
+    window.addEventListener('resize', resize);
+    return () => {
+      window.removeEventListener('resize', resize);
+      pad.off();
+      sigRef.current = null;
+    };
+  }, []);
+
   const [uid, setUid] = useState<string | null>(null);
   const [waiverOpen, setWaiverOpen] = useState(false);
   const [waiverShownOnce, setWaiverShownOnce] = useState(false);
@@ -73,7 +108,6 @@ export default function RegisterPage() {
           setCounty(data.county || "REFUSED");
           setCountyOther(data.countyOther || "");
           setWaiver(!!data.waiverAgreed);
-          setSignature(data.eSignatureName || "");
         }, 0);
       }
     } catch {}
@@ -108,10 +142,9 @@ export default function RegisterPage() {
       county,
       countyOther,
       waiverAgreed: waiver,
-      eSignatureName: signature,
     };
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch {}
-  }, [fullName, zipCode, birthYear, veteranStatus, sexualOrientation, sexualOther, gender, genderOther, race, raceOther, ethnicity, county, countyOther, waiver, signature]);
+  }, [fullName, zipCode, birthYear, veteranStatus, sexualOrientation, sexualOther, gender, genderOther, race, raceOther, ethnicity, county, countyOther, waiver]);
 
   const submit = async () => {
     setMessage(null);
@@ -130,7 +163,7 @@ export default function RegisterPage() {
       county,
       countyOther: county === "OTHER_OH_COUNTY" ? countyOther || null : null,
       waiverAgreed: waiver === true,
-      eSignatureName: signature,
+      eSignatureImage: signatureData,
       eSignatureAt: new Date().toISOString(),
     };
     const res = await fetch("/api/registrations", {
@@ -164,7 +197,8 @@ export default function RegisterPage() {
       setCounty("REFUSED");
       setCountyOther("");
       setWaiver(false);
-      setSignature("");
+      setSignatureData("");
+      sigRef.current?.clear();
       router.replace("/start");
     }
   };
@@ -398,17 +432,20 @@ export default function RegisterPage() {
           </button>
           .
         </label>
-        <input
-          className="w-full border rounded px-4 py-3 bg-background text-foreground placeholder:text-foreground/50 border-foreground/20"
-          placeholder="E‑Signature (Type Full Name)"
-          value={signature}
-          onChange={(e) => setSignature(e.target.value)}
-        />
+        <div className="space-y-2">
+          <div className="text-base text-foreground/80">Signature</div>
+          <div className="border border-foreground/20 rounded">
+            <canvas ref={canvasRef} style={{ width: '100%', height: 200 }} />
+          </div>
+          <div className="flex gap-2">
+            <button type="button" className="px-3 py-2 rounded border" onClick={()=>{ sigRef.current?.clear(); setSignatureData(""); }}>Clear</button>
+          </div>
+        </div>
       </section>
 
       <button
         className="w-full h-14 rounded bg-indigo-600 text-white font-medium disabled:opacity-50"
-        disabled={!fullName || !/^\d{5}$/.test(zipCode) || birthYear.length!==4 || !waiver || !signature}
+        disabled={!fullName || !/^\d{5}$/.test(zipCode) || birthYear.length!==4 || !waiver || !signatureData}
         onClick={submit}
       >
         Complete Registration & Check‑In

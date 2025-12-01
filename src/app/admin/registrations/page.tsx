@@ -67,7 +67,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
               <th className="text-left px-2 py-1">County</th>
               <th className="text-left px-2 py-1">County Other</th>
               <th className="text-left px-2 py-1">Waiver Agreed</th>
-              <th className="text-left px-2 py-1">E‑Sign Name</th>
+              <th className="text-left px-2 py-1">Signature</th>
               <th className="text-left px-2 py-1">E‑Sign At</th>
               <th className="text-left px-2 py-1">Device ID</th>
               <th className="text-left px-2 py-1">Created IP</th>
@@ -93,7 +93,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
                 <td className="px-2 py-1">{r.county}</td>
                 <td className="px-2 py-1">{r.countyOther || ''}</td>
                 <td className="px-2 py-1">{r.waiverAgreed ? 'Yes' : 'No'}</td>
-                <td className="px-2 py-1">{r.eSignatureName}</td>
+                <td className="px-2 py-1">{r.eSignatureImage ? <a className="underline text-indigo-600" href={`/api/registrations/signature/${r.id}`} target="_blank" rel="noreferrer">View</a> : ''}</td>
                 <td className="px-2 py-1">{new Date(r.eSignatureAt).toLocaleString()}</td>
                 <td className="px-2 py-1 font-mono">{r.deviceId}</td>
                 <td className="px-2 py-1">{r.createdIp || ''}</td>

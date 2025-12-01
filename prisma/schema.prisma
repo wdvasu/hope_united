@@ -108,7 +108,8 @@ model Registration {
   countyOther       String?
 
   waiverAgreed      Boolean
-  eSignatureName    String
+  eSignatureName    String?
+  eSignatureImage   String?
   eSignatureAt      DateTime
 
   deviceId          String

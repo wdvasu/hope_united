@@ -23,11 +23,11 @@ export async function GET(req: Request) {
 
   if (format === 'csv') {
     const header = [
-      'createdAt','uid','fullName','zipCode','veteranStatus','sexualOrientation','sexualOther','gender','genderOther','race','raceOther','ethnicity','county','countyOther','waiverAgreed','eSignatureName','eSignatureAt','deviceId','createdIp','userAgent'
+      'createdAt','uid','fullName','birthYear','zipCode','veteranStatus','sexualOrientation','sexualOther','gender','genderOther','race','raceOther','ethnicity','county','countyOther','waiverAgreed','eSignatureName','eSignatureAt','deviceId','createdIp','userAgent'
     ];
     const rows = regs.map(r => [
-      r.createdAt.toISOString(), r.uid, r.fullName, r.zipCode, r.veteranStatus,
-      r.sexualOrientation, r.sexualOther||'', r.gender, r.genderOther||'', r.race, r.raceOther||'', r.ethnicity, r.county, r.countyOther||'', String(r.waiverAgreed), r.eSignatureName, r.eSignatureAt.toISOString(), r.deviceId, r.createdIp||'', r.userAgent||''
+      r.createdAt.toISOString(), r.uid, r.fullName, r.birthYear ?? '', r.zipCode, r.veteranStatus,
+      r.sexualOrientation, r.sexualOther||'', r.gender, r.genderOther||'', r.race, r.raceOther||'', r.ethnicity, r.county, r.countyOther||'', String(r.waiverAgreed), r.eSignatureName||'', r.eSignatureAt.toISOString(), r.deviceId, r.createdIp||'', r.userAgent||''
     ].map(v => typeof v === 'string' ? `"${v.replaceAll('"','""')}"` : v).join(','));
     const body = [header.join(','), ...rows].join('\n');
     return new NextResponse(body, { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="registrations.csv"' } });

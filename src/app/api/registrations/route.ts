@@ -25,7 +25,7 @@ const schema = z.object({
   county: z.enum(['SUMMIT', 'STARK', 'PORTAGE', 'CUYAHOGA', 'OTHER_OH_COUNTY', 'OUT_OF_STATE', 'REFUSED']),
   countyOther: z.string().optional().nullable(),
   waiverAgreed: z.literal(true),
-  eSignatureName: z.string().min(1),
+  eSignatureImage: z.string().min(1),
   eSignatureAt: z.string().transform((s) => new Date(s)),
 });
 
@@ -73,7 +73,8 @@ export async function POST(req: Request) {
       county: parsed.data.county as County,
       countyOther: parsed.data.countyOther || null,
       waiverAgreed: true,
-      eSignatureName: parsed.data.eSignatureName,
+      eSignatureName: null,
+      eSignatureImage: sanitizeImage(parsed.data.eSignatureImage),
       eSignatureAt: parsed.data.eSignatureAt,
       createdIp: createdIp || null,
       userAgent: userAgent || null,
@@ -81,4 +82,12 @@ export async function POST(req: Request) {
   });
 
   return NextResponse.json({ uid, id: r.id });
+}
+
+function sanitizeImage(s: string): string {
+  // Accept both raw base64 or data URL and normalize to base64 without prefix
+  const prefix = 'base64,';
+  const idx = s.indexOf(prefix);
+  if (idx >= 0) return s.slice(idx + prefix.length);
+  return s;
 }

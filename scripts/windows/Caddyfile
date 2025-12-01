@@ -1,0 +1,5 @@
+<LAN_IP> {
+  encode gzip
+  tls ./cert.pem ./key.pem
+  reverse_proxy 127.0.0.1:3000
+}

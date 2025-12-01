@@ -47,11 +47,9 @@ Note: iPad/Android must trust the mkcert root to avoid HTTPS camera issues. See 
 
 ## 4) App configuration
 
-Copy `.env.production.local` in the repo root with (fill in <PASSWORD>):
-```
-NODE_ENV=production
-DATABASE_URL=postgresql://hopeunited:<PASSWORD>@localhost:5432/hope_united?schema=public
-```
+Create `.env.production.local` in the repo root with:
+- `NODE_ENV=production`
+- A Prisma connection string named `DATABASE_URL` using your local PostgreSQL credentials. Example shape: user/password@localhost:5432/hope_united
 
 Ensure `next.config.ts` includes your IP in `allowedDevOrigins` if you use dev assets; production build is unaffected.
 
@@ -121,7 +119,7 @@ See `scripts/windows/install.ps1` for a guided install which:
 
 Run:
 ```
-Set-ExecutionPolicy Bypass -Scope Process -Force; ./scripts/windows/install.ps1 -LanIp 192.168.0.99 -DbUrl "postgresql://hopeunited:<PASSWORD>@localhost:5432/hope_united?schema=public"
+Set-ExecutionPolicy Bypass -Scope Process -Force; ./scripts/windows/install.ps1 -LanIp 192.168.0.99 -DbUrl "<your PostgreSQL connection string>"
 ```
 
 ## 10) Windows installer (Inno Setup)

@@ -5,7 +5,7 @@ import { ACTIVITY_CATEGORIES, ActivityCategory } from '@/lib/activityCategories'
 type ActivityEvent = { category: ActivityCategory; createdAt: string };
 type Adjustment = { category: ActivityCategory; day: string; value: number };
 
-export function CollapsibleMonths({ year, counts, events, adjustments }: { year: number; counts: Record<string, number[]>; events: ActivityEvent[]; adjustments: Adjustment[] }) {
+export function CollapsibleMonths({ year, counts, events, adjustments, onAdjustmentSaved }: { year: number; counts: Record<string, number[]>; events: ActivityEvent[]; adjustments: Adjustment[]; onAdjustmentSaved?: (a: Adjustment)=>void }) {
   const [open, setOpen] = useState<boolean[]>(Array(12).fill(false));
   const [localAdjustments, setLocalAdjustments] = useState<Adjustment[]>(adjustments);
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -25,6 +25,7 @@ export function CollapsibleMonths({ year, counts, events, adjustments }: { year:
                 if (idx>=0) { const cp=[...prev]; cp[idx]=adj as Adjustment; return cp; }
                 return [...prev, adj as Adjustment];
               });
+              onAdjustmentSaved?.(adj as Adjustment);
             }} />
           )}
         </div>
@@ -113,13 +114,19 @@ function EditableCell({ value, onSave }: { value: number; onSave: (v: number)=>v
   return (
     <div className="inline-block min-w-[48px] text-right">
       {!editing ? (
-        <button type="button" className="px-1 py-0.5 rounded hover:bg-foreground/5 w-full text-right" onClick={()=>{ setText(String(value || '')); setEditing(true); }}>
-          {value || ''}
+        <button
+          type="button"
+          className="px-1 py-0.5 rounded hover:bg-foreground/5 w-full text-right"
+          title="Click to edit"
+          onClick={()=>{ setText(String(value || '')); setEditing(true); }}
+        >
+          {value === 0 ? <span className="text-foreground/30">Add</span> : value}
         </button>
       ) : (
         <input
           className="w-16 text-right border rounded px-1 py-0.5"
           inputMode="numeric"
+          placeholder="0"
           autoFocus
           value={text}
           onChange={(e)=>setText(e.target.value.replace(/[^0-9]/g,''))}

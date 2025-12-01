@@ -22,12 +22,16 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
   const now = new Date();
   const year = Number(sp.year ?? String(now.getUTCFullYear()));
 
-  // Load all activities for the year once, aggregate in memory
+  // Load all activities and adjustments for the year once, aggregate in memory
   const yearStart = new Date(Date.UTC(year, 0, 1, 0, 0, 0));
   const yearEnd = new Date(Date.UTC(year, 11, 31, 23, 59, 59, 999));
   const acts = await prisma.activity.findMany({
     where: { createdAt: { gte: yearStart, lte: yearEnd } },
     select: { category: true, createdAt: true },
+  });
+  const adjustments = await prisma.activityAdjustment.findMany({
+    where: { day: { gte: yearStart, lte: yearEnd } },
+    select: { day: true, category: true, value: true },
   });
   const events: ActivityEvent[] = acts.map((a) => ({
     category: a.category as ActivityCategory,
@@ -35,15 +39,32 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
   }));
 
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const counts: Record<string, number[]> = {};
-  ACTIVITY_CATEGORIES.forEach((c) => (counts[c] = Array(12).fill(0)));
+  // Build day-level map then overlay adjustments (absolute), then roll up to months
+  const dayMap: Record<string, Record<string, number>> = {}; // category -> YYYY-MM-DD -> count
   for (const a of acts) {
     const d = new Date(a.createdAt);
-    const mi = d.getUTCMonth();
-    if (ACTIVITY_CATEGORIES.includes(a.category as ActivityCategory)) {
-      counts[a.category as ActivityCategory]![mi] += 1;
-    }
+    const dayKey = d.toISOString().slice(0,10); // UTC day
+    const cat = a.category as ActivityCategory;
+    if (!ACTIVITY_CATEGORIES.includes(cat)) continue;
+    dayMap[cat] ||= {};
+    dayMap[cat][dayKey] = (dayMap[cat][dayKey] || 0) + 1;
   }
+  for (const adj of adjustments) {
+    const dayKey = adj.day.toISOString().slice(0,10);
+    const cat = adj.category as ActivityCategory;
+    if (!ACTIVITY_CATEGORIES.includes(cat)) continue;
+    dayMap[cat] ||= {};
+    dayMap[cat][dayKey] = adj.value;
+  }
+
+  const counts: Record<string, number[]> = {};
+  ACTIVITY_CATEGORIES.forEach((c) => (counts[c] = Array(12).fill(0)));
+  Object.entries(dayMap).forEach(([cat, days]) => {
+    for (const [dayKey, val] of Object.entries(days)) {
+      const mi = new Date(`${dayKey}T00:00:00.000Z`).getUTCMonth();
+      counts[cat][mi] += val;
+    }
+  });
 
   const totalsByMonth = Array(12).fill(0).map((_, i) => ACTIVITY_CATEGORIES.reduce((acc, c) => acc + counts[c][i], 0));
   const totalsByCategory = ACTIVITY_CATEGORIES.map((c) => counts[c].reduce((a, b) => a + b, 0));
@@ -91,7 +112,7 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
         </table>
       </div>
 
-      <CollapsibleMonths year={year} counts={counts} events={events} />
+      <CollapsibleMonths year={year} counts={counts} events={events} adjustments={adjustments.map(a=>({ day: a.day.toISOString(), category: a.category as ActivityCategory, value: a.value }))} />
     </div>
   );
 }

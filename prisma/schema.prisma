@@ -129,3 +129,15 @@ model Activity {
   createdIp String?
   userAgent String?
 }
+
+// Absolute overrides for reporting: per category and day (UTC)
+model ActivityAdjustment {
+  id        String   @id @default(uuid())
+  day       DateTime // UTC midnight for the calendar day
+  category  String
+  value     Int      // absolute count to use in reports
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([day, category])
+}

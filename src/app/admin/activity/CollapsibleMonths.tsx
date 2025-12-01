@@ -3,9 +3,11 @@ import { useState } from 'react';
 import { ACTIVITY_CATEGORIES, ActivityCategory } from '@/lib/activityCategories';
 
 type ActivityEvent = { category: ActivityCategory; createdAt: string };
+type Adjustment = { category: ActivityCategory; day: string; value: number };
 
-export function CollapsibleMonths({ year, counts, events }: { year: number; counts: Record<string, number[]>; events: ActivityEvent[] }) {
+export function CollapsibleMonths({ year, counts, events, adjustments }: { year: number; counts: Record<string, number[]>; events: ActivityEvent[]; adjustments: Adjustment[] }) {
   const [open, setOpen] = useState<boolean[]>(Array(12).fill(false));
+  const [localAdjustments, setLocalAdjustments] = useState<Adjustment[]>(adjustments);
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   return (
     <div className="space-y-2">
@@ -16,7 +18,14 @@ export function CollapsibleMonths({ year, counts, events }: { year: number; coun
             {name} {year}
           </button>
           {open[i] && (
-            <MonthDetailTable year={year} monthIndex={i} events={events} />
+            <MonthDetailTable year={year} monthIndex={i} events={events} adjustments={localAdjustments} onSetAdjustment={(adj)=>{
+              setLocalAdjustments((prev)=>{
+                const idx = prev.findIndex(a=>a.category===adj.category && a.day===adj.day);
+                if (adj.value === null as unknown as number) return prev; // type guard noop
+                if (idx>=0) { const cp=[...prev]; cp[idx]=adj as Adjustment; return cp; }
+                return [...prev, adj as Adjustment];
+              });
+            }} />
           )}
         </div>
       ))}
@@ -24,7 +33,7 @@ export function CollapsibleMonths({ year, counts, events }: { year: number; coun
   );
 }
 
-function MonthDetailTable({ year, monthIndex, events }: { year: number; monthIndex: number; events: ActivityEvent[] }) {
+function MonthDetailTable({ year, monthIndex, events, adjustments, onSetAdjustment }: { year: number; monthIndex: number; events: ActivityEvent[]; adjustments: Adjustment[]; onSetAdjustment: (a: { category: ActivityCategory; day: string; value: number })=>void }) {
   const daysInMonth = new Date(year, monthIndex + 1, 0).getDate(); // local time
   const byCategory: Record<ActivityCategory, number[]> = Object.fromEntries(
     ACTIVITY_CATEGORIES.map((c) => [c, Array(daysInMonth).fill(0)])
@@ -34,6 +43,14 @@ function MonthDetailTable({ year, monthIndex, events }: { year: number; monthInd
     if (d.getFullYear() === year && d.getMonth() === monthIndex) {
       const di = d.getDate() - 1; // 0-based index
       if (byCategory[ev.category]) byCategory[ev.category][di] += 1;
+    }
+  }
+  // apply absolute overrides
+  for (const adj of adjustments) {
+    const d = new Date(adj.day);
+    if (d.getFullYear() === year && d.getMonth() === monthIndex) {
+      const di = d.getDate() - 1;
+      if (byCategory[adj.category]) byCategory[adj.category][di] = adj.value;
     }
   }
   const totalsPerDay: number[] = Array(daysInMonth).fill(0);
@@ -55,9 +72,21 @@ function MonthDetailTable({ year, monthIndex, events }: { year: number; monthInd
           {ACTIVITY_CATEGORIES.map((c) => (
             <tr key={c} className="border-t">
               <td className="p-2 whitespace-nowrap">{c}</td>
-              {byCategory[c].map((n, di) => (
-                <td key={di} className="p-2 text-right tabular-nums">{n || ''}</td>
-              ))}
+              {byCategory[c].map((n, di) => {
+                const dayStr = new Date(Date.UTC(year, monthIndex, di+1)).toISOString().slice(0,10);
+                return (
+                  <td key={di} className="p-2 text-right tabular-nums">
+                    <EditableCell
+                      value={n}
+                      onSave={async (val) => {
+                        const v = Number.isFinite(val) ? Math.max(0, Math.floor(val)) : 0;
+                        await fetch('/api/activity/adjustments', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ day: dayStr, category: c, value: v }) });
+                        onSetAdjustment({ category: c, day: dayStr, value: v });
+                      }}
+                    />
+                  </td>
+                );
+              })}
             </tr>
           ))}
           <tr className="border-t bg-zinc-50 font-medium">
@@ -68,6 +97,37 @@ function MonthDetailTable({ year, monthIndex, events }: { year: number; monthInd
           </tr>
         </tbody>
       </table>
+    </div>
+  );
+}
+
+function EditableCell({ value, onSave }: { value: number; onSave: (v: number)=>void | Promise<void> }) {
+  const [editing, setEditing] = useState(false);
+  const [text, setText] = useState(String(value || ''));
+  const [saving, setSaving] = useState(false);
+  const commit = async () => {
+    const v = text.trim()==='' ? 0 : Number(text);
+    setSaving(true);
+    try { await onSave(Number.isFinite(v) ? v : 0); } finally { setSaving(false); setEditing(false); }
+  };
+  return (
+    <div className="inline-block min-w-[48px] text-right">
+      {!editing ? (
+        <button type="button" className="px-1 py-0.5 rounded hover:bg-foreground/5 w-full text-right" onClick={()=>{ setText(String(value || '')); setEditing(true); }}>
+          {value || ''}
+        </button>
+      ) : (
+        <input
+          className="w-16 text-right border rounded px-1 py-0.5"
+          inputMode="numeric"
+          autoFocus
+          value={text}
+          onChange={(e)=>setText(e.target.value.replace(/[^0-9]/g,''))}
+          onBlur={commit}
+          onKeyDown={(e)=>{ if (e.key==='Enter') commit(); if (e.key==='Escape') setEditing(false); }}
+          disabled={saving}
+        />
+      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/db';
 import Link from 'next/link';
 import { FilterBar } from './FilterBar';
+import { EditableTable } from './EditableTable';
 
 type SearchParams = {
   start?: string;
@@ -33,6 +34,29 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
   });
   const hasNext = regs.length > pageSize;
   const rows = hasNext ? regs.slice(0, pageSize) : regs;
+  const clientRows = rows.map(r => ({
+    id: r.id,
+    createdAt: r.createdAt.toISOString(),
+    uid: r.uid,
+    fullName: r.fullName,
+    birthYear: r.birthYear ?? null,
+    zipCode: r.zipCode,
+    veteranStatus: r.veteranStatus,
+    sexualOrientation: r.sexualOrientation,
+    sexualOther: r.sexualOther ?? null,
+    gender: r.gender,
+    genderOther: r.genderOther ?? null,
+    race: r.race,
+    raceOther: r.raceOther ?? null,
+    ethnicity: r.ethnicity,
+    county: r.county,
+    countyOther: r.countyOther ?? null,
+    waiverAgreed: r.waiverAgreed,
+    eSignatureAt: r.eSignatureAt.toISOString(),
+    deviceId: r.deviceId,
+    createdIp: r.createdIp ?? null,
+    eSignatureImage: r.eSignatureImage ?? null,
+  }));
 
   return (
     <div className="max-w-screen-2xl mx-auto p-6 space-y-4">
@@ -46,62 +70,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
           Download CSV
         </Link>
       </div>
-      <div className="overflow-x-auto border rounded">
-        <table className="min-w-[1400px] text-sm whitespace-nowrap leading-tight">
-          <thead className="bg-zinc-50">
-            <tr>
-              <th className="text-left px-2 py-1">Created</th>
-              <th className="text-left px-2 py-1">UID</th>
-              <th className="text-left px-2 py-1">Full Name</th>
-              <th className="text-left px-2 py-1">Birth Year</th>
-              <th className="text-left px-2 py-1">ZIP</th>
-              <th className="text-left px-2 py-1">Veteran</th>
-              {/** drug columns removed */}
-              <th className="text-left px-2 py-1">Sexual Orientation</th>
-              <th className="text-left px-2 py-1">Sexual Other</th>
-              <th className="text-left px-2 py-1">Gender</th>
-              <th className="text-left px-2 py-1">Gender Other</th>
-              <th className="text-left px-2 py-1">Race</th>
-              <th className="text-left px-2 py-1">Race Other</th>
-              <th className="text-left px-2 py-1">Ethnicity</th>
-              <th className="text-left px-2 py-1">County</th>
-              <th className="text-left px-2 py-1">County Other</th>
-              <th className="text-left px-2 py-1">Waiver Agreed</th>
-              <th className="text-left px-2 py-1">Signature</th>
-              <th className="text-left px-2 py-1">E‑Sign At</th>
-              <th className="text-left px-2 py-1">Device ID</th>
-              <th className="text-left px-2 py-1">Created IP</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.id} className="border-t">
-                <td className="px-2 py-1">{new Date(r.createdAt).toLocaleString()}</td>
-                <td className="px-2 py-1 font-mono">{r.uid}</td>
-                <td className="px-2 py-1">{r.fullName}</td>
-                <td className="px-2 py-1">{r.birthYear ?? ''}</td>
-                <td className="px-2 py-1">{r.zipCode}</td>
-                <td className="px-2 py-1">{r.veteranStatus}</td>
-                {/** removed */}
-                <td className="px-2 py-1">{r.sexualOrientation}</td>
-                <td className="px-2 py-1">{r.sexualOther || ''}</td>
-                <td className="px-2 py-1">{r.gender}</td>
-                <td className="px-2 py-1">{r.genderOther || ''}</td>
-                <td className="px-2 py-1">{r.race}</td>
-                <td className="px-2 py-1">{r.raceOther || ''}</td>
-                <td className="px-2 py-1">{r.ethnicity}</td>
-                <td className="px-2 py-1">{r.county}</td>
-                <td className="px-2 py-1">{r.countyOther || ''}</td>
-                <td className="px-2 py-1">{r.waiverAgreed ? 'Yes' : 'No'}</td>
-                <td className="px-2 py-1">{r.eSignatureImage ? <a className="underline text-indigo-600" href={`/api/registrations/signature/${r.id}`} target="_blank" rel="noreferrer">View</a> : ''}</td>
-                <td className="px-2 py-1">{new Date(r.eSignatureAt).toLocaleString()}</td>
-                <td className="px-2 py-1 font-mono">{r.deviceId}</td>
-                <td className="px-2 py-1">{r.createdIp || ''}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <EditableTable rows={clientRows} />
       <div className="flex items-center justify-between">
         <div>Page {page}</div>
         <div className="flex gap-2">

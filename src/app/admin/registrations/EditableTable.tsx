@@ -61,7 +61,7 @@ export function EditableTable({ rows: initialRows }: { rows: RegRow[] }) {
   return (
     <>
       <div className="overflow-x-auto border rounded">
-        <table className="min-w-[1400px] text-sm whitespace-nowrap leading-tight">
+        <table className="min-w-[1200px] text-sm whitespace-nowrap leading-tight">
           <thead className="bg-zinc-50">
             <tr>
               <th className="text-left px-2 py-1">Created</th>
@@ -82,8 +82,6 @@ export function EditableTable({ rows: initialRows }: { rows: RegRow[] }) {
               <th className="text-left px-2 py-1">Waiver Agreed</th>
               <th className="text-left px-2 py-1">Signature</th>
               <th className="text-left px-2 py-1">E‑Sign At</th>
-              <th className="text-left px-2 py-1">Device ID</th>
-              <th className="text-left px-2 py-1">Created IP</th>
               <th className="text-left px-2 py-1">Actions</th>
             </tr>
           </thead>
@@ -108,8 +106,6 @@ export function EditableTable({ rows: initialRows }: { rows: RegRow[] }) {
                 <td className="px-2 py-1">{r.waiverAgreed ? 'Yes' : 'No'}</td>
                 <td className="px-2 py-1">{r.eSignatureImage ? <a className="underline text-indigo-600" href={`/api/registrations/signature/${r.id}`} target="_blank" rel="noreferrer">View</a> : ''}</td>
                 <td className="px-2 py-1">{new Date(r.eSignatureAt).toLocaleString()}</td>
-                <td className="px-2 py-1 font-mono">{r.deviceId}</td>
-                <td className="px-2 py-1">{r.createdIp || ''}</td>
                 <td className="px-2 py-1">
                   <button className="px-2 py-1 rounded border" onClick={()=>setEditing(r)}>Edit</button>
                 </td>

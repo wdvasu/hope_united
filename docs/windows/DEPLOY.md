@@ -18,9 +18,9 @@ Option A — Winget (interactive):
 
 Option B — EDB installer: download from postgresql.org and install normally.
 
-Create app database/user (replace password as needed):
+Create app database/user (replace <PASSWORD> as needed):
 ```
-psql -U postgres -h localhost -c "CREATE USER hopeunited WITH PASSWORD 'changeme';"
+psql -U postgres -h localhost -c "CREATE USER hopeunited WITH PASSWORD '<PASSWORD>';"
 psql -U postgres -h localhost -c "CREATE DATABASE hope_united OWNER hopeunited;"
 ```
 
@@ -47,10 +47,10 @@ Note: iPad/Android must trust the mkcert root to avoid HTTPS camera issues. See 
 
 ## 4) App configuration
 
-Copy `.env.production.local` in the repo root with:
+Copy `.env.production.local` in the repo root with (fill in <PASSWORD>):
 ```
 NODE_ENV=production
-DATABASE_URL=postgresql://hopeunited:changeme@localhost:5432/hope_united?schema=public
+DATABASE_URL=postgresql://hopeunited:<PASSWORD>@localhost:5432/hope_united?schema=public
 ```
 
 Ensure `next.config.ts` includes your IP in `allowedDevOrigins` if you use dev assets; production build is unaffected.
@@ -121,7 +121,7 @@ See `scripts/windows/install.ps1` for a guided install which:
 
 Run:
 ```
-Set-ExecutionPolicy Bypass -Scope Process -Force; ./scripts/windows/install.ps1 -LanIp 192.168.0.99 -DbUrl "postgresql://hopeunited:changeme@localhost:5432/hope_united?schema=public"
+Set-ExecutionPolicy Bypass -Scope Process -Force; ./scripts/windows/install.ps1 -LanIp 192.168.0.99 -DbUrl "postgresql://hopeunited:<PASSWORD>@localhost:5432/hope_united?schema=public"
 ```
 
 ## 10) Windows installer (Inno Setup)

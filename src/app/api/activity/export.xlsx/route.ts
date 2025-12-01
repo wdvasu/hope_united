@@ -17,18 +17,25 @@ export async function GET(req: Request) {
     where: { day: { gte: yearStart, lte: yearEnd } },
     select: { day: true, category: true, value: true },
   });
-  // Build day map and overlay adjustments
+  // Build LOCAL day map and overlay adjustments; then roll up to LOCAL months for parity with admin report
   const dayMap: Record<string, Record<string, number>> = {};
+  const toLocalKey = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${dd}`;
+  };
   for (const a of acts) {
     const d = new Date(a.createdAt);
-    const dayKey = d.toISOString().slice(0,10);
+    const dayKey = toLocalKey(d);
     const cat = a.category as ActivityCategory;
     if (!ACTIVITY_CATEGORIES.includes(cat)) continue;
     dayMap[cat] ||= {};
     dayMap[cat][dayKey] = (dayMap[cat][dayKey] || 0) + 1;
   }
   for (const adj of adjustments) {
-    const dayKey = adj.day.toISOString().slice(0,10);
+    const d = new Date(adj.day);
+    const dayKey = toLocalKey(d);
     const cat = adj.category as ActivityCategory;
     if (!ACTIVITY_CATEGORIES.includes(cat)) continue;
     dayMap[cat] ||= {};
@@ -38,7 +45,7 @@ export async function GET(req: Request) {
   ACTIVITY_CATEGORIES.forEach((c) => (counts[c] = Array(12).fill(0)));
   Object.entries(dayMap).forEach(([cat, days]) => {
     for (const [dayKey, val] of Object.entries(days)) {
-      const mi = new Date(`${dayKey}T00:00:00.000Z`).getUTCMonth();
+      const mi = Number(dayKey.slice(5,7)) - 1; // month index from local key
       counts[cat][mi] += val;
     }
   });

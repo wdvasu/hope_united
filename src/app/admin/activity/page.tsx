@@ -39,18 +39,25 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
   }));
 
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  // Build day-level map then overlay adjustments (absolute), then roll up to months
-  const dayMap: Record<string, Record<string, number>> = {}; // category -> YYYY-MM-DD -> count
+  // Build LOCAL day-level map then overlay adjustments (absolute), then roll up to months (LOCAL)
+  const dayMap: Record<string, Record<string, number>> = {}; // category -> YYYY-MM-DD (LOCAL) -> count
+  const toLocalKey = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${dd}`;
+  };
   for (const a of acts) {
     const d = new Date(a.createdAt);
-    const dayKey = d.toISOString().slice(0,10); // UTC day
+    const dayKey = toLocalKey(d);
     const cat = a.category as ActivityCategory;
     if (!ACTIVITY_CATEGORIES.includes(cat)) continue;
     dayMap[cat] ||= {};
     dayMap[cat][dayKey] = (dayMap[cat][dayKey] || 0) + 1;
   }
   for (const adj of adjustments) {
-    const dayKey = adj.day.toISOString().slice(0,10);
+    const d = new Date(adj.day);
+    const dayKey = toLocalKey(d);
     const cat = adj.category as ActivityCategory;
     if (!ACTIVITY_CATEGORIES.includes(cat)) continue;
     dayMap[cat] ||= {};
@@ -61,7 +68,7 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
   ACTIVITY_CATEGORIES.forEach((c) => (counts[c] = Array(12).fill(0)));
   Object.entries(dayMap).forEach(([cat, days]) => {
     for (const [dayKey, val] of Object.entries(days)) {
-      const mi = new Date(`${dayKey}T00:00:00.000Z`).getUTCMonth();
+      const mi = Number(dayKey.slice(5,7)) - 1; // month index from local key
       counts[cat][mi] += val;
     }
   });

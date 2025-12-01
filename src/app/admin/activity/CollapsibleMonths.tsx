@@ -5,7 +5,7 @@ import { ACTIVITY_CATEGORIES, ActivityCategory } from '@/lib/activityCategories'
 type ActivityEvent = { category: ActivityCategory; createdAt: string };
 type Adjustment = { category: ActivityCategory; day: string; value: number };
 
-export function CollapsibleMonths({ year, counts, events, adjustments }: { year: number; counts: Record<string, number[]>; events: ActivityEvent[]; adjustments: Adjustment[] }) {
+export function CollapsibleMonths({ year, counts, events, adjustments, onAdjustmentSaved }: { year: number; counts: Record<string, number[]>; events: ActivityEvent[]; adjustments: Adjustment[]; onAdjustmentSaved?: (a: Adjustment)=>void }) {
   const [open, setOpen] = useState<boolean[]>(Array(12).fill(false));
   const [localAdjustments, setLocalAdjustments] = useState<Adjustment[]>(adjustments);
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -25,6 +25,7 @@ export function CollapsibleMonths({ year, counts, events, adjustments }: { year:
                 if (idx>=0) { const cp=[...prev]; cp[idx]=adj as Adjustment; return cp; }
                 return [...prev, adj as Adjustment];
               });
+              onAdjustmentSaved?.(adj as Adjustment);
             }} />
           )}
         </div>

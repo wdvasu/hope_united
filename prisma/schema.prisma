@@ -1,0 +1,143 @@
+// Prisma schema for Hope United
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+enum VeteranStatus {
+  YES
+  NO
+  REFUSED
+}
+
+enum SexualOrientation {
+  HETEROSEXUAL
+  GAY_LESBIAN
+  BISEXUAL
+  OTHER
+  REFUSED
+}
+
+enum Gender {
+  FEMALE
+  MALE
+  TRANSGENDER
+  NON_BINARY
+  OTHER
+  REFUSED
+}
+
+enum Race {
+  WHITE
+  BLACK_AFRICAN_AMERICAN
+  ASIAN
+  AMERICAN_INDIAN_ALASKA_NATIVE
+  NATIVE_HAWAIIAN_PACIFIC_ISLANDER
+  OTHER
+  REFUSED
+}
+
+enum Ethnicity {
+  HISPANIC_LATINO
+  NOT_HISPANIC_LATINO
+  REFUSED
+}
+
+enum County {
+  SUMMIT
+  STARK
+  PORTAGE
+  CUYAHOGA
+  OTHER_OH_COUNTY
+  OUT_OF_STATE
+  REFUSED
+}
+
+model Device {
+  id          String       @id @default(uuid())
+  label       String
+  secretHash  String
+  active      Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  revokedAt   DateTime?
+
+  sessions       Session[]
+  registrations  Registration[]
+  activities     Activity[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  deviceId  String
+  device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+model Registration {
+  id                String            @id @default(uuid())
+  uid               String            @unique
+
+  fullName          String
+  firstName         String?
+  lastInitial       String?
+  birthYear         Int?
+  zipCode           String
+
+  veteranStatus     VeteranStatus
+
+
+  sexualOrientation SexualOrientation
+  sexualOther       String?
+
+  gender            Gender
+  genderOther       String?
+
+  race              Race
+  raceOther         String?
+
+  ethnicity         Ethnicity
+
+  county            County
+  countyOther       String?
+
+  waiverAgreed      Boolean
+  eSignatureName    String?
+  eSignatureImage   String?
+  eSignatureAt      DateTime
+
+  deviceId          String
+  device            Device            @relation(fields: [deviceId], references: [id])
+
+  createdAt         DateTime          @default(now())
+  createdIp         String?
+  userAgent         String?
+}
+
+model Activity {
+  id        String   @id @default(uuid())
+  deviceId  String
+  device    Device   @relation(fields: [deviceId], references: [id])
+  category  String
+  createdAt DateTime @default(now())
+  createdIp String?
+  userAgent String?
+}
+
+// Absolute overrides for reporting: per category and day (UTC)
+model ActivityAdjustment {
+  id        String   @id @default(uuid())
+  day       DateTime // UTC midnight for the calendar day
+  category  String
+  value     Int      // absolute count to use in reports
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([day, category])
+}

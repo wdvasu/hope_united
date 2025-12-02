@@ -10,6 +10,9 @@ This guide installs the Hope United server on a Windows desktop for LAN-only usa
 
 Prereqs: Windows 10/11 with administrator rights and a static LAN IP (example: `192.168.0.99`).
 
+If you are doing a remote install (Zoho Assist), see the printable guide:
+- docs/windows/REMOTE_INSTALL.md
+
 ## 1) Install PostgreSQL 16 (once)
 
 Option A — Winget (interactive):

@@ -1,0 +1,88 @@
+"use client";
+import { useMemo, useState } from "react";
+
+import { ACTIVITY_CATEGORIES } from "@/lib/activityCategories";
+
+export default function ActivitySheetClient({ attendeeName }: { attendeeName: string }) {
+  const [categories, setCategories] = useState<string[]>([]);
+  const [submittedAt, setSubmittedAt] = useState<Date | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+
+  const todayLabel = useMemo(() => {
+    const now = new Date();
+    try {
+      return now.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    } catch {
+      return now.toDateString();
+    }
+  }, []);
+
+  const switchUser = async () => {
+    try { await fetch('/api/activity/attendee', { method: 'DELETE' }); } catch {}
+    window.location.href = '/activity';
+  };
+
+  const submit = async () => {
+    setMessage(null);
+    const payload = { categories, at: new Date().toISOString() };
+    try {
+      const res = await fetch('/api/activity', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (res.status === 401) { window.location.href = '/activity'; return; }
+      if (!res.ok) throw new Error('Failed');
+      const j = await res.json();
+      setMessage(`Activities recorded (${j.count}).`);
+      setSubmittedAt(new Date());
+      setCategories([]);
+      // Hard reload to force login (middleware clears cookie when reset=1)
+      window.location.href = `/activity?reset=1&ts=${Date.now()}`;
+    } catch {
+      setMessage('Could not save activity.');
+    }
+  };
+
+  const Chip = ({ selected, label, onClick }: { selected: boolean; label: string; onClick: () => void }) => (
+    <button type="button" onClick={onClick} className={`px-4 py-2 rounded-full border text-base transition-colors ${selected ? 'bg-foreground text-background border-foreground' : 'bg-transparent border-foreground/30 text-foreground hover:bg-foreground/5'}`}>
+      {label}
+    </button>
+  );
+
+  return (
+    <div className="max-w-3xl mx-auto p-6 space-y-8 text-[18px]">
+      <div className="flex items-center">
+        <h1 className="text-2xl font-semibold">Daily Activity</h1>
+        {attendeeName && (
+          <div className="ml-4 text-sm text-foreground/70">Client: <span className="font-medium text-foreground">{attendeeName}</span></div>
+        )}
+        <button type="button" onClick={switchUser} className="ml-auto text-sm underline text-indigo-600">Switch resident</button>
+      </div>
+
+      <section className="space-y-3">
+        <div className="rounded border border-foreground/20 p-3 text-sm">
+          <div className="font-medium">Date</div>
+          <div>{todayLabel}</div>
+        </div>
+        <h2 className="font-medium">Choose one or more categories</h2>
+        <div className="flex flex-wrap gap-2">
+          {ACTIVITY_CATEGORIES.map((c) => {
+            const sel = categories.includes(c);
+            const toggle = () => setCategories(prev => sel ? prev.filter(x => x !== c) : [...prev, c]);
+            return <Chip key={c} selected={sel} label={c} onClick={toggle} />
+          })}
+        </div>
+      </section>
+
+      {submittedAt && (
+        <div className="rounded border border-foreground/20 p-3 text-sm">
+          <div className="font-medium">Submitted</div>
+          <div>{submittedAt.toLocaleString()}</div>
+        </div>
+      )}
+
+      <button className="w-full h-14 rounded bg-indigo-600 text-white font-medium disabled:opacity-50" disabled={categories.length === 0} onClick={submit}>
+        Save Selected Activities
+      </button>
+
+      {message && <p className="text-sm">{message}</p>}
+    </div>
+  );
+}

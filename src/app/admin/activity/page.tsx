@@ -32,16 +32,21 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
     where: { day: { gte: yearStart, lte: yearEnd } },
     select: { day: true, category: true, value: true },
   });
-  const events: ActivityEvent[] = acts.map((a) => ({
-    category: a.category as ActivityCategory,
-    createdAt: a.createdAt.toISOString(),
-  }));
+  // Filter out any legacy/unknown categories to prevent client exceptions
+  const events: ActivityEvent[] = acts
+    .filter((a) => ACTIVITY_CATEGORIES.includes(a.category as ActivityCategory))
+    .map((a) => ({
+      category: a.category as ActivityCategory,
+      createdAt: a.createdAt.toISOString(),
+    }));
 
   return (
     <AdminActivityClient
       year={year}
       events={events}
-      adjustments={adjustments.map(a=>({ day: a.day.toISOString(), category: a.category as ActivityCategory, value: a.value }))}
+      adjustments={adjustments
+        .filter((a) => ACTIVITY_CATEGORIES.includes(a.category as ActivityCategory))
+        .map(a=>({ day: a.day.toISOString(), category: a.category as ActivityCategory, value: a.value }))}
     />
   );
 }

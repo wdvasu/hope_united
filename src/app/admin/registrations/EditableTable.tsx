@@ -2,6 +2,26 @@
 
 import { useState } from 'react';
 
+function extractErrorMessage(payload: unknown): string {
+  if (!payload || typeof payload !== 'object') return 'Failed to save';
+  const obj = payload as { error?: unknown; message?: unknown };
+  if (typeof obj.error === 'string') return obj.error;
+  const err = obj.error as { formErrors?: unknown; fieldErrors?: unknown } | undefined;
+  if (err && Array.isArray(err.formErrors)) {
+    const first = (err.formErrors as unknown[]).find(v => typeof v === 'string');
+    if (typeof first === 'string') return first;
+  }
+  if (err && err.fieldErrors && typeof err.fieldErrors === 'object') {
+    const fe = err.fieldErrors as Record<string, unknown>;
+    for (const k of Object.keys(fe)) {
+      const arr = fe[k] as unknown;
+      if (Array.isArray(arr) && typeof arr[0] === 'string') return arr[0] as string;
+    }
+  }
+  if (typeof obj.message === 'string') return obj.message;
+  return 'Failed to save';
+}
+
 type RegRow = {
   id: string;
   createdAt: string;
@@ -42,8 +62,8 @@ export function EditableTable({ rows: initialRows }: { rows: RegRow[] }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const j = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(j.error || 'Failed to save');
+      const j: unknown = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(extractErrorMessage(j));
       // merge into local state
       setRows(prev => prev.map(r => (r.id === payload.id ? { ...r, ...payload } as RegRow : r)));
       setEditing(null);

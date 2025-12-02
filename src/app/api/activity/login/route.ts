@@ -20,13 +20,19 @@ export async function POST(req: Request) {
   if (!firstName || !lastInitial || !Number.isInteger(birthYear)) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
-  const matches = await prisma.registration.findMany({
-    where: {
-      firstName: { equals: firstName, mode: 'insensitive' },
-      lastInitial: { equals: lastInitial, mode: 'insensitive' },
-      birthYear: birthYear,
-    },
-    select: { id: true, fullName: true, zipCode: true, createdAt: true },
+  // Fetch candidates by year, then match in JS using stored fields or derivation from fullName
+  const candidates = await prisma.registration.findMany({
+    where: { birthYear },
+    select: { id: true, fullName: true, zipCode: true, createdAt: true, firstName: true, lastInitial: true },
+  });
+  const fi = firstName.toLowerCase();
+  const li = lastInitial.toLowerCase();
+  const matches = candidates.filter(r => {
+    const parts = r.fullName.trim().split(/\s+/);
+    const fn = (r.firstName || parts[0] || '').toLowerCase();
+    const last = parts.length ? parts[parts.length - 1] : '';
+    const liDerived = (r.lastInitial || (last ? last[0] : '')).toLowerCase();
+    return fn === fi && liDerived === li;
   });
   if (matches.length === 0) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   if (matches.length > 1) {

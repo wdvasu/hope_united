@@ -22,9 +22,17 @@ Option A — Winget (interactive):
 Option B — EDB installer: download from postgresql.org and install normally.
 
 Create app database/user (replace <PASSWORD> as needed):
+
+Option A — if `psql` is on PATH:
 ```
 psql -U postgres -h localhost -c "CREATE USER hopeunited WITH PASSWORD '<PASSWORD>';"
 psql -U postgres -h localhost -c "CREATE DATABASE hope_united OWNER hopeunited;"
+```
+
+Option B — use full path (PostgreSQL 16 default install path):
+```
+"C:\\Program Files\\PostgreSQL\\16\\bin\\psql.exe" -U postgres -h localhost -c "CREATE USER hopeunited WITH PASSWORD '<PASSWORD>';"
+"C:\\Program Files\\PostgreSQL\\16\\bin\\psql.exe" -U postgres -h localhost -c "CREATE DATABASE hope_united OWNER hopeunited;"
 ```
 
 ## 2) One-time dependencies

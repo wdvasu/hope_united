@@ -6,9 +6,9 @@ export async function GET() {
   const cookieStore = await cookies();
   const id = cookieStore.get('attendee')?.value;
   if (!id) return NextResponse.json({ ok: false }, { status: 401 });
-  const exists = await prisma.registration.findUnique({ where: { id }, select: { id: true } });
-  if (!exists) return NextResponse.json({ ok: false }, { status: 401 });
-  return NextResponse.json({ ok: true, id });
+  const reg = await prisma.registration.findUnique({ where: { id }, select: { id: true, fullName: true } });
+  if (!reg) return NextResponse.json({ ok: false }, { status: 401 });
+  return NextResponse.json({ ok: true, id: reg.id, fullName: reg.fullName });
 }
 
 export async function DELETE() {

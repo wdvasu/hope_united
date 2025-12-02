@@ -11,6 +11,7 @@ export default function ActivityPage() {
   const [submittedAt, setSubmittedAt] = useState<Date | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [attendeeOk, setAttendeeOk] = useState<boolean | null>(null);
+  const [attendeeName, setAttendeeName] = useState<string>("");
   const [firstName, setFirstName] = useState("");
   const [lastInitial, setLastInitial] = useState("");
   const [birthYear, setBirthYear] = useState("");
@@ -36,8 +37,14 @@ export default function ActivityPage() {
       try {
         const res = await fetch("/api/activity/attendee", { cache: "no-store" });
         setAttendeeOk(res.ok);
+        if (res.ok) {
+          try { const j = await res.json(); setAttendeeName(j.fullName || ""); } catch {}
+        } else {
+          setAttendeeName("");
+        }
       } catch {
         setAttendeeOk(false);
+        setAttendeeName("");
       }
     })();
   }, []);
@@ -183,6 +190,9 @@ export default function ActivityPage() {
     <div className="max-w-3xl mx-auto p-6 space-y-8 text-[18px]">
       <div className="flex items-center">
         <h1 className="text-2xl font-semibold">Daily Activity</h1>
+        {attendeeOk === true && attendeeName && (
+          <div className="ml-4 text-sm text-foreground/70">Resident: <span className="font-medium text-foreground">{attendeeName}</span></div>
+        )}
         {attendeeOk === true && (
           <button type="button" onClick={switchUser} className="ml-auto text-sm underline text-indigo-600">Switch resident</button>
         )}

@@ -39,6 +39,10 @@ export default function ActivityPage() {
         const needsReset = url.searchParams.get('reset') === '1';
         if (needsReset) {
           try { await fetch('/api/activity/attendee', { method: 'DELETE', cache: 'no-store' }); } catch {}
+          // Force login UI regardless of any cookie race; skip further checks
+          setAttendeeOk(false);
+          setAttendeeName('');
+          return;
         }
         const res = await fetch("/api/activity/attendee", { cache: "no-store" });
         setAttendeeOk(res.ok);

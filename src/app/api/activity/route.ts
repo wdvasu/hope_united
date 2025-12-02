@@ -49,8 +49,9 @@ export async function POST(req: Request) {
   }));
   const result = await prisma.activity.createMany({ data });
   // Proactively log out attendee on the server so clients always return to Activity login.
+  const res = NextResponse.json({ ok: true, count: result.count });
   try {
-    cookieStore.set('attendee', '', { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 0 });
+    res.cookies.set('attendee', '', { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 0 });
   } catch {}
-  return NextResponse.json({ ok: true, count: result.count });
+  return res;
 }

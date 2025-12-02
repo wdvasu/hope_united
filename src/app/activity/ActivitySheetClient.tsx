@@ -17,10 +17,15 @@ export default function ActivitySheetClient({ attendeeName }: { attendeeName: st
     }
   }, []);
 
-  const switchUser = async () => {
-    try { await fetch('/api/activity/attendee', { method: 'DELETE' }); } catch {}
-    window.location.href = '/activity';
-  };
+  const [version, setVersion] = useState<{commit?: string, branch?: string} | null>(null);
+  const [cookie, setCookie] = useState<string | null>(null);
+  // Lightweight debug footer to verify we are on the right build and cookie state
+  useMemo(() => {
+    (async () => {
+      try { const v = await fetch('/api/version'); if (v.ok) setVersion(await v.json()); } catch {}
+      try { const c = await fetch('/api/debug/cookies', { cache: 'no-store' }); if (c.ok) { const j = await c.json(); setCookie(j.attendee || null); } } catch {}
+    })();
+  }, []);
 
   const submit = async () => {
     setMessage(null);
@@ -53,7 +58,6 @@ export default function ActivitySheetClient({ attendeeName }: { attendeeName: st
         {attendeeName && (
           <div className="ml-4 text-sm text-foreground/70">Client: <span className="font-medium text-foreground">{attendeeName}</span></div>
         )}
-        <button type="button" onClick={switchUser} className="ml-auto text-sm underline text-indigo-600">Switch resident</button>
       </div>
 
       <section className="space-y-3">
@@ -83,6 +87,7 @@ export default function ActivitySheetClient({ attendeeName }: { attendeeName: st
       </button>
 
       {message && <p className="text-sm">{message}</p>}
+      <div className="mt-6 text-xs text-foreground/60">Build {version?.branch}@{version?.commit} • attendee cookie: {cookie ?? 'none'}</div>
     </div>
   );
 }

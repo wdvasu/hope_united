@@ -9,6 +9,15 @@ export default function ActivityLoginClient() {
   const [conflictOptions, setConflictOptions] = useState<Array<{ id: string; label: string }>>([]);
   const [choiceOpen, setChoiceOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string>("");
+  const [version, setVersion] = useState<{commit?: string, branch?: string} | null>(null);
+  const [cookie, setCookie] = useState<string | null>(null);
+  // Debug footer
+  useMemo(() => {
+    (async () => {
+      try { const v = await fetch('/api/version'); if (v.ok) setVersion(await v.json()); } catch {}
+      try { const c = await fetch('/api/debug/cookies', { cache: 'no-store' }); if (c.ok) { const j = await c.json(); setCookie(j.attendee || null); } } catch {}
+    })();
+  }, []);
 
   const attendeeLogin = async () => {
     setMessage(null);
@@ -86,6 +95,7 @@ export default function ActivityLoginClient() {
           </div>
         </div>
       )}
+      <div className="mt-6 text-xs text-foreground/60">Build {version?.branch}@{version?.commit} • attendee cookie: {cookie ?? 'none'}</div>
     </div>
   );
 }

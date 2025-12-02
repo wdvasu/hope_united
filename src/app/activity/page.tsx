@@ -168,9 +168,25 @@ export default function ActivityPage() {
     );
   }
 
+  const switchUser = async () => {
+    try { await fetch('/api/activity/attendee', { method: 'DELETE' }); } catch {}
+    setAttendeeOk(false);
+    setMessage(null);
+    setFirstName("");
+    setLastInitial("");
+    setBirthYear("");
+    setConflictOptions([]);
+    setChoiceOpen(false);
+  };
+
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-8 text-[18px]">
-      <h1 className="text-2xl font-semibold">Daily Activity</h1>
+      <div className="flex items-center">
+        <h1 className="text-2xl font-semibold">Daily Activity</h1>
+        {attendeeOk === true && (
+          <button type="button" onClick={switchUser} className="ml-auto text-sm underline text-indigo-600">Switch resident</button>
+        )}
+      </div>
 
       <section className="space-y-3">
         <div className="rounded border border-foreground/20 p-3 text-sm">

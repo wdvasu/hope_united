@@ -191,7 +191,7 @@ export default function ActivityPage() {
       <div className="flex items-center">
         <h1 className="text-2xl font-semibold">Daily Activity</h1>
         {attendeeOk === true && attendeeName && (
-          <div className="ml-4 text-sm text-foreground/70">Resident: <span className="font-medium text-foreground">{attendeeName}</span></div>
+          <div className="ml-4 text-sm text-foreground/70">Client: <span className="font-medium text-foreground">{attendeeName}</span></div>
         )}
         {attendeeOk === true && (
           <button type="button" onClick={switchUser} className="ml-auto text-sm underline text-indigo-600">Switch resident</button>

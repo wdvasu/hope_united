@@ -33,11 +33,10 @@ export async function POST(req: Request) {
   } catch {}
   const matches = candidates.filter(r => {
     const parts = r.fullName.trim().split(/\s+/);
-    const fn = (r.firstName || parts[0] || '').toLowerCase();
+    const fnDerived = (parts[0] || '').toLowerCase();
     const last = parts.length ? parts[parts.length - 1] : '';
-    const storedLi = r.lastInitial ? r.lastInitial[0] : '';
-    const liDerived = (storedLi || (last ? last[0] : '')).toLowerCase();
-    return fn === fi && liDerived === li;
+    const liDerived = (last ? last[0] : '').toLowerCase();
+    return fnDerived === fi && liDerived === li;
   });
   try { console.log('[activity/login] matches', matches.length, matches.map(m => m.id)); } catch {}
   if (matches.length === 0) return NextResponse.json({ error: 'Not found' }, { status: 404 });

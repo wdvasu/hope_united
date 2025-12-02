@@ -72,8 +72,17 @@ export default function ActivityPage() {
       setSubmittedAt(new Date());
       setCategories([]);
       // After one save (batch), log out and redirect to activity login.
-      try { await fetch('/api/activity/attendee', { method: 'DELETE' }); } catch {}
-      window.location.href = "/activity";
+      try { await fetch('/api/activity/attendee', { method: 'DELETE', cache: 'no-store' }); } catch {}
+      // Ensure UI shows login even before navigation (fallback if navigation is prevented)
+      setAttendeeOk(false);
+      setAttendeeName("");
+      setFirstName("");
+      setLastInitial("");
+      setBirthYear("");
+      setConflictOptions([]);
+      setChoiceOpen(false);
+      // Force a fresh navigation to /activity (cache-bust)
+      window.location.replace(`/activity?ts=${Date.now()}`);
     } catch {
       setMessage("Could not save activity.");
     }

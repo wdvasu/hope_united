@@ -84,7 +84,7 @@ export default function AdminActivityClient({ year, events, adjustments: initial
             {ACTIVITY_CATEGORIES.map((c, idx) => (
               <tr key={c} className="border-t">
                 <td className="p-2">{c}</td>
-                {counts[c].map((n, i) => (
+                {(counts[c] || Array(12).fill(0)).map((n, i) => (
                   <td key={i} className="p-2 text-right tabular-nums">{n}</td>
                 ))}
                 <td className="p-2 text-right font-medium tabular-nums">{totalsByCategory[idx]}</td>

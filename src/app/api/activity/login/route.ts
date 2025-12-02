@@ -27,6 +27,10 @@ export async function POST(req: Request) {
   });
   const fi = firstName.toLowerCase();
   const li = lastInitial.toLowerCase();
+  try {
+    console.log('[activity/login] input', { firstName, lastInitial, birthYear });
+    console.log('[activity/login] candidates', candidates.length, candidates.map(r => ({ id: r.id, firstName: r.firstName, lastInitial: r.lastInitial, fullName: r.fullName })));
+  } catch {}
   const matches = candidates.filter(r => {
     const parts = r.fullName.trim().split(/\s+/);
     const fn = (r.firstName || parts[0] || '').toLowerCase();
@@ -34,6 +38,7 @@ export async function POST(req: Request) {
     const liDerived = (r.lastInitial || (last ? last[0] : '')).toLowerCase();
     return fn === fi && liDerived === li;
   });
+  try { console.log('[activity/login] matches', matches.length, matches.map(m => m.id)); } catch {}
   if (matches.length === 0) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   if (matches.length > 1) {
     const options = matches

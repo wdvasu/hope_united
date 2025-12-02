@@ -32,7 +32,8 @@ export async function POST(req: Request) {
     const fn = (r.firstName || parts[0] || '').toLowerCase();
     const last = parts.length ? parts[parts.length - 1] : '';
     const liDerived = (r.lastInitial || (last ? last[0] : '')).toLowerCase();
-    return fn === fi && liDerived === li;
+    const firstOk = fn === fi || fn.startsWith(fi) || fi.startsWith(fn);
+    return firstOk && liDerived === li;
   });
   if (matches.length === 0) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   if (matches.length > 1) {

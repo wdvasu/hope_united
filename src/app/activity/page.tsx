@@ -86,9 +86,9 @@ export default function ActivityPage() {
       setBirthYear("");
       setConflictOptions([]);
       setChoiceOpen(false);
-      // Force a fresh navigation to /activity (cache-bust) and request a reset on arrival
+      // Force a full reload to /activity (cache-bust) and request a reset on arrival
       const target = `/activity?reset=1&ts=${Date.now()}`;
-      try { router.replace(target); } catch { window.location.replace(target); }
+      window.location.href = target;
     } catch {
       setMessage("Could not save activity.");
     }

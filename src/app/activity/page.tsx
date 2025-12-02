@@ -70,8 +70,8 @@ export default function ActivityPage() {
       setMessage("Activity recorded.");
       setSubmittedAt(j.createdAt ? new Date(j.createdAt) : new Date());
       setCategory("");
-      try { await fetch('/api/activity/attendee', { method: 'DELETE' }); } catch {}
-      router.replace("/start");
+      // Keep attendee logged in so multiple activities can be recorded in a row.
+      // User can tap "Switch resident" when finished.
     } catch {
       setMessage("Could not save activity.");
     }

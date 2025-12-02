@@ -35,7 +35,8 @@ export async function POST(req: Request) {
     const parts = r.fullName.trim().split(/\s+/);
     const fn = (r.firstName || parts[0] || '').toLowerCase();
     const last = parts.length ? parts[parts.length - 1] : '';
-    const liDerived = (r.lastInitial || (last ? last[0] : '')).toLowerCase();
+    const storedLi = r.lastInitial ? r.lastInitial[0] : '';
+    const liDerived = (storedLi || (last ? last[0] : '')).toLowerCase();
     return fn === fi && liDerived === li;
   });
   try { console.log('[activity/login] matches', matches.length, matches.map(m => m.id)); } catch {}

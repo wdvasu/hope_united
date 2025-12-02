@@ -62,7 +62,8 @@ export default function ActivityPage() {
         body: JSON.stringify(payload),
       });
       if (res.status === 401) {
-        window.location.href = "/login";
+        // If device session expired, route users to Activity page (attendee login), not tablet login.
+        window.location.href = "/activity";
         return;
       }
       if (!res.ok) throw new Error("Failed");

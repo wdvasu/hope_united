@@ -141,6 +141,28 @@ Start Menu will include a shortcut to open `https://<LAN_IP>`.
 
 ---
 
+## 11) Smoke tests (tablet workflow)
+
+After install, verify the end-to-end flow over HTTPS:
+
+1. Enroll device: https://<LAN_IP>/admin/enroll → enroll and print QR
+2. Tablet device login: https://<LAN_IP>/login → scan the QR
+3. Registration form: https://<LAN_IP>/register → submit a test registration
+4. Admin tables: https://<LAN_IP>/admin/registrations and /admin/activity → verify data and exports
+5. Activity login: https://<LAN_IP>/activity
+   - Enter First name / Last initial / Birth year
+   - If multiple matches, a dropdown should appear to choose the correct person
+   - After login, the header should show: "Client: {Full Name}"
+6. Activity multi-select and submit:
+   - Select multiple activity categories and click "Save Selected Activities"
+   - Success message shows the count saved
+   - You are automatically logged out of the attendee session and returned to /activity login
+7. Reboot test: reboot Windows and confirm services start and the site loads over HTTPS
+
+If anything fails, capture NSSM service status and logs, and Caddy output.
+
+---
+
 Uninstall:
 ```
 nssm stop HopeUnited-Caddy

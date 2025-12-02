@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export default function ActivityPage() {
   const router = useRouter();
-  const [category, setCategory] = useState<string>("");
+  const [categories, setCategories] = useState<string[]>([]);
   const [submittedAt, setSubmittedAt] = useState<Date | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [attendeeOk, setAttendeeOk] = useState<boolean | null>(null);
@@ -52,7 +52,7 @@ export default function ActivityPage() {
   const submit = async () => {
     setMessage(null);
     const payload = {
-      category,
+      categories,
       at: new Date().toISOString(),
     };
     try {
@@ -67,11 +67,12 @@ export default function ActivityPage() {
       }
       if (!res.ok) throw new Error("Failed");
       const j = await res.json();
-      setMessage("Activity recorded.");
-      setSubmittedAt(j.createdAt ? new Date(j.createdAt) : new Date());
-      setCategory("");
-      // Keep attendee logged in so multiple activities can be recorded in a row.
-      // User can tap "Switch resident" when finished.
+      setMessage(`Activities recorded (${j.count}).`);
+      setSubmittedAt(new Date());
+      setCategories([]);
+      // After one save (batch), log out and redirect to activity login.
+      try { await fetch('/api/activity/attendee', { method: 'DELETE' }); } catch {}
+      window.location.href = "/activity";
     } catch {
       setMessage("Could not save activity.");
     }
@@ -203,11 +204,13 @@ export default function ActivityPage() {
           <div className="font-medium">Date</div>
           <div>{todayLabel}</div>
         </div>
-        <h2 className="font-medium">Choose a category</h2>
+        <h2 className="font-medium">Choose one or more categories</h2>
         <div className="flex flex-wrap gap-2">
-          {ACTIVITY_CATEGORIES.map((c) => (
-            <Chip key={c} selected={category === c} label={c} onClick={() => setCategory(c)} />
-          ))}
+          {ACTIVITY_CATEGORIES.map((c) => {
+            const sel = categories.includes(c);
+            const toggle = () => setCategories(prev => sel ? prev.filter(x => x !== c) : [...prev, c]);
+            return <Chip key={c} selected={sel} label={c} onClick={toggle} />
+          })}
         </div>
         {/* No "Other" in fixed category list */}
       </section>
@@ -221,10 +224,10 @@ export default function ActivityPage() {
 
       <button
         className="w-full h-14 rounded bg-indigo-600 text-white font-medium disabled:opacity-50"
-        disabled={!category}
+        disabled={categories.length === 0}
         onClick={submit}
       >
-        Save Activity
+        Save Selected Activities
       </button>
 
       {message && <p className="text-sm">{message}</p>}

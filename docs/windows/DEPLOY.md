@@ -124,13 +124,20 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; ./scripts/windows/install.ps1 
 
 ## 10) Windows installer (Inno Setup)
 
-We provide `scripts/windows/installer.iss` (Inno Setup script). Steps:
-1. Install Inno Setup
-2. Build the app first (section 5)
-3. Open `installer.iss`, set `LanIp` and target dir
-4. Compile to produce `HopeUnitedSetup.exe`
+We provide `scripts/windows/installer.iss` (Inno Setup script). It now prompts for LAN IP and DATABASE_URL at install time and will:
+- Generate mkcert certs for your LAN IP
+- Write `scripts/windows/Caddyfile`
+- Create/update `.env.production.local` with `NODE_ENV=production` and your `DATABASE_URL`
+- Run `npm ci`, `prisma generate`, `prisma migrate deploy`, and `npm run build`
+- Register Node and Caddy as Windows services (NSSM)
 
-The installer will copy the app, Caddyfile, certs, and register services.
+Steps:
+1. Install Inno Setup
+2. Build the app first (section 5) or let the installer run the build
+3. Double-click the generated `HopeUnitedSetup.exe`
+4. Enter your LAN IP and PostgreSQL `DATABASE_URL` when prompted
+
+Start Menu will include a shortcut to open `https://<LAN_IP>`.
 
 ---
 

@@ -82,7 +82,7 @@ export default function ActivityPage() {
       setConflictOptions([]);
       setChoiceOpen(false);
       // Force a fresh navigation to /activity (cache-bust)
-      window.location.replace(`/activity?ts=${Date.now()}`);
+      try { router.replace(`/activity?ts=${Date.now()}`); } catch { window.location.replace(`/activity?ts=${Date.now()}`); }
     } catch {
       setMessage("Could not save activity.");
     }
@@ -108,6 +108,11 @@ export default function ActivityPage() {
       } else {
         setAttendeeOk(true);
         setMessage(null);
+        // Fetch attendee name so header shows without a manual refresh
+        try {
+          const a = await fetch('/api/activity/attendee', { cache: 'no-store' });
+          if (a.ok) { const j = await a.json(); setAttendeeName(j.fullName || ''); }
+        } catch {}
       }
     } catch {
       setMessage("Login failed");
@@ -128,6 +133,11 @@ export default function ActivityPage() {
         setChoiceOpen(false);
         setAttendeeOk(true);
         setMessage(null);
+        // Fetch attendee name so header shows without a manual refresh
+        try {
+          const a = await fetch('/api/activity/attendee', { cache: 'no-store' });
+          if (a.ok) { const j = await a.json(); setAttendeeName(j.fullName || ''); }
+        } catch {}
       }
     } catch {
       setMessage("Could not set attendee.");

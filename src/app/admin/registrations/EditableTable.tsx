@@ -57,10 +57,11 @@ export function EditableTable({ rows: initialRows }: { rows: RegRow[] }) {
   const onSave = async (payload: Partial<RegRow> & { id: string }) => {
     setSaving(true);
     try {
-      const res = await fetch(`/api/registrations/${payload.id}`, {
+      const { id, ...body } = payload;
+      const res = await fetch(`/api/registrations/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(body),
       });
       const j: unknown = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(extractErrorMessage(j));

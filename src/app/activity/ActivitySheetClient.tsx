@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { ACTIVITY_CATEGORIES } from "@/lib/activityCategories";
 
@@ -20,7 +20,7 @@ export default function ActivitySheetClient({ attendeeName }: { attendeeName: st
   const [version, setVersion] = useState<{commit?: string, branch?: string} | null>(null);
   const [cookie, setCookie] = useState<string | null>(null);
   // Lightweight debug footer to verify we are on the right build and cookie state
-  useMemo(() => {
+  useEffect(() => {
     (async () => {
       try { const v = await fetch('/api/version'); if (v.ok) setVersion(await v.json()); } catch {}
       try { const c = await fetch('/api/debug/cookies', { cache: 'no-store' }); if (c.ok) { const j = await c.json(); setCookie(j.attendee || null); } } catch {}

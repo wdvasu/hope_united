@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ActivityLoginClient() {
   const [message, setMessage] = useState<string | null>(null);
@@ -12,7 +12,7 @@ export default function ActivityLoginClient() {
   const [version, setVersion] = useState<{commit?: string, branch?: string} | null>(null);
   const [cookie, setCookie] = useState<string | null>(null);
   // Debug footer
-  useMemo(() => {
+  useEffect(() => {
     (async () => {
       try { const v = await fetch('/api/version'); if (v.ok) setVersion(await v.json()); } catch {}
       try { const c = await fetch('/api/debug/cookies', { cache: 'no-store' }); if (c.ok) { const j = await c.json(); setCookie(j.attendee || null); } } catch {}

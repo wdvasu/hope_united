@@ -35,6 +35,11 @@ export default function ActivityPage() {
   useEffect(() => {
     (async () => {
       try {
+        const url = new URL(window.location.href);
+        const needsReset = url.searchParams.get('reset') === '1';
+        if (needsReset) {
+          try { await fetch('/api/activity/attendee', { method: 'DELETE', cache: 'no-store' }); } catch {}
+        }
         const res = await fetch("/api/activity/attendee", { cache: "no-store" });
         setAttendeeOk(res.ok);
         if (res.ok) {
@@ -81,8 +86,9 @@ export default function ActivityPage() {
       setBirthYear("");
       setConflictOptions([]);
       setChoiceOpen(false);
-      // Force a fresh navigation to /activity (cache-bust)
-      try { router.replace(`/activity?ts=${Date.now()}`); } catch { window.location.replace(`/activity?ts=${Date.now()}`); }
+      // Force a fresh navigation to /activity (cache-bust) and request a reset on arrival
+      const target = `/activity?reset=1&ts=${Date.now()}`;
+      try { router.replace(target); } catch { window.location.replace(target); }
     } catch {
       setMessage("Could not save activity.");
     }

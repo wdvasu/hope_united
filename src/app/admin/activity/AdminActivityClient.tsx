@@ -19,22 +19,25 @@ export default function AdminActivityClient({ year, events, adjustments: initial
     };
     const dayMap: Record<string, Record<string, number>> = {};
     for (const ev of events) {
+      const cat = ev.category;
+      if (!ACTIVITY_CATEGORIES.includes(cat)) continue; // ignore unknown categories
       const d = new Date(ev.createdAt);
       const key = toLocalKey(d);
-      const cat = ev.category;
       dayMap[cat] ||= {};
       dayMap[cat][key] = (dayMap[cat][key] || 0) + 1;
     }
     for (const adj of adjustments) {
+      const cat = adj.category;
+      if (!ACTIVITY_CATEGORIES.includes(cat)) continue; // ignore unknown categories
       const d = new Date(adj.day);
       const key = toLocalKey(d);
-      const cat = adj.category;
       dayMap[cat] ||= {};
       dayMap[cat][key] = adj.value;
     }
     const counts: Record<string, number[]> = {};
     ACTIVITY_CATEGORIES.forEach((c) => (counts[c] = Array(12).fill(0)));
     Object.entries(dayMap).forEach(([cat, days]) => {
+      if (!counts[cat]) return; // safety for any unexpected categories
       for (const [key, val] of Object.entries(days)) {
         const mi = Number(key.slice(5, 7)) - 1;
         counts[cat][mi] += val;

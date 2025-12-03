@@ -97,10 +97,12 @@ if (Test-Path (Join-Path $PWD 'node_modules')) { Remove-Item -Recurse -Force -Pa
 Write-Host 'Writing scripts/windows/Caddyfile...' -ForegroundColor Cyan
 $caddyDir = Join-Path $PWD 'scripts/windows'
 New-Item -ItemType Directory -Force -Path $caddyDir | Out-Null
+$certPath = Join-Path $PWD 'cert.pem'
+$keyPath  = Join-Path $PWD 'key.pem'
 @(
   "$LanIp {",
   '  encode gzip',
-  '  tls ./cert.pem ./key.pem',
+  "  tls $certPath $keyPath",
   '  reverse_proxy 127.0.0.1:3000',
   '}'
 ) | Out-File -FilePath (Join-Path $caddyDir 'Caddyfile') -Encoding UTF8

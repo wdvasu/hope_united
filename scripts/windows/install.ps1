@@ -116,8 +116,14 @@ netsh advfirewall firewall add rule name="HopeUnited HTTPS" dir=in action=allow 
 
 # 7) Services
 Write-Host 'Configuring Windows services with NSSM...' -ForegroundColor Cyan
-nssm stop HopeUnited-Node 2>$null | Out-Null
-nssm stop HopeUnited-Caddy 2>$null | Out-Null
+if (Get-Service -Name 'HopeUnited-Node' -ErrorAction SilentlyContinue) {
+  nssm stop HopeUnited-Node | Out-Null
+  nssm remove HopeUnited-Node confirm | Out-Null
+}
+if (Get-Service -Name 'HopeUnited-Caddy' -ErrorAction SilentlyContinue) {
+  nssm stop HopeUnited-Caddy | Out-Null
+  nssm remove HopeUnited-Caddy confirm | Out-Null
+}
 
 nssm install HopeUnited-Node "$node" "node_modules\next\dist\bin\next" start -p 3000
 nssm set HopeUnited-Node AppDirectory "$PWD"

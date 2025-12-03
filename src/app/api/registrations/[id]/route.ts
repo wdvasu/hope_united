@@ -42,3 +42,13 @@ export async function PATCH(req: NextRequest, ctx: { params: Promise<{ id: strin
   }
   return NextResponse.json({ ok: true });
 }
+
+export async function DELETE(_req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+  const { id } = await ctx.params;
+  try {
+    await prisma.registration.delete({ where: { id } });
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    return NextResponse.json({ error: 'Delete failed' }, { status: 500 });
+  }
+}

@@ -50,6 +50,7 @@ export function EditableTable({ rows: initialRows }: { rows: RegRow[] }) {
   const [rows, setRows] = useState(initialRows);
   const [editing, setEditing] = useState<RegRow | null>(null);
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
 
   const closeToast = () => setToast(null);
@@ -76,6 +77,25 @@ export function EditableTable({ rows: initialRows }: { rows: RegRow[] }) {
       setTimeout(closeToast, 3000);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const onDelete = async (id: string) => {
+    if (!confirm('Delete this registration? This cannot be undone.')) return;
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/registrations/${id}`, { method: 'DELETE' });
+      const j: unknown = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(extractErrorMessage(j));
+      setRows(prev => prev.filter(r => r.id !== id));
+      setToast({ type: 'success', msg: 'Deleted' });
+      setTimeout(closeToast, 2000);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Delete failed';
+      setToast({ type: 'error', msg });
+      setTimeout(closeToast, 3000);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -108,7 +128,10 @@ export function EditableTable({ rows: initialRows }: { rows: RegRow[] }) {
           <tbody>
             {rows.map((r) => (
               <tr key={r.id} className="border-t">
-                <td className="px-2 py-1"><button className="px-2 py-1 rounded border" onClick={()=>setEditing(r)}>Edit</button></td>
+                <td className="px-2 py-1 flex gap-2">
+                  <button className="px-2 py-1 rounded border" onClick={()=>setEditing(r)}>Edit</button>
+                  <button className="px-2 py-1 rounded border text-red-600 border-red-300 disabled:opacity-50" disabled={deletingId===r.id} onClick={()=>onDelete(r.id)}>{deletingId===r.id?'Deleting…':'Delete'}</button>
+                </td>
                 <td className="px-2 py-1">{r.fullName}</td>
                 <td className="px-2 py-1">{r.birthYear ?? ''}</td>
                 <td className="px-2 py-1">{r.zipCode}</td>

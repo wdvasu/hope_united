@@ -79,6 +79,16 @@ Write-Host 'Writing .env and .env.production.local...' -ForegroundColor Cyan
   "DATABASE_URL=$DbUrl"
 ) | Out-File -FilePath (Join-Path $PWD '.env') -Encoding UTF8
 
+# 3b) Quiesce services and clean working directory to avoid file locks
+Write-Host 'Stopping services and cleaning working directory...' -ForegroundColor Cyan
+nssm stop HopeUnited-Node 2>$null | Out-Null
+nssm stop HopeUnited-Caddy 2>$null | Out-Null
+nssm remove HopeUnited-Node confirm 2>$null | Out-Null
+nssm remove HopeUnited-Caddy confirm 2>$null | Out-Null
+Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force
+Get-Process caddy -ErrorAction SilentlyContinue | Stop-Process -Force
+if (Test-Path (Join-Path $PWD 'node_modules')) { Remove-Item -Recurse -Force -Path (Join-Path $PWD 'node_modules') }
+
 # 4) Caddyfile
 Write-Host 'Writing scripts/windows/Caddyfile...' -ForegroundColor Cyan
 $caddyDir = Join-Path $PWD 'scripts/windows'
@@ -95,8 +105,8 @@ New-Item -ItemType Directory -Force -Path $caddyDir | Out-Null
 Write-Host 'Installing node modules (npm ci)...' -ForegroundColor Cyan
 npm ci
 Write-Host 'Prisma generate + migrate deploy...' -ForegroundColor Cyan
-npx prisma generate
-npx prisma migrate deploy
+npx prisma@6.19.0 generate
+npx prisma@6.19.0 migrate deploy
 Write-Host 'Building Next.js app...' -ForegroundColor Cyan
 npm run build
 

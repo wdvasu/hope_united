@@ -81,10 +81,14 @@ Write-Host 'Writing .env and .env.production.local...' -ForegroundColor Cyan
 
 # 3b) Quiesce services and clean working directory to avoid file locks
 Write-Host 'Stopping services and cleaning working directory...' -ForegroundColor Cyan
-nssm stop HopeUnited-Node 2>$null | Out-Null
-nssm stop HopeUnited-Caddy 2>$null | Out-Null
-nssm remove HopeUnited-Node confirm 2>$null | Out-Null
-nssm remove HopeUnited-Caddy confirm 2>$null | Out-Null
+if (Get-Service -Name 'HopeUnited-Node' -ErrorAction SilentlyContinue) {
+  nssm stop HopeUnited-Node | Out-Null
+  nssm remove HopeUnited-Node confirm | Out-Null
+}
+if (Get-Service -Name 'HopeUnited-Caddy' -ErrorAction SilentlyContinue) {
+  nssm stop HopeUnited-Caddy | Out-Null
+  nssm remove HopeUnited-Caddy confirm | Out-Null
+}
 Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force
 Get-Process caddy -ErrorAction SilentlyContinue | Stop-Process -Force
 if (Test-Path (Join-Path $PWD 'node_modules')) { Remove-Item -Recurse -Force -Path (Join-Path $PWD 'node_modules') }

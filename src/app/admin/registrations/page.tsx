@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db';
 import Link from 'next/link';
 import { FilterBar } from './FilterBar';
 import { EditableTable } from './EditableTable';
+import { ImportBox } from './ImportBox';
 
 type SearchParams = {
   start?: string;
@@ -61,6 +62,7 @@ export default async function AdminRegistrationsPage({ searchParams }: { searchP
   return (
     <div className="max-w-screen-2xl mx-auto p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Registrations</h1>
+      <ImportBox />
       <FilterBar start={sp.start} end={sp.end} county={sp.county} pageSize={pageSize} />
       <div className="flex items-center gap-2">
         <Link

@@ -31,6 +31,16 @@ Notes:
 - It generates TLS certs for your LAN IP, writes the Caddyfile, applies Prisma migrations, and builds the app.
 - It registers two services: HopeUnited-Node and HopeUnited-Caddy.
 
+Fresh install option
+- If you want a clean reinstall from a deployment ZIP in one step (without touching PostgreSQL), use:
+```
+powershell -ExecutionPolicy Bypass -File .\\scripts\\windows\\fresh-install.ps1 \
+  -ZipPath "C:\\Users\\Public\\Downloads\\hope_united.zip" \
+  -LanIp 192.168.0.99 \
+  -DbUrl "<YOUR_DATABASE_URL>"
+```
+See docs/windows/FRESH_INSTALL.md for details.
+
 5) Open firewall for HTTPS (one‑time)
 ```
 netsh advfirewall firewall add rule name="HopeUnited HTTPS" dir=in action=allow protocol=TCP localport=443

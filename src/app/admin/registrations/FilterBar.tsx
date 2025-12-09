@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export function FilterBar({
   start,
@@ -18,7 +18,6 @@ export function FilterBar({
 }) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [qValue, setQValue] = useState(q || "");
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const submitNow = () => {
     if (!formRef.current) return;
@@ -31,9 +30,6 @@ export function FilterBar({
     submitNow();
   };
 
-  useEffect(() => {
-    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
-  }, []);
   return (
     <form ref={formRef} className="flex flex-wrap gap-2 items-end" method="get" action="/admin/registrations">
       <input type="hidden" name="page" defaultValue="1" />
@@ -52,11 +48,7 @@ export function FilterBar({
           type="text"
           placeholder="Full name"
           value={qValue}
-          onChange={(e) => {
-            setQValue(e.target.value);
-            if (debounceRef.current) clearTimeout(debounceRef.current);
-            debounceRef.current = setTimeout(() => { submitNow(); }, 400);
-          }}
+          onChange={(e) => setQValue(e.target.value)}
           className="border rounded px-2 py-1 w-56"
         />
       </div>

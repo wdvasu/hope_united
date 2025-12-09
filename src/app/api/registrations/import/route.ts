@@ -127,13 +127,17 @@ export async function POST(req: Request) {
   const max = 5000;
   const rows = raw.slice(0, max);
 
-  const results = { total: rows.length, inserted: 0, skipped: 0 };
-  const data: Prisma.RegistrationCreateManyInput[] = [];
+  const results = { total: rows.length, inserted: 0, skipped: 0, errors: [] as Array<{ row: number; reason: string; fullName?: string; zip?: string }> };
+  const data: Array<Prisma.RegistrationCreateInput & { __row: number; __fullName?: string; __zip?: string }> = [];
 
+  let idx = 0;
   for (const r of rows) {
+    idx++;
     const fullName = pick(r, ['full name','fullname','name']);
     const zip = pick(r, ['zip','zip code','zipcode']);
-    if (!fullName || !zip || !/^\d{5}$/.test(zip)) { results.skipped++; continue; }
+    if (!fullName) { results.errors.push({ row: idx, reason: 'Missing full name' }); continue; }
+    if (!zip) { results.errors.push({ row: idx, reason: 'Missing ZIP', fullName }); continue; }
+    if (!/^\d{5}$/.test(zip)) { results.errors.push({ row: idx, reason: 'Invalid ZIP (must be 5 digits)', fullName, zip }); continue; }
 
     const birth = pick(r, ['date of birth','birthdate','dob','birth date','birthyear','birth year']);
     const birthYear = toYear(birth);
@@ -155,7 +159,7 @@ export async function POST(req: Request) {
 
     data.push({
       uid: generateUID(),
-      deviceId,
+      device: { connect: { id: deviceId! } },
       fullName,
       firstName: null,
       lastInitial: null,
@@ -178,17 +182,25 @@ export async function POST(req: Request) {
       createdAt,
       createdIp: null,
       userAgent: null,
+      __row: idx,
+      __fullName: fullName,
+      __zip: zip,
     });
   }
 
   if (data.length) {
-    const chunkSize = 500;
-    for (let i=0; i<data.length; i+=chunkSize) {
-      const chunk = data.slice(i, i+chunkSize);
-      const res = await prisma.registration.createMany({ data: chunk });
-      results.inserted += res.count;
+    // Insert per-row to capture DB-level errors precisely for reporting
+    for (const rec of data) {
+      try {
+        const { __row, __fullName, __zip, ...payload } = rec;
+        await prisma.registration.create({ data: payload });
+        results.inserted += 1;
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : 'Database error';
+        results.errors.push({ row: rec.__row, reason: msg, fullName: rec.__fullName, zip: rec.__zip });
+      }
     }
   }
-  results.skipped += (rows.length - (results.inserted));
+  results.skipped = results.errors.length;
   return NextResponse.json(results);
 }

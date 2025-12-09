@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 export function ImportBox() {
   const [file, setFile] = useState<File | null>(null);
-  const [result, setResult] = useState<{ total: number; inserted: number; skipped: number } | null>(null);
+  const [result, setResult] = useState<{ total: number; inserted: number; skipped: number; errors?: Array<{ row: number; reason: string; fullName?: string; zip?: string }>; } | null>(null);
   const [busy, setBusy] = useState(false);
   const inputId = 'import-file-input';
 
@@ -52,7 +52,33 @@ export function ImportBox() {
           {busy? 'Importing…' : 'Import'}
         </button>
         {result && (
-          <div className="text-sm text-foreground/70">Imported {result.inserted} of {result.total}. Skipped {result.skipped}.</div>
+          <div className="text-sm text-foreground/70 flex items-center gap-3">
+            <span>Imported {result.inserted} of {result.total}. Skipped {result.skipped}.</span>
+            {!!result.errors?.length && (
+              <>
+                <button
+                  type="button"
+                  className="px-2 py-1 rounded border bg-white hover:bg-zinc-50"
+                  onClick={() => {
+                    const rows = [
+                      ['Row','Reason','Full Name','ZIP'],
+                      ...result.errors!.map(e => [String(e.row), e.reason, e.fullName || '', e.zip || ''])
+                    ];
+                    const csv = rows.map(r => r.map(v => '"' + String(v).replaceAll('"','""') + '"').join(',')).join('\n');
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'import-skipped-rows.csv';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  }}
+                >
+                  Download skipped rows CSV
+                </button>
+              </>
+            )}
+          </div>
         )}
       </form>
       <div className="text-xs text-foreground/60 mt-2">

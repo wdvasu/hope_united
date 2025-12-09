@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function extractErrorMessage(payload: unknown): string {
   if (!payload || typeof payload !== 'object') return 'Failed to save';
@@ -48,6 +48,8 @@ type RegRow = {
 
 export function EditableTable({ rows: initialRows }: { rows: RegRow[] }) {
   const [rows, setRows] = useState(initialRows);
+  // Keep local table state in sync when server sends new rows (e.g., pagination, filters)
+  useEffect(() => { setRows(initialRows); }, [initialRows]);
   const [editing, setEditing] = useState<RegRow | null>(null);
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);

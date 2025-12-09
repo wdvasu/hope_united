@@ -43,3 +43,7 @@ next-env.d.ts
 # docs: local spreadsheets/examples
 docs/*.xlsx
 docs/*.xls
+
+# Local dev artifacts
+.next-dev.log
+.next-dev.pid

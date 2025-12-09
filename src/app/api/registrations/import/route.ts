@@ -132,7 +132,7 @@ export async function POST(req: Request) {
   const rows = raw.slice(0, max);
 
   const results = { total: rows.length, inserted: 0, skipped: 0, errors: [] as Array<{ row: number; reason: string; fullName?: string; zip?: string }> };
-  const data: Array<Prisma.RegistrationCreateInput & { __row: number; __fullName?: string; __zip?: string }> = [];
+  const data: Array<Prisma.RegistrationCreateInput & { __row: number; __fullName?: string; __zip?: string; __deviceId: string }> = [];
 
   let idx = 0;
   for (const r of rows) {
@@ -189,28 +189,114 @@ export async function POST(req: Request) {
       __row: idx,
       __fullName: fullName,
       __zip: zip,
+      __deviceId: deviceId!,
     });
   }
 
   if (data.length) {
-    // Insert per-row to capture DB-level errors precisely for reporting
-    for (const rec of data) {
-      try {
-        const { __row, __fullName, __zip, ...payload } = rec;
-        if (replaceExisting) {
-          await prisma.registration.deleteMany({
-            where: {
-              fullName: { equals: __fullName!, mode: 'insensitive' },
-              zipCode: __zip!,
-              ...(payload.birthYear != null ? { birthYear: payload.birthYear as number } : {}),
-            },
-          });
+    if (replaceExisting) {
+      // Fast path: delete duplicates in batches, then bulk insert
+      const chunkSize = 300;
+      for (let i = 0; i < data.length; i += chunkSize) {
+        const chunk = data.slice(i, i + chunkSize);
+        // 1) delete existing that match the dedupe key
+        const OR = chunk.map((rec) => ({
+          fullName: { equals: rec.__fullName!, mode: 'insensitive' as const },
+          zipCode: rec.__zip!,
+          ...(rec.birthYear != null ? { birthYear: rec.birthYear as number } : { birthYear: null }),
+        }));
+        if (OR.length) {
+          await prisma.registration.deleteMany({ where: { OR } });
         }
-        await prisma.registration.create({ data: payload });
-        results.inserted += 1;
-      } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : 'Database error';
-        results.errors.push({ row: rec.__row, reason: msg, fullName: rec.__fullName, zip: rec.__zip });
+        // 2) try bulk create; on failure, fall back to per-row to collect errors
+        const payloads: Prisma.RegistrationCreateManyInput[] = chunk.map((rec) => ({
+          uid: rec.uid,
+          deviceId: rec.__deviceId,
+          fullName: rec.fullName,
+          firstName: rec.firstName ?? null,
+          lastInitial: rec.lastInitial ?? null,
+          birthYear: rec.birthYear ?? null,
+          zipCode: rec.zipCode,
+          veteranStatus: rec.veteranStatus,
+          sexualOrientation: rec.sexualOrientation,
+          sexualOther: rec.sexualOther ?? null,
+          gender: rec.gender,
+          genderOther: rec.genderOther ?? null,
+          race: rec.race,
+          raceOther: rec.raceOther ?? null,
+          ethnicity: rec.ethnicity,
+          county: rec.county,
+          countyOther: rec.countyOther ?? null,
+          waiverAgreed: rec.waiverAgreed,
+          eSignatureName: rec.eSignatureName ?? null,
+          eSignatureImage: rec.eSignatureImage ?? null,
+          eSignatureAt: rec.eSignatureAt,
+          createdAt: rec.createdAt,
+          createdIp: rec.createdIp ?? null,
+          userAgent: rec.userAgent ?? null,
+        }));
+        try {
+          const res = await prisma.registration.createMany({ data: payloads });
+          results.inserted += res.count;
+        } catch {
+          for (const rec of chunk) {
+            try {
+              const { __row, __fullName, __zip, ...payload } = rec;
+              await prisma.registration.create({ data: payload });
+              results.inserted += 1;
+            } catch (e: unknown) {
+              const msg = e instanceof Error ? e.message : 'Database error';
+              results.errors.push({ row: rec.__row, reason: msg, fullName: rec.__fullName, zip: rec.__zip });
+            }
+          }
+        }
+      }
+    } else {
+      // No replacement: use createMany in batches for speed; fall back to per-row if needed
+      const chunkSize = 500;
+      for (let i = 0; i < data.length; i += chunkSize) {
+        const chunk = data.slice(i, i + chunkSize);
+        const payloads: Prisma.RegistrationCreateManyInput[] = chunk.map((rec) => ({
+          uid: rec.uid,
+          deviceId: rec.__deviceId,
+          fullName: rec.fullName,
+          firstName: rec.firstName ?? null,
+          lastInitial: rec.lastInitial ?? null,
+          birthYear: rec.birthYear ?? null,
+          zipCode: rec.zipCode,
+          veteranStatus: rec.veteranStatus,
+          sexualOrientation: rec.sexualOrientation,
+          sexualOther: rec.sexualOther ?? null,
+          gender: rec.gender,
+          genderOther: rec.genderOther ?? null,
+          race: rec.race,
+          raceOther: rec.raceOther ?? null,
+          ethnicity: rec.ethnicity,
+          county: rec.county,
+          countyOther: rec.countyOther ?? null,
+          waiverAgreed: rec.waiverAgreed,
+          eSignatureName: rec.eSignatureName ?? null,
+          eSignatureImage: rec.eSignatureImage ?? null,
+          eSignatureAt: rec.eSignatureAt,
+          createdAt: rec.createdAt,
+          createdIp: rec.createdIp ?? null,
+          userAgent: rec.userAgent ?? null,
+        }));
+        try {
+          const res = await prisma.registration.createMany({ data: payloads });
+          results.inserted += res.count;
+        } catch {
+          for (const rec of chunk) {
+            try {
+              const { __row, __fullName, __zip, ...payload } = rec;
+              await prisma.registration.create({ data: payload });
+              results.inserted += 1;
+            } catch (e: unknown) {
+              const msg = e instanceof Error ? e.message : 'Database error';
+              results.errors.push({ row: rec.__row, reason: msg, fullName: rec.__fullName, zip: rec.__zip });
+            }
+          }
+        }
       }
     }
   }

@@ -6,6 +6,7 @@ export function ImportBox() {
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<{ total: number; inserted: number; skipped: number; errors?: Array<{ row: number; reason: string; fullName?: string; zip?: string }>; } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [replaceExisting, setReplaceExisting] = useState(false);
   const inputId = 'import-file-input';
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -16,6 +17,7 @@ export function ImportBox() {
     try {
       const fd = new FormData();
       fd.append('file', file);
+      if (replaceExisting) fd.append('replaceExisting', '1');
       const res = await fetch('/api/registrations/import', { method: 'POST', body: fd });
       const j = await res.json();
       if (!res.ok) throw new Error(j?.error || 'Import failed');
@@ -44,6 +46,12 @@ export function ImportBox() {
         <span className="text-sm text-foreground/70 min-w-[200px] truncate">
           {file ? file.name : 'No file selected'}
         </span>
+        <label className="flex items-center gap-2 text-sm text-foreground/80 ml-2">
+          <input type="checkbox" checked={replaceExisting} onChange={e=>setReplaceExisting(e.target.checked)} />
+          <span>Replace existing (match: Name + ZIP{` `}
+            <span className="text-foreground/60">[+ Birth Year if provided]</span>)
+          </span>
+        </label>
         <button
           type="submit"
           disabled={!file || busy}

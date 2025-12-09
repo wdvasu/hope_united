@@ -117,6 +117,10 @@ export async function POST(req: Request) {
 
   const form = await req.formData();
   const file = form.get('file');
+  const replaceExisting = (() => {
+    const v = String(form.get('replaceExisting') ?? '').toLowerCase();
+    return v === '1' || v === 'true' || v === 'on' || v === 'yes';
+  })();
   if (!(file instanceof Blob)) return NextResponse.json({ error: 'file required' }, { status: 400 });
   const ab = await file.arrayBuffer();
   const buf = Buffer.from(ab);
@@ -193,6 +197,15 @@ export async function POST(req: Request) {
     for (const rec of data) {
       try {
         const { __row, __fullName, __zip, ...payload } = rec;
+        if (replaceExisting) {
+          await prisma.registration.deleteMany({
+            where: {
+              fullName: { equals: __fullName!, mode: 'insensitive' },
+              zipCode: __zip!,
+              ...(payload.birthYear != null ? { birthYear: payload.birthYear as number } : {}),
+            },
+          });
+        }
         await prisma.registration.create({ data: payload });
         results.inserted += 1;
       } catch (e: unknown) {

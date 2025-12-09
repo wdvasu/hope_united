@@ -77,7 +77,7 @@ export function FilterBar({
       </div>
       <div className="flex flex-col">
         <label className="text-xs">Page size</label>
-        <input name="pageSize" type="number" min={1} max={200} defaultValue={String(pageSize)} onChange={onImmediateChange} className="border rounded px-2 py-1 w-24" />
+        <input name="pageSize" type="number" min={1} max={200} defaultValue={String(pageSize)} className="border rounded px-2 py-1 w-24" />
       </div>
       <button className="px-3 py-2 rounded bg-black text-white" type="submit">Apply</button>
       <a className="px-3 py-2 rounded border" href="/admin/registrations">Reset</a>

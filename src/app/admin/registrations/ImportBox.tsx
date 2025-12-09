@@ -37,7 +37,7 @@ export function ImportBox() {
         )}
       </form>
       <div className="text-xs text-foreground/60 mt-2">
-        Expected columns (case-insensitive, extra columns ignored): Full Name, Birthdate, ZIP Code, Veteran, Sexual Orientation, Gender, Race, Ethnicity, County, Created Date.
+        Expected columns (case-insensitive, extra columns ignored): Full Name, Date of Birth, Zip, Veteran Status, Orientation/Identity, Gender, Race, Ethnicity, County, Created Date.
       </div>
     </div>
   );

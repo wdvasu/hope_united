@@ -135,10 +135,10 @@ export async function POST(req: Request) {
     const zip = pick(r, ['zip','zip code','zipcode']);
     if (!fullName || !zip || !/^\d{5}$/.test(zip)) { results.skipped++; continue; }
 
-    const birth = pick(r, ['birthdate','dob','birth date','date of birth','birthyear','birth year']);
+    const birth = pick(r, ['date of birth','birthdate','dob','birth date','birthyear','birth year']);
     const birthYear = toYear(birth);
-    const veteran = pick(r, ['veteran','vet','veteran status']);
-    const sexual = pick(r, ['sexual orientation','orientation']);
+    const veteran = pick(r, ['veteran status','veteran','vet']);
+    const sexual = pick(r, ['orientation/identity','sexual orientation','orientation']);
     const gender = pick(r, ['gender']);
     const race = pick(r, ['race']);
     const ethnicity = pick(r, ['ethnicity']);

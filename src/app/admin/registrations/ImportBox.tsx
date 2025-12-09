@@ -44,7 +44,11 @@ export function ImportBox() {
         <span className="text-sm text-foreground/70 min-w-[200px] truncate">
           {file ? file.name : 'No file selected'}
         </span>
-        <button type="submit" disabled={!file || busy} className="px-3 py-2 rounded border bg-white disabled:opacity-50">
+        <button
+          type="submit"
+          disabled={!file || busy}
+          className={`px-3 py-2 rounded disabled:opacity-50 ${file && !busy ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'border bg-white text-foreground/60'}`}
+        >
           {busy? 'Importing…' : 'Import'}
         </button>
         {result && (

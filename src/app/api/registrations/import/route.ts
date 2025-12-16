@@ -3,7 +3,70 @@ import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import { generateUID } from '@/lib/uid';
 import * as XLSX from 'xlsx';
-import type { Prisma, VeteranStatus, SexualOrientation, Gender, Race, Ethnicity, County } from '@prisma/client';
+// Avoid depending on enum exports from @prisma/client for broader compatibility
+// across environments. Define local string union types matching the Prisma schema.
+// We only need these at type level.
+// import type { Prisma } from '@prisma/client'; // not required after local types below
+type VeteranStatus = 'YES' | 'NO' | 'REFUSED';
+type SexualOrientation = 'HETEROSEXUAL' | 'GAY_LESBIAN' | 'BISEXUAL' | 'OTHER' | 'REFUSED';
+type Gender = 'FEMALE' | 'MALE' | 'TRANSGENDER' | 'NON_BINARY' | 'OTHER' | 'REFUSED';
+type Race = 'WHITE' | 'BLACK_AFRICAN_AMERICAN' | 'ASIAN' | 'AMERICAN_INDIAN_ALASKA_NATIVE' | 'NATIVE_HAWAIIAN_PACIFIC_ISLANDER' | 'OTHER' | 'REFUSED';
+type Ethnicity = 'HISPANIC_LATINO' | 'NOT_HISPANIC_LATINO' | 'REFUSED';
+type County = 'SUMMIT' | 'STARK' | 'PORTAGE' | 'CUYAHOGA' | 'OTHER_OH_COUNTY' | 'OUT_OF_STATE' | 'REFUSED';
+
+type RegistrationCreate = {
+  uid: string;
+  device: { connect: { id: string } };
+  fullName: string;
+  firstName: string | null;
+  lastInitial: string | null;
+  birthYear: number | null;
+  zipCode: string;
+  veteranStatus: VeteranStatus;
+  sexualOrientation: SexualOrientation;
+  sexualOther: string | null;
+  gender: Gender;
+  genderOther: string | null;
+  race: Race;
+  raceOther: string | null;
+  ethnicity: Ethnicity;
+  county: County;
+  countyOther: string | null;
+  waiverAgreed: boolean;
+  eSignatureName: string | null;
+  eSignatureImage: string | null;
+  eSignatureAt: Date;
+  createdAt: Date;
+  createdIp: string | null;
+  userAgent: string | null;
+};
+
+type RegistrationCreateMany = {
+  uid: string;
+  deviceId: string;
+  fullName: string;
+  firstName: string | null;
+  lastInitial: string | null;
+  birthYear: number | null;
+  zipCode: string;
+  veteranStatus: VeteranStatus;
+  sexualOrientation: SexualOrientation;
+  sexualOther: string | null;
+  gender: Gender;
+  genderOther: string | null;
+  race: Race;
+  raceOther: string | null;
+  ethnicity: Ethnicity;
+  county: County;
+  countyOther: string | null;
+  waiverAgreed: boolean;
+  eSignatureName: string | null;
+  eSignatureImage: string | null;
+  eSignatureAt: Date;
+  createdAt: Date;
+  createdIp: string | null;
+  userAgent: string | null;
+};
 
 type Row = Record<string, unknown>;
 
@@ -132,7 +195,7 @@ export async function POST(req: Request) {
   const rows = raw.slice(0, max);
 
   const results = { total: rows.length, inserted: 0, skipped: 0, errors: [] as Array<{ row: number; reason: string; fullName?: string; zip?: string }> };
-  const data: Array<Prisma.RegistrationCreateInput & { __row: number; __fullName?: string; __zip?: string; __deviceId: string }> = [];
+  const data: Array<RegistrationCreate & { __row: number; __fullName?: string; __zip?: string; __deviceId: string }> = [];
 
   let idx = 0;
   for (const r of rows) {
@@ -209,7 +272,7 @@ export async function POST(req: Request) {
           await prisma.registration.deleteMany({ where: { OR } });
         }
         // 2) try bulk create; on failure, fall back to per-row to collect errors
-        const payloads: Prisma.RegistrationCreateManyInput[] = chunk.map((rec) => ({
+        const payloads: RegistrationCreateMany[] = chunk.map((rec) => ({
           uid: rec.uid,
           deviceId: rec.__deviceId,
           fullName: rec.fullName,
@@ -256,7 +319,7 @@ export async function POST(req: Request) {
       const chunkSize = 500;
       for (let i = 0; i < data.length; i += chunkSize) {
         const chunk = data.slice(i, i + chunkSize);
-        const payloads: Prisma.RegistrationCreateManyInput[] = chunk.map((rec) => ({
+        const payloads: RegistrationCreateMany[] = chunk.map((rec) => ({
           uid: rec.uid,
           deviceId: rec.__deviceId,
           fullName: rec.fullName,

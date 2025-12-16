@@ -21,7 +21,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
   // Fetch candidates by year, then match in JS using stored fields or derivation from fullName
-  const candidates = await prisma.registration.findMany({
+  type Candidate = {
+    id: string;
+    fullName: string;
+    zipCode: string | null;
+    createdAt: Date;
+    firstName: string | null;
+    lastInitial: string | null;
+  };
+  const candidates: Candidate[] = await prisma.registration.findMany({
     where: { birthYear },
     select: { id: true, fullName: true, zipCode: true, createdAt: true, firstName: true, lastInitial: true },
   });
@@ -29,21 +37,21 @@ export async function POST(req: Request) {
   const li = lastInitial.toLowerCase();
   try {
     console.log('[activity/login] input', { firstName, lastInitial, birthYear });
-    console.log('[activity/login] candidates', candidates.length, candidates.map(r => ({ id: r.id, firstName: r.firstName, lastInitial: r.lastInitial, fullName: r.fullName })));
+    console.log('[activity/login] candidates', candidates.length, candidates.map((r: Candidate) => ({ id: r.id, firstName: r.firstName, lastInitial: r.lastInitial, fullName: r.fullName })));
   } catch {}
-  const matches = candidates.filter(r => {
+  const matches: Candidate[] = candidates.filter((r: Candidate) => {
     const parts = r.fullName.trim().split(/\s+/);
     const fnDerived = (parts[0] || '').toLowerCase();
     const last = parts.length ? parts[parts.length - 1] : '';
     const liDerived = (last ? last[0] : '').toLowerCase();
     return fnDerived === fi && liDerived === li;
   });
-  try { console.log('[activity/login] matches', matches.length, matches.map(m => m.id)); } catch {}
+  try { console.log('[activity/login] matches', matches.length, matches.map((m: Candidate) => m.id)); } catch {}
   if (matches.length === 0) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   if (matches.length > 1) {
     const options = matches
-      .sort((a,b) => a.fullName.localeCompare(b.fullName))
-      .map(m => ({ id: m.id, label: `${m.fullName}${m.zipCode ? ` • ${m.zipCode}` : ''}` }));
+      .sort((a: Candidate, b: Candidate) => a.fullName.localeCompare(b.fullName))
+      .map((m: Candidate) => ({ id: m.id, label: `${m.fullName}${m.zipCode ? ` • ${m.zipCode}` : ''}` }));
     return NextResponse.json({ conflict: true, options }, { status: 409 });
   }
   const r = matches[0];

@@ -40,5 +40,8 @@ export async function GET(req: Request) {
     select: { day: true, category: true, value: true },
     orderBy: { day: 'asc' },
   });
-  return NextResponse.json({ items: list.map(l => ({ day: l.day.toISOString().slice(0,10), category: l.category, value: l.value })) });
+  type AdjustmentRow = { day: Date; category: string; value: number };
+  return NextResponse.json({
+    items: list.map((l: AdjustmentRow) => ({ day: l.day.toISOString().slice(0, 10), category: l.category, value: l.value })),
+  });
 }

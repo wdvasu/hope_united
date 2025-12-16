@@ -15,6 +15,8 @@ type SearchParams = {
 // }
 
 type ActivityEvent = { category: ActivityCategory; createdAt: string };
+type RawActivity = { category: string; createdAt: Date };
+type RawAdjustment = { day: Date; category: string; value: number };
 
 export default async function AdminActivityPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams;
@@ -24,18 +26,18 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
   // Load all activities and adjustments for the year once, aggregate in memory
   const yearStart = new Date(Date.UTC(year, 0, 1, 0, 0, 0));
   const yearEnd = new Date(Date.UTC(year, 11, 31, 23, 59, 59, 999));
-  const acts = await prisma.activity.findMany({
+  const acts: RawActivity[] = await prisma.activity.findMany({
     where: { createdAt: { gte: yearStart, lte: yearEnd } },
     select: { category: true, createdAt: true },
   });
-  const adjustments = await prisma.activityAdjustment.findMany({
+  const adjustments: RawAdjustment[] = await prisma.activityAdjustment.findMany({
     where: { day: { gte: yearStart, lte: yearEnd } },
     select: { day: true, category: true, value: true },
   });
   // Filter out any legacy/unknown categories to prevent client exceptions
   const events: ActivityEvent[] = acts
-    .filter((a) => ACTIVITY_CATEGORIES.includes(a.category as ActivityCategory))
-    .map((a) => ({
+    .filter((a: RawActivity) => ACTIVITY_CATEGORIES.includes(a.category as ActivityCategory))
+    .map((a: RawActivity) => ({
       category: a.category as ActivityCategory,
       createdAt: a.createdAt.toISOString(),
     }));
@@ -45,8 +47,8 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
       year={year}
       events={events}
       adjustments={adjustments
-        .filter((a) => ACTIVITY_CATEGORIES.includes(a.category as ActivityCategory))
-        .map(a=>({ day: a.day.toISOString(), category: a.category as ActivityCategory, value: a.value }))}
+        .filter((a: RawAdjustment) => ACTIVITY_CATEGORIES.includes(a.category as ActivityCategory))
+        .map((a: RawAdjustment)=>({ day: a.day.toISOString(), category: a.category as ActivityCategory, value: a.value }))}
     />
   );
 }

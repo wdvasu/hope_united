@@ -62,8 +62,8 @@ export default function ActivitySheetClient({ attendeeName }: { attendeeName: st
       setSubmittedAt(new Date());
       setCategories([]);
       try { localStorage.removeItem(STORAGE_KEY); } catch {}
-      // Hard reload to force login (middleware clears cookie when reset=1)
-      window.location.href = `/activity?reset=1&ts=${Date.now()}`;
+      // After a successful submit, return to the Start menu (attendee cookie cleared server-side)
+      window.location.href = '/start';
     } catch {
       setMessage('Could not save activity.');
     }

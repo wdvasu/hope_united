@@ -2,6 +2,16 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 
+function isSecureRequest(req: Request): boolean {
+  try {
+    const u = new URL(req.url);
+    if (u.protocol === 'https:') return true;
+  } catch {}
+  const xf = req.headers.get('x-forwarded-proto') || '';
+  const first = xf.split(',')[0]?.trim();
+  return first === 'https';
+}
+
 export async function POST(req: Request) {
   const { deviceId, deviceSecret } = await req.json();
   if (!deviceId || !deviceSecret) return NextResponse.json({ error: 'Missing credentials' }, { status: 400 });
@@ -18,7 +28,7 @@ export async function POST(req: Request) {
   const res = NextResponse.json({ ok: true, sessionId: session.id, expiresAt });
   res.cookies.set('sid', session.id, {
     httpOnly: true,
-    secure: true,
+    secure: isSecureRequest(req),
     sameSite: 'lax',
     path: '/',
     expires: expiresAt,

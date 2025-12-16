@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 
 import { ACTIVITY_CATEGORIES } from "@/lib/activityCategories";
 
+const STORAGE_KEY = ["hopeunited", "activity", "selected", "v1"].join(":");
+
 export default function ActivitySheetClient({ attendeeName }: { attendeeName: string }) {
   const [categories, setCategories] = useState<string[]>([]);
   const [submittedAt, setSubmittedAt] = useState<Date | null>(null);
@@ -27,17 +29,39 @@ export default function ActivitySheetClient({ attendeeName }: { attendeeName: st
     })();
   }, []);
 
+  // Load any saved selections (e.g., after forced re-login)
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) setCategories(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  // Persist selections so the user doesn't lose choices on redirects
+  useEffect(() => {
+    try {
+      if (categories.length > 0) localStorage.setItem(STORAGE_KEY, JSON.stringify(categories));
+      else localStorage.removeItem(STORAGE_KEY);
+    } catch {}
+  }, [categories]);
+
   const submit = async () => {
     setMessage(null);
     const payload = { categories, at: new Date().toISOString() };
     try {
       const res = await fetch('/api/activity', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if (res.status === 401) { window.location.href = '/activity'; return; }
+      if (res.status === 401) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(categories)); } catch {}
+        // Tablet session expired or attendee missing. Send to tablet login.
+        window.location.href = '/login?from=activity';
+        return;
+      }
       if (!res.ok) throw new Error('Failed');
       const j = await res.json();
       setMessage(`Activities recorded (${j.count}).`);
       setSubmittedAt(new Date());
       setCategories([]);
+      try { localStorage.removeItem(STORAGE_KEY); } catch {}
       // Hard reload to force login (middleware clears cookie when reset=1)
       window.location.href = `/activity?reset=1&ts=${Date.now()}`;
     } catch {

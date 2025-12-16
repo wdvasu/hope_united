@@ -3,7 +3,14 @@ import { prisma } from '@/lib/db';
 import { generateUID } from '@/lib/uid';
 import { getSession } from '@/lib/auth';
 import { z } from 'zod';
-import { VeteranStatus, SexualOrientation, Gender, Race, Ethnicity, County } from '@prisma/client';
+// Define local enum string unions to avoid relying on @prisma/client enum exports,
+// which can vary across environments/versions.
+type VeteranStatus = 'YES' | 'NO' | 'REFUSED';
+type SexualOrientation = 'HETEROSEXUAL' | 'GAY_LESBIAN' | 'BISEXUAL' | 'OTHER' | 'REFUSED';
+type Gender = 'FEMALE' | 'MALE' | 'TRANSGENDER' | 'NON_BINARY' | 'OTHER' | 'REFUSED';
+type Race = 'WHITE' | 'BLACK_AFRICAN_AMERICAN' | 'ASIAN' | 'AMERICAN_INDIAN_ALASKA_NATIVE' | 'NATIVE_HAWAIIAN_PACIFIC_ISLANDER' | 'OTHER' | 'REFUSED';
+type Ethnicity = 'HISPANIC_LATINO' | 'NOT_HISPANIC_LATINO' | 'REFUSED';
+type County = 'SUMMIT' | 'STARK' | 'PORTAGE' | 'CUYAHOGA' | 'OTHER_OH_COUNTY' | 'OUT_OF_STATE' | 'REFUSED';
 
 const schema = z.object({
   fullName: z.string().min(1),

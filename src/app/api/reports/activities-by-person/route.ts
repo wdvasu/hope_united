@@ -50,7 +50,7 @@ export async function GET(req: Request) {
 
   const regIds = Array.from(new Set(grouped.map((g: { registrationId: string | null }) => g.registrationId!).filter(Boolean))) as string[];
   const regs = await prisma.registration.findMany({
-    where: {
+    where: ({
       id: { in: regIds },
       ...(filters.zip ? { zipCode: filters.zip } : {}),
       ...(typeof filters.birthYear === 'number' && !Number.isNaN(filters.birthYear) ? { birthYear: filters.birthYear } : {}),
@@ -60,7 +60,7 @@ export async function GET(req: Request) {
       ...(filters.race ? { race: filters.race } : {}),
       ...(filters.ethnicity ? { ethnicity: filters.ethnicity } : {}),
       ...(filters.county ? { county: filters.county } : {}),
-    },
+    } as any),
     select: { id: true, fullName: true, zipCode: true },
   });
   const regMap = new Map<string, { id: string; fullName: string; zipCode: string | null }>(regs.map((r: { id: string; fullName: string; zipCode: string | null }) => [r.id, r]));

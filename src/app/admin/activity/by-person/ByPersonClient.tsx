@@ -64,6 +64,22 @@ export default function ByPersonClient() {
 
   const rows = data?.items ?? [];
 
+  // Column totals (recomputed whenever rows change)
+  const { grandTotal, categoryTotals } = useMemo(() => {
+    const catTotals: Record<string, number> = Object.fromEntries(
+      ACTIVITY_CATEGORIES.map((c) => [c, 0])
+    );
+    let total = 0;
+    for (const r of rows) {
+      total += r.total;
+      for (const c of ACTIVITY_CATEGORIES) {
+        catTotals[c] += r.categories[c] ?? 0;
+      }
+    }
+    return { grandTotal: total, categoryTotals: catTotals };
+  }, [rows]);
+
+
   const csv = useMemo(() => {
     const headers = ['Full Name', 'ZIP', 'Total', ...ACTIVITY_CATEGORIES];
     const lines = [headers.join(',')];
@@ -174,6 +190,16 @@ export default function ByPersonClient() {
                 <tr><td className="p-2 border" colSpan={ACTIVITY_CATEGORIES.length + 4}>No data for this range.</td></tr>
               )}
             </tbody>
+            <tfoot>
+              <tr className="bg-foreground/10 font-semibold">
+                <td className="p-2 border text-right" colSpan={2}>Totals</td>
+                <td className="p-2 border text-right">{grandTotal}</td>
+                {ACTIVITY_CATEGORIES.map((c) => (
+                  <td key={c} className="p-2 border text-right">{categoryTotals[c] ?? 0}</td>
+                ))}
+                <td className="p-2 border"></td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       )}

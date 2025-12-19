@@ -7,6 +7,15 @@ const querySchema = z.object({
   day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(), // single day (UTC)
   start: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(), // start day (UTC)
   end: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),   // end day (UTC)
+  // Optional registration filters (all exact match)
+  zip: z.string().min(1).max(10).optional(),
+  birthYear: z.string().regex(/^\d{4}$/).optional(),
+  veteranStatus: z.string().optional(),
+  sexualOrientation: z.string().optional(),
+  gender: z.string().optional(),
+  race: z.string().optional(),
+  ethnicity: z.string().optional(),
+  county: z.string().optional(),
 });
 
 export async function GET(req: Request) {
@@ -21,6 +30,16 @@ export async function GET(req: Request) {
     end = new Date(parsed.data.end + 'T23:59:59.999Z');
     if (start > end) { const t = start; start = end; end = t; }
   }
+  const filters = {
+    zip: parsed.data.zip?.trim(),
+    birthYear: parsed.data.birthYear ? parseInt(parsed.data.birthYear, 10) : undefined,
+    veteranStatus: parsed.data.veteranStatus?.trim(),
+    sexualOrientation: parsed.data.sexualOrientation?.trim(),
+    gender: parsed.data.gender?.trim(),
+    race: parsed.data.race?.trim(),
+    ethnicity: parsed.data.ethnicity?.trim(),
+    county: parsed.data.county?.trim(),
+  } as const;
 
   // Group counts per person and category
   const grouped = await prisma.activity.groupBy({
@@ -31,14 +50,24 @@ export async function GET(req: Request) {
 
   const regIds = Array.from(new Set(grouped.map((g: { registrationId: string | null }) => g.registrationId!).filter(Boolean))) as string[];
   const regs = await prisma.registration.findMany({
-    where: { id: { in: regIds } },
+    where: {
+      id: { in: regIds },
+      ...(filters.zip ? { zipCode: filters.zip } : {}),
+      ...(typeof filters.birthYear === 'number' && !Number.isNaN(filters.birthYear) ? { birthYear: filters.birthYear } : {}),
+      ...(filters.veteranStatus ? { veteranStatus: filters.veteranStatus } : {}),
+      ...(filters.sexualOrientation ? { sexualOrientation: filters.sexualOrientation } : {}),
+      ...(filters.gender ? { gender: filters.gender } : {}),
+      ...(filters.race ? { race: filters.race } : {}),
+      ...(filters.ethnicity ? { ethnicity: filters.ethnicity } : {}),
+      ...(filters.county ? { county: filters.county } : {}),
+    },
     select: { id: true, fullName: true, zipCode: true },
   });
   const regMap = new Map<string, { id: string; fullName: string; zipCode: string | null }>(regs.map((r: { id: string; fullName: string; zipCode: string | null }) => [r.id, r]));
 
   // Fetch details per person (category + timestamp)
   const details = await prisma.activity.findMany({
-    where: { registrationId: { in: regIds }, createdAt: { gte: start, lte: end } },
+    where: { registrationId: { in: regs.map((r: { id: string }) => r.id) }, createdAt: { gte: start, lte: end } },
     select: { registrationId: true, category: true, createdAt: true },
     orderBy: { createdAt: 'asc' },
   });
@@ -53,7 +82,7 @@ export async function GET(req: Request) {
   const itemsMap = new Map<string, Item>();
 
   // Initialize per registration
-  for (const id of regIds) {
+  for (const id of regs.map((r: { id: string }) => r.id)) {
     const r = regMap.get(id);
     if (!r) continue;
     itemsMap.set(id, { registration: r, total: 0, categories: {}, details: [] });

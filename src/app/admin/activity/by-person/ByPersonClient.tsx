@@ -16,6 +16,17 @@ export default function ByPersonClient() {
   const today = new Date().toISOString().slice(0, 10);
   const [startDay, setStartDay] = useState<string>(today);
   const [endDay, setEndDay] = useState<string>(today);
+
+  // Filter state
+  const [zip, setZip] = useState<string>("");
+  const [birthYear, setBirthYear] = useState<string>("");
+  const [veteranStatus, setVeteranStatus] = useState<string>("");
+  const [sexualOrientation, setSexualOrientation] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+  const [race, setRace] = useState<string>("");
+  const [ethnicity, setEthnicity] = useState<string>("");
+  const [county, setCounty] = useState<string>("");
+
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
@@ -25,7 +36,16 @@ export default function ByPersonClient() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/reports/activities-by-person?start=${encodeURIComponent(sDay)}&end=${encodeURIComponent(eDay)}`);
+      const params = new URLSearchParams({ start: sDay, end: eDay });
+      if (zip) params.set('zip', zip);
+      if (birthYear) params.set('birthYear', birthYear);
+      if (veteranStatus) params.set('veteranStatus', veteranStatus);
+      if (sexualOrientation) params.set('sexualOrientation', sexualOrientation);
+      if (gender) params.set('gender', gender);
+      if (race) params.set('race', race);
+      if (ethnicity) params.set('ethnicity', ethnicity);
+      if (county) params.set('county', county);
+      const res = await fetch(`/api/reports/activities-by-person?${params.toString()}`);
       if (!res.ok) throw new Error('Failed to load');
       const json = (await res.json()) as ApiResponse;
       setData(json);
@@ -79,6 +99,25 @@ export default function ByPersonClient() {
         <input type="date" value={endDay} onChange={(e) => setEndDay(e.target.value)} className="border rounded px-2 py-1" />
         <button onClick={() => load(startDay, endDay)} className="border rounded px-3 py-1 hover:bg-foreground/5">Load</button>
         <button onClick={downloadCsv} className="border rounded px-3 py-1 hover:bg-foreground/5">Export CSV</button>
+      </div>
+      <div className="flex items-center gap-3 flex-wrap">
+        <label className="text-sm">ZIP</label>
+        <input value={zip} onChange={(e)=>setZip(e.target.value)} className="border rounded px-2 py-1 w-28" placeholder="e.g. 44308" />
+        <label className="text-sm">Birth Year</label>
+        <input value={birthYear} onChange={(e)=>setBirthYear(e.target.value.replace(/[^0-9]/g,'').slice(0,4))} className="border rounded px-2 py-1 w-24" placeholder="YYYY" />
+        <label className="text-sm">Veteran</label>
+        <Select value={veteranStatus} onChange={setVeteranStatus} options={["","YES","NO","REFUSED"]} />
+        <label className="text-sm">Sexual Orientation</label>
+        <Select value={sexualOrientation} onChange={setSexualOrientation} options={["","HETEROSEXUAL","GAY_LESBIAN","BISEXUAL","OTHER","REFUSED"]} />
+        <label className="text-sm">Gender</label>
+        <Select value={gender} onChange={setGender} options={["","FEMALE","MALE","TRANSGENDER","NON_BINARY","OTHER","REFUSED"]} />
+        <label className="text-sm">Race</label>
+        <Select value={race} onChange={setRace} options={["","WHITE","BLACK_AFRICAN_AMERICAN","ASIAN","AMERICAN_INDIAN_ALASKA_NATIVE","NATIVE_HAWAIIAN_PACIFIC_ISLANDER","OTHER","REFUSED"]} />
+        <label className="text-sm">Ethnicity</label>
+        <Select value={ethnicity} onChange={setEthnicity} options={["","HISPANIC_LATINO","NOT_HISPANIC_LATINO","REFUSED"]} />
+        <label className="text-sm">County</label>
+        <Select value={county} onChange={setCounty} options={["","SUMMIT","STARK","PORTAGE","CUYAHOGA","OTHER_OH_COUNTY","OUT_OF_STATE","REFUSED"]} />
+        <button onClick={() => load(startDay, endDay)} className="border rounded px-3 py-1 hover:bg-foreground/5">Apply Filters</button>
       </div>
       {loading && <div>Loading…</div>}
       {error && <div className="text-red-600">{error}</div>}
@@ -150,4 +189,14 @@ function formatTime(iso: string) {
 function csvEscape(s: string) {
   if(/[\",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
   return s;
+}
+
+function Select({ value, onChange, options }: { value: string; onChange: (v:string)=>void; options: string[] }) {
+  return (
+    <select value={value} onChange={(e)=>onChange(e.target.value)} className="border rounded px-2 py-1">
+      {options.map((o)=> (
+        <option key={o} value={o}>{o==='' ? 'Any' : o}</option>
+      ))}
+    </select>
+  );
 }

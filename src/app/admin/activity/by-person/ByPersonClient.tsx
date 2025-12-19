@@ -7,7 +7,7 @@ type ApiItem = {
   registration: { id: string; fullName: string; zipCode: string | null };
   total: number;
   categories: Record<string, number>;
-  details: Array<{ category: string; createdAt: string }>;
+  details: Array<{ category: string; createdAt: string }>; // present from API but unused in UI
 };
 
 type ApiResponse = { day: string; start?: string; end?: string; items: ApiItem[] };
@@ -29,7 +29,6 @@ export default function ByPersonClient() {
 
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
 
   const load = async (sDay: string, eDay: string) => {
@@ -49,7 +48,6 @@ export default function ByPersonClient() {
       if (!res.ok) throw new Error('Failed to load');
       const json = (await res.json()) as ApiResponse;
       setData(json);
-      setExpanded({});
     } catch (e) {
       setError('Could not load data');
     } finally {
@@ -78,7 +76,6 @@ export default function ByPersonClient() {
     }
     return { grandTotal: total, categoryTotals: catTotals };
   }, [rows]);
-
 
   const csv = useMemo(() => {
     const headers = ['Full Name', 'ZIP', 'Total', ...ACTIVITY_CATEGORIES];
@@ -148,12 +145,10 @@ export default function ByPersonClient() {
                 {ACTIVITY_CATEGORIES.map((c) => (
                   <th key={c} className="text-right p-2 border">{c}</th>
                 ))}
-                <th className="p-2 border">Details</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((r) => (
-                <>
                   <tr key={r.registration.id}>
                     <td className="p-2 border whitespace-nowrap">{r.registration.fullName}</td>
                     <td className="p-2 border whitespace-nowrap">{r.registration.zipCode}</td>
@@ -161,33 +156,10 @@ export default function ByPersonClient() {
                     {ACTIVITY_CATEGORIES.map((c) => (
                       <td key={c} className="p-2 border text-right">{r.categories[c] ?? 0}</td>
                     ))}
-                    <td className="p-2 border text-center">
-                      <button
-                        className="text-blue-700 underline"
-                        onClick={() => setExpanded((e) => ({ ...e, [r.registration.id]: !e[r.registration.id] }))}
-                      >
-                        {expanded[r.registration.id] ? 'Hide' : 'Show'}
-                      </button>
-                    </td>
                   </tr>
-                  {expanded[r.registration.id] && (
-                    <tr>
-                      <td className="p-2 border bg-foreground/5" colSpan={ACTIVITY_CATEGORIES.length + 4}>
-                        <ul className="text-sm grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                          {r.details.map((d, i) => (
-                            <li key={i} className="border rounded p-2 bg-background">
-                              <span className="font-mono mr-2">{formatTime(d.createdAt)}</span>
-                              <span>{d.category}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </td>
-                    </tr>
-                  )}
-                </>
               ))}
               {rows.length === 0 && (
-                <tr><td className="p-2 border" colSpan={ACTIVITY_CATEGORIES.length + 4}>No data for this range.</td></tr>
+                <tr><td className="p-2 border" colSpan={ACTIVITY_CATEGORIES.length + 3}>No data for this range.</td></tr>
               )}
               {rows.length > 0 && (
                 <tr className="bg-foreground/10 font-semibold">
@@ -196,7 +168,6 @@ export default function ByPersonClient() {
                   {ACTIVITY_CATEGORIES.map((c) => (
                     <td key={c} className="p-2 border text-right">{categoryTotals[c] ?? 0}</td>
                   ))}
-                  <td className="p-2 border"></td>
                 </tr>
               )}
             </tbody>
@@ -205,11 +176,6 @@ export default function ByPersonClient() {
       )}
     </div>
   );
-}
-
-function formatTime(iso: string) {
-  const d = new Date(iso);
-  return d.toISOString().slice(11, 19); // HH:MM:SS
 }
 
 function csvEscape(s: string) {

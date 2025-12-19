@@ -70,7 +70,7 @@ export default function ByPersonClient() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-4">
+    <div className="max-w-screen-2xl mx-auto p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Activity by Person (Date Range)</h1>
       <div className="flex items-center gap-3 flex-wrap">
         <label className="text-sm">Start (UTC)</label>

@@ -10,6 +10,8 @@ export const ACTIVITY_CATEGORIES = [
   'Art',
   'Training/Focus Group',
   'Tour/Outreach',
+  'Faith-Based',
+  'Personal Growth',
 ] as const;
 
 export type ActivityCategory = typeof ACTIVITY_CATEGORIES[number];

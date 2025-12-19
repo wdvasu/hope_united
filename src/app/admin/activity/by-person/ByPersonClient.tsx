@@ -10,20 +10,22 @@ type ApiItem = {
   details: Array<{ category: string; createdAt: string }>;
 };
 
-type ApiResponse = { day: string; items: ApiItem[] };
+type ApiResponse = { day: string; start?: string; end?: string; items: ApiItem[] };
 
 export default function ByPersonClient() {
-  const [day, setDay] = useState<string>(() => new Date().toISOString().slice(0, 10));
+  const today = new Date().toISOString().slice(0, 10);
+  const [startDay, setStartDay] = useState<string>(today);
+  const [endDay, setEndDay] = useState<string>(today);
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
 
-  const load = async (d: string) => {
+  const load = async (sDay: string, eDay: string) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/reports/activities-by-person?day=${encodeURIComponent(d)}`);
+      const res = await fetch(`/api/reports/activities-by-person?start=${encodeURIComponent(sDay)}&end=${encodeURIComponent(eDay)}`);
       if (!res.ok) throw new Error('Failed to load');
       const json = (await res.json()) as ApiResponse;
       setData(json);
@@ -36,7 +38,7 @@ export default function ByPersonClient() {
   };
 
   useEffect(() => {
-    load(day);
+    load(startDay, endDay);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -54,7 +56,7 @@ export default function ByPersonClient() {
         ...counts,
       ].join(','));
     }
-    return lines.join('\\n');
+    return lines.join('\n');
   }, [rows]);
 
   const downloadCsv = () => {
@@ -62,18 +64,20 @@ export default function ByPersonClient() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `activities_by_person_${day}.csv`;
+    a.download = `activities_by_person_${startDay}_to_${endDay}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-4">
-      <h1 className="text-2xl font-semibold">Activity by Person (Daily)</h1>
-      <div className="flex items-center gap-3">
-        <label className="text-sm">Day (UTC)</label>
-        <input type="date" value={day} onChange={(e) => setDay(e.target.value)} className="border rounded px-2 py-1" />
-        <button onClick={() => load(day)} className="border rounded px-3 py-1 hover:bg-foreground/5">Load</button>
+      <h1 className="text-2xl font-semibold">Activity by Person (Date Range)</h1>
+      <div className="flex items-center gap-3 flex-wrap">
+        <label className="text-sm">Start (UTC)</label>
+        <input type="date" value={startDay} onChange={(e) => setStartDay(e.target.value)} className="border rounded px-2 py-1" />
+        <label className="text-sm">End (UTC)</label>
+        <input type="date" value={endDay} onChange={(e) => setEndDay(e.target.value)} className="border rounded px-2 py-1" />
+        <button onClick={() => load(startDay, endDay)} className="border rounded px-3 py-1 hover:bg-foreground/5">Load</button>
         <button onClick={downloadCsv} className="border rounded px-3 py-1 hover:bg-foreground/5">Export CSV</button>
       </div>
       {loading && <div>Loading…</div>}
@@ -128,7 +132,7 @@ export default function ByPersonClient() {
                 </>
               ))}
               {rows.length === 0 && (
-                <tr><td className="p-2 border" colSpan={ACTIVITY_CATEGORIES.length + 4}>No data for this day.</td></tr>
+                <tr><td className="p-2 border" colSpan={ACTIVITY_CATEGORIES.length + 4}>No data for this range.</td></tr>
               )}
             </tbody>
           </table>
@@ -144,6 +148,6 @@ function formatTime(iso: string) {
 }
 
 function csvEscape(s: string) {
-  if (/[\",\\n]/.test(s)) return '\"' + s.replace(/\"/g, '\"\"') + '\"';
+  if(/[\",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
   return s;
 }

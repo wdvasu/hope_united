@@ -4,7 +4,9 @@ import { prisma } from '@/lib/db';
 import { z } from 'zod';
 
 const querySchema = z.object({
-  day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(), // UTC date
+  day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(), // single day (UTC)
+  start: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(), // start day (UTC)
+  end: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),   // end day (UTC)
 });
 
 export async function GET(req: Request) {
@@ -12,8 +14,13 @@ export async function GET(req: Request) {
   const parsed = querySchema.safeParse(Object.fromEntries(url.searchParams.entries()));
   if (!parsed.success) return NextResponse.json({ error: 'Invalid query' }, { status: 400 });
   const day = parsed.data.day || new Date().toISOString().slice(0, 10);
-  const start = new Date(day + 'T00:00:00.000Z');
-  const end = new Date(day + 'T23:59:59.999Z');
+  let start = new Date(day + 'T00:00:00.000Z');
+  let end = new Date(day + 'T23:59:59.999Z');
+  if (parsed.data.start && parsed.data.end) {
+    start = new Date(parsed.data.start + 'T00:00:00.000Z');
+    end = new Date(parsed.data.end + 'T23:59:59.999Z');
+    if (start > end) { const t = start; start = end; end = t; }
+  }
 
   // Group counts per person and category
   const grouped = await prisma.activity.groupBy({
@@ -22,12 +29,12 @@ export async function GET(req: Request) {
     _count: { _all: true },
   });
 
-  const regIds = Array.from(new Set(grouped.map(g => g.registrationId!).filter(Boolean)));
+  const regIds = Array.from(new Set(grouped.map((g: { registrationId: string | null }) => g.registrationId!).filter(Boolean))) as string[];
   const regs = await prisma.registration.findMany({
     where: { id: { in: regIds } },
     select: { id: true, fullName: true, zipCode: true },
   });
-  const regMap = new Map(regs.map(r => [r.id, r] as const));
+  const regMap = new Map<string, { id: string; fullName: string; zipCode: string | null }>(regs.map((r: { id: string; fullName: string; zipCode: string | null }) => [r.id, r]));
 
   // Fetch details per person (category + timestamp)
   const details = await prisma.activity.findMany({
@@ -70,5 +77,5 @@ export async function GET(req: Request) {
 
   const items = Array.from(itemsMap.values()).sort((a, b) => a.registration.fullName.localeCompare(b.registration.fullName));
 
-  return NextResponse.json({ day, items });
+  return NextResponse.json({ day, start: start.toISOString(), end: end.toISOString(), items });
 }

@@ -47,3 +47,7 @@ docs/*.xls
 # Local dev artifacts
 .next-dev.log
 .next-dev.pid
+
+# media artifacts
+*.mp4
+*.mov

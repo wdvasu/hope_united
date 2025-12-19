@@ -118,6 +118,9 @@ model Registration {
   createdAt         DateTime          @default(now())
   createdIp         String?
   userAgent         String?
+
+  // Activities performed by this person
+  activities        Activity[]
 }
 
 model Activity {
@@ -128,6 +131,11 @@ model Activity {
   createdAt DateTime @default(now())
   createdIp String?
   userAgent String?
+  // Link to the person (registration) who performed the activity (nullable for legacy rows)
+  registrationId String?
+  registration   Registration? @relation(fields: [registrationId], references: [id])
+  @@index([createdAt])
+  @@index([registrationId, createdAt])
 }
 
 // Absolute overrides for reporting: per category and day (UTC)

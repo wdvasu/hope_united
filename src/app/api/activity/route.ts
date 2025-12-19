@@ -46,6 +46,7 @@ export async function POST(req: Request) {
     createdAt: parsed.data.at,
     createdIp: createdIp || null,
     userAgent: userAgent || null,
+    registrationId: attendee,
   }));
   const result = await prisma.activity.createMany({ data });
   // Proactively log out attendee on the server so clients always return to Activity login.

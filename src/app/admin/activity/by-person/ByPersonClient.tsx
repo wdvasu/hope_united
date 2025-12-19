@@ -189,17 +189,17 @@ export default function ByPersonClient() {
               {rows.length === 0 && (
                 <tr><td className="p-2 border" colSpan={ACTIVITY_CATEGORIES.length + 4}>No data for this range.</td></tr>
               )}
+              {rows.length > 0 && (
+                <tr className="bg-foreground/10 font-semibold">
+                  <td className="p-2 border text-right" colSpan={2}>Totals</td>
+                  <td className="p-2 border text-right">{grandTotal}</td>
+                  {ACTIVITY_CATEGORIES.map((c) => (
+                    <td key={c} className="p-2 border text-right">{categoryTotals[c] ?? 0}</td>
+                  ))}
+                  <td className="p-2 border"></td>
+                </tr>
+              )}
             </tbody>
-            <tfoot>
-              <tr className="bg-foreground/10 font-semibold">
-                <td className="p-2 border text-right" colSpan={2}>Totals</td>
-                <td className="p-2 border text-right">{grandTotal}</td>
-                {ACTIVITY_CATEGORIES.map((c) => (
-                  <td key={c} className="p-2 border text-right">{categoryTotals[c] ?? 0}</td>
-                ))}
-                <td className="p-2 border"></td>
-              </tr>
-            </tfoot>
           </table>
         </div>
       )}

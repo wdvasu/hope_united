@@ -2,10 +2,10 @@
 ALTER TABLE "Activity" ADD COLUMN IF NOT EXISTS "registrationId" TEXT;
 
 -- Foreign key to Registration
-DO 48585 BEGIN
+DO $$ BEGIN
   ALTER TABLE "Activity" ADD CONSTRAINT "Activity_registrationId_fkey"
     FOREIGN KEY ("registrationId") REFERENCES "Registration"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-EXCEPTION WHEN duplicate_object THEN NULL; END 48585;
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Helpful indexes for reporting
 CREATE INDEX IF NOT EXISTS "Activity_createdAt_idx" ON "Activity" ("createdAt");

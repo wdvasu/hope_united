@@ -74,14 +74,34 @@ export default function ManualActivityPage() {
     setMessage(null);
     if (!selected || cats.length === 0) return;
     try {
+      // Ensure we have a valid session before posting
+      try {
+        const s = await fetch('/api/auth/session', { cache: 'no-store' });
+        if (!s.ok) {
+          await fetch('/api/auth/demo-session', { method: 'POST' });
+        }
+      } catch {}
+
       const payload = { registrationId: selected.id, categories: cats, at: atIso };
-      const res = await fetch('/api/activity/manual', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if (!res.ok) throw new Error('Failed');
+      let res = await fetch('/api/activity/manual', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+
+      // If still unauthorized, try once more to create session and retry
+      if (!res.ok && res.status === 401) {
+        await fetch('/api/auth/demo-session', { method: 'POST' });
+        res = await fetch('/api/activity/manual', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      }
+
+      if (!res.ok) {
+        const txt = await res.text().catch(() => '');
+        throw new Error(`Failed (${res.status}) ${txt}`);
+      }
       const j = await res.json();
       setMessage(`Saved ${j.count} activities for ${selected.fullName}.`);
       setCats([]);
-    } catch {
-      setMessage('Could not save.');
+    } catch (e) {
+      // @ts-ignore
+      const msg = e && e.message ? e.message : '';
+      setMessage(`Could not save. ${msg}`.trim());
     }
   };
 

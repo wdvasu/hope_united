@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       createdIp: createdIp || null,
       userAgent: userAgent || null,
       registrationId: parsed.data.registrationId,
-      notes: parsed.data.notes ?? null,
+      // Notes are accepted by API but not persisted (no column on Activity)
     }));
 
     const result = await prisma.activity.createMany({ data });

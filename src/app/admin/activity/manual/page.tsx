@@ -18,6 +18,23 @@ export default function ManualActivityPage() {
   const [cats, setCats] = useState<string[]>([]);
   const [message, setMessage] = useState<string | null>(null);
 
+  // Ensure a device session exists so the API can attribute deviceId
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/session', { cache: 'no-store' });
+        if (!res.ok) {
+          await fetch('/api/auth/demo-session', { method: 'POST' });
+        }
+      } catch {
+        // best-effort; UI will still show an error on submit if something blocks
+      }
+      if (cancelled) return;
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   // Debounced search
   useEffect(() => {
     if (!query || selected) { setResults([]); return; }

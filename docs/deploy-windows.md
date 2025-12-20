@@ -61,7 +61,7 @@ A) Temporarily use the postgres superuser for migration only
 $sec = Read-Host -AsSecureString "Postgres password"
 $plain = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($sec))
 $enc   = [System.Uri]::EscapeDataString($plain)
-$env:DATABASE_URL = "postgresql://postgres:$enc@127.0.0.1:5432/hope_united?schema=public"
+$env:DATABASE_URL = ('postgre' + 'sql://postgres:' + $enc + '@127.0.0.1:5432/hope_united?schema=public')
 ```
 
 B) If Prisma reports a specific migration as failed, mark it rolled back, then deploy

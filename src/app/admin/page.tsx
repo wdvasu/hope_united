@@ -19,7 +19,8 @@ export default function AdminIndexPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link href="/admin/registrations" className="border rounded p-4 hover:bg-foreground/5">Registrations</Link>
         <Link href="/admin/activity" className="border rounded p-4 hover:bg-foreground/5">Activity Report</Link>
-        <Link href="/admin/activity/by-person" className="border rounded p-4 hover:bg-foreground/5">Activity by Person (Daily)</Link>
+        <Link href="/admin/activity/by-person" className="border rounded p-4 hover:bg-foreground/5">Activity by Person (Date Range)</Link>
+        <Link href="/admin/activity/manual" className="border rounded p-4 hover:bg-foreground/5">Manual Activity Entry</Link>
         <Link href="/admin/enroll" className="border rounded p-4 hover:bg-foreground/5">Enroll Device</Link>
         <button onClick={openDemo} className="border rounded p-4 text-left hover:bg-foreground/5">
           Open Demo Kiosk (new window)

@@ -41,16 +41,16 @@ function MonthDetailTable({ year, monthIndex, events, adjustments, onSetAdjustme
   ) as Record<ActivityCategory, number[]>;
   for (const ev of events) {
     const d = new Date(ev.createdAt);
-    if (d.getFullYear() === year && d.getMonth() === monthIndex) {
-      const di = d.getDate() - 1; // 0-based index
+    if (d.getUTCFullYear() === year && d.getUTCMonth() === monthIndex) {
+      const di = d.getUTCDate() - 1; // 0-based index
       if (byCategory[ev.category]) byCategory[ev.category][di] += 1;
     }
   }
   // apply absolute overrides
   for (const adj of adjustments) {
     const d = new Date(adj.day);
-    if (d.getFullYear() === year && d.getMonth() === monthIndex) {
-      const di = d.getDate() - 1;
+    if (d.getUTCFullYear() === year && d.getUTCMonth() === monthIndex) {
+      const di = d.getUTCDate() - 1;
       if (byCategory[adj.category]) byCategory[adj.category][di] = adj.value;
     }
   }

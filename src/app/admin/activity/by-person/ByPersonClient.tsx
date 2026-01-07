@@ -10,7 +10,7 @@ type ApiItem = {
   details: Array<{ category: string; createdAt: string }>; // present from API but unused in UI
 };
 
-type ApiResponse = { day: string; start?: string; end?: string; items: ApiItem[] };
+type ApiResponse = { day: string; start?: string; end?: string; items: ApiItem[]; totalPeople: number };
 
 export default function ByPersonClient() {
   const today = new Date().toISOString().slice(0, 10);
@@ -162,13 +162,19 @@ export default function ByPersonClient() {
                 <tr><td className="p-2 border" colSpan={ACTIVITY_CATEGORIES.length + 3}>No data for this range.</td></tr>
               )}
               {rows.length > 0 && (
-                <tr className="bg-foreground/10 font-semibold">
-                  <td className="p-2 border text-right" colSpan={2}>Totals</td>
-                  <td className="p-2 border text-right">{grandTotal}</td>
-                  {ACTIVITY_CATEGORIES.map((c) => (
-                    <td key={c} className="p-2 border text-right">{categoryTotals[c] ?? 0}</td>
-                  ))}
-                </tr>
+                <>
+                  <tr className="bg-foreground/10 font-semibold">
+                    <td className="p-2 border text-right" colSpan={2}>Totals</td>
+                    <td className="p-2 border text-right">{grandTotal}</td>
+                    {ACTIVITY_CATEGORIES.map((c) => (
+                      <td key={c} className="p-2 border text-right">{categoryTotals[c] ?? 0}</td>
+                    ))}
+                  </tr>
+                  <tr className="bg-foreground/5 font-semibold">
+                    <td className="p-2 border text-right" colSpan={2}>Total People</td>
+                    <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 1}>{data?.totalPeople ?? 0}</td>
+                  </tr>
+                </>
               )}
             </tbody>
           </table>

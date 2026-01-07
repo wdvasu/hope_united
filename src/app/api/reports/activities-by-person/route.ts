@@ -106,5 +106,5 @@ export async function GET(req: Request) {
 
   const items = Array.from(itemsMap.values()).sort((a, b) => a.registration.fullName.localeCompare(b.registration.fullName));
 
-  return NextResponse.json({ day, start: start.toISOString(), end: end.toISOString(), items });
+  return NextResponse.json({ day, start: start.toISOString(), end: end.toISOString(), items, totalPeople: items.length });
 }

@@ -52,8 +52,8 @@ export default function ActivitySheetClient({ attendeeName }: { attendeeName: st
       const res = await fetch('/api/activity', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (res.status === 401) {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(categories)); } catch {}
-        // Tablet session expired or attendee missing. Send to tablet login.
-        window.location.href = '/login?from=activity';
+        // Attendee session expired, send back to activity login.
+        window.location.href = '/activity';
         return;
       }
       if (!res.ok) throw new Error('Failed');

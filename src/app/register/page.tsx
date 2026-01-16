@@ -29,7 +29,6 @@ const STORAGE_KEY = ["hopeunited", "register", "draft", "v1"].join(":");
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [authed, setAuthed] = useState<boolean | null>(null);
   const [fullName, setFullName] = useState("");
   const [birthYear, setBirthYear] = useState("");
   const [zipCode, setZipCode] = useState("");
@@ -114,17 +113,7 @@ export default function RegisterPage() {
     } catch {}
   }, []);
 
-  // Auth gate check
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch("/api/auth/session", { cache: "no-store" });
-        setAuthed(res.ok);
-      } catch {
-        setAuthed(false);
-      }
-    })();
-  }, []);
+
 
   // Persist draft on changes (debounced via microtask)
   useEffect(() => {
@@ -172,10 +161,6 @@ export default function RegisterPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    if (res.status === 401) {
-      window.location.href = "/login";
-      return;
-    }
     const j = await res.json();
     if (!res.ok) {
       setMessage(j.error || "Submission failed");
@@ -225,16 +210,6 @@ export default function RegisterPage() {
       {label}
     </button>
   );
-
-  if (authed === false) {
-    return (
-      <div className="max-w-xl mx-auto p-6 space-y-4 text-center">
-        <h1 className="text-2xl font-semibold">Please login</h1>
-        <p className="text-foreground/70">This tablet must be enrolled and logged in before registering participants.</p>
-        <a className="inline-block px-4 py-2 rounded bg-black text-white" href="/login">Go to Login</a>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-8 text-[18px]">

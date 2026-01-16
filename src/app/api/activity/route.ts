@@ -21,7 +21,8 @@ const schema = z.union([singleSchema, multiSchema]);
 
 export async function POST(req: Request) {
   const session = await getSession();
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  // Allow activity submission without device session - deviceId will be null if not logged in
+  const deviceId = session?.deviceId || null;
   const cookieStore = await cookies();
   const attendee = cookieStore.get('attendee')?.value;
   if (!attendee) return NextResponse.json({ error: 'Attendee login required' }, { status: 401 });
@@ -41,7 +42,7 @@ export async function POST(req: Request) {
 
   // Use createMany for efficiency; does not return records.
   const data = categories.map((c) => ({
-    deviceId: session.deviceId,
+    deviceId,
     category: c,
     createdAt: parsed.data.at,
     createdIp: createdIp || null,

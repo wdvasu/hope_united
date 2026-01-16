@@ -41,7 +41,7 @@ type RegRow = {
   countyOther: string | null;
   waiverAgreed: boolean;
   eSignatureAt: string;
-  deviceId: string;
+  deviceId: string | null;
   createdIp: string | null;
   eSignatureImage?: string | null;
 };

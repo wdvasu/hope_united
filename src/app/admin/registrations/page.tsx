@@ -20,7 +20,7 @@ type Reg = {
   countyOther: string | null;
   waiverAgreed: boolean;
   eSignatureAt: Date;
-  deviceId: string;
+  deviceId: string | null;
   createdIp: string | null;
   eSignatureImage: string | null;
 };

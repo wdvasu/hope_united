@@ -1,0 +1,2 @@
+-- This migration was already applied to the database
+-- Placeholder to match migration history

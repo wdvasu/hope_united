@@ -38,7 +38,8 @@ const schema = z.object({
 
 export async function POST(req: Request) {
   const session = await getSession();
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  // Allow registration without device session - deviceId will be null if not logged in
+  const deviceId = session?.deviceId || null;
 
   const body = await req.json();
   const parsed = schema.safeParse(body);
@@ -63,7 +64,7 @@ export async function POST(req: Request) {
   const r = await prisma.registration.create({
     data: {
       uid,
-      deviceId: session.deviceId,
+      deviceId,
       fullName: parsed.data.fullName,
       firstName: firstName ? firstName.trim() : null,
       lastInitial: lastInitial ? lastInitial.trim().slice(0, 1) : null,

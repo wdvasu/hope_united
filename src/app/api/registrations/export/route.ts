@@ -20,7 +20,7 @@ type Reg = {
   waiverAgreed: boolean;
   eSignatureAt: Date;
   eSignatureName: string | null;
-  deviceId: string;
+  deviceId: string | null;
   createdIp: string | null;
   eSignatureImage: string | null;
   userAgent: string | null;
@@ -61,7 +61,7 @@ export async function GET(req: Request) {
     ];
     const rows = regs.map((r: Reg) => [
       r.createdAt.toISOString(), r.uid, r.fullName, r.birthYear ?? '', r.zipCode, r.veteranStatus,
-      r.sexualOrientation, r.sexualOther||'', r.gender, r.genderOther||'', r.race, r.raceOther||'', r.ethnicity, r.county, r.countyOther||'', String(r.waiverAgreed), r.eSignatureName||'', r.eSignatureAt.toISOString(), r.deviceId, r.createdIp||'', r.userAgent||''
+      r.sexualOrientation, r.sexualOther||'', r.gender, r.genderOther||'', r.race, r.raceOther||'', r.ethnicity, r.county, r.countyOther||'', String(r.waiverAgreed), r.eSignatureName||'', r.eSignatureAt.toISOString(), r.deviceId||'', r.createdIp||'', r.userAgent||''
     ].map(v => typeof v === 'string' ? `"${v.replaceAll('"','""')}"` : v).join(','));
     const body = [header.join(','), ...rows].join('\n');
     return new NextResponse(body, { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="registrations.csv"' } });

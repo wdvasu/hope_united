@@ -10,7 +10,7 @@ type ApiItem = {
   details: Array<{ category: string; createdAt: string }>; // present from API but unused in UI
 };
 
-type ApiResponse = { day: string; start?: string; end?: string; items: ApiItem[]; totalPeople: number };
+type ApiResponse = { day: string; start?: string; end?: string; items: ApiItem[]; totalPeople: number; totalVisits: number; totalUniqueVisits: number };
 
 export default function ByPersonClient() {
   const today = new Date().toISOString().slice(0, 10);
@@ -78,7 +78,7 @@ export default function ByPersonClient() {
   }, [rows]);
 
   const csv = useMemo(() => {
-    const headers = ['Full Name', 'ZIP', 'Total', ...ACTIVITY_CATEGORIES];
+    const headers = ['Full Name', 'ZIP', 'Total Activity Visits', ...ACTIVITY_CATEGORIES];
     const lines = [headers.join(',')];
     for (const r of rows) {
       const counts = ACTIVITY_CATEGORIES.map((c) => String(r.categories[c] ?? 0));
@@ -141,7 +141,7 @@ export default function ByPersonClient() {
               <tr className="bg-foreground/5">
                 <th className="text-left p-2 border">Person</th>
                 <th className="text-left p-2 border">ZIP</th>
-                <th className="text-right p-2 border">Total</th>
+                <th className="text-right p-2 border">Total Activity Visits</th>
                 {ACTIVITY_CATEGORIES.map((c) => (
                   <th key={c} className="text-right p-2 border">{c}</th>
                 ))}
@@ -173,6 +173,16 @@ export default function ByPersonClient() {
                   <tr className="bg-foreground/5 font-semibold">
                     <td className="p-2 border">Total People</td>
                     <td className="p-2 border">{data?.totalPeople ?? 0}</td>
+                    <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 1}></td>
+                  </tr>
+                  <tr className="bg-foreground/5 font-semibold">
+                    <td className="p-2 border">Total Unique Person Visits</td>
+                    <td className="p-2 border">{data?.totalUniqueVisits ?? 0}</td>
+                    <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 1}></td>
+                  </tr>
+                  <tr className="bg-foreground/5 font-semibold">
+                    <td className="p-2 border">Total Activity Visits</td>
+                    <td className="p-2 border">{data?.totalVisits ?? 0}</td>
                     <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 1}></td>
                   </tr>
                 </>

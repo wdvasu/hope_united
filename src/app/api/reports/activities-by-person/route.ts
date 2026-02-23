@@ -106,5 +106,16 @@ export async function GET(req: Request) {
 
   const items = Array.from(itemsMap.values()).sort((a, b) => a.registration.fullName.localeCompare(b.registration.fullName));
 
-  return NextResponse.json({ day, start: start.toISOString(), end: end.toISOString(), items, totalPeople: items.length });
+  const totalVisits = items.reduce((sum, item) => sum + item.total, 0);
+
+  // Calculate total unique person-day visits
+  const uniqueVisits = new Set<string>();
+  for (const d of details) {
+    const dayKey = d.createdAt.toISOString().slice(0, 10);
+    const personDayKey = `${d.registrationId}-${dayKey}`;
+    uniqueVisits.add(personDayKey);
+  }
+  const totalUniqueVisits = uniqueVisits.size;
+
+  return NextResponse.json({ day, start: start.toISOString(), end: end.toISOString(), items, totalPeople: items.length, totalVisits, totalUniqueVisits });
 }

@@ -171,12 +171,12 @@ export default function ByPersonClient() {
                     ))}
                   </tr>
                   <tr className="bg-foreground/5 font-semibold">
-                    <td className="p-2 border">Total People</td>
+                    <td className="p-2 border">Total Unique Person Visits</td>
                     <td className="p-2 border">{data?.totalPeople ?? 0}</td>
                     <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 1}></td>
                   </tr>
                   <tr className="bg-foreground/5 font-semibold">
-                    <td className="p-2 border">Total Unique Person Visits</td>
+                    <td className="p-2 border">Total People</td>
                     <td className="p-2 border">{data?.totalUniqueVisits ?? 0}</td>
                     <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 1}></td>
                   </tr>

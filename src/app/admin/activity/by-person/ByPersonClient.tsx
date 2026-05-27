@@ -18,6 +18,7 @@ export default function ByPersonClient() {
   const [endDay, setEndDay] = useState<string>(today);
 
   // Filter state
+  const [personName, setPersonName] = useState<string>("");
   const [zip, setZip] = useState<string>("");
   const [birthYear, setBirthYear] = useState<string>("");
   const [veteranStatus, setVeteranStatus] = useState<string>("");
@@ -26,6 +27,10 @@ export default function ByPersonClient() {
   const [race, setRace] = useState<string>("");
   const [ethnicity, setEthnicity] = useState<string>("");
   const [county, setCounty] = useState<string>("");
+
+  // Person name suggestions
+  const [personSuggestions, setPersonSuggestions] = useState<Array<{ id: string; fullName: string }>>([]);
+  const [showPersonSuggestions, setShowPersonSuggestions] = useState(false);
 
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -36,6 +41,7 @@ export default function ByPersonClient() {
     setError(null);
     try {
       const params = new URLSearchParams({ start: sDay, end: eDay });
+      if (personName) params.set('personName', personName);
       if (zip) params.set('zip', zip);
       if (birthYear) params.set('birthYear', birthYear);
       if (veteranStatus) params.set('veteranStatus', veteranStatus);
@@ -48,10 +54,25 @@ export default function ByPersonClient() {
       if (!res.ok) throw new Error('Failed to load');
       const json = (await res.json()) as ApiResponse;
       setData(json);
-    } catch (e) {
+    } catch {
       setError('Could not load data');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const searchPersonNames = async (query: string) => {
+    if (query.length < 2) {
+      setPersonSuggestions([]);
+      return;
+    }
+    try {
+      const res = await fetch(`/api/reports/person-search?query=${encodeURIComponent(query)}`);
+      if (!res.ok) return;
+      const json = await res.json();
+      setPersonSuggestions(json.results || []);
+    } catch {
+      setPersonSuggestions([]);
     }
   };
 
@@ -114,6 +135,37 @@ export default function ByPersonClient() {
         <button onClick={downloadCsv} className="border rounded px-3 py-1 hover:bg-foreground/5">Export CSV</button>
       </div>
       <div className="flex items-center gap-3 flex-wrap">
+        <label className="text-sm">Person Name</label>
+        <div className="relative">
+          <input
+            value={personName}
+            onChange={(e) => {
+              setPersonName(e.target.value);
+              searchPersonNames(e.target.value);
+              setShowPersonSuggestions(true);
+            }}
+            onFocus={() => setShowPersonSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowPersonSuggestions(false), 200)}
+            className="border rounded px-2 py-1 w-60"
+            placeholder="Type to search..."
+          />
+          {showPersonSuggestions && personSuggestions.length > 0 && (
+            <div className="absolute z-10 w-60 bg-white border rounded shadow-lg mt-1 max-h-60 overflow-y-auto">
+              {personSuggestions.map((person) => (
+                <div
+                  key={person.id}
+                  className="px-3 py-2 hover:bg-foreground/5 cursor-pointer"
+                  onClick={() => {
+                    setPersonName(person.fullName);
+                    setShowPersonSuggestions(false);
+                  }}
+                >
+                  {person.fullName}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <label className="text-sm">ZIP</label>
         <input value={zip} onChange={(e)=>setZip(e.target.value)} className="border rounded px-2 py-1 w-28" placeholder="e.g. 44308" />
         <label className="text-sm">Birth Year</label>

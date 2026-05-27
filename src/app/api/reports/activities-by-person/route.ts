@@ -8,6 +8,7 @@ const querySchema = z.object({
   start: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(), // start day (UTC)
   end: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),   // end day (UTC)
   // Optional registration filters (all exact match)
+  personName: z.string().min(1).optional(),
   zip: z.string().min(1).max(10).optional(),
   birthYear: z.string().regex(/^\d{4}$/).optional(),
   veteranStatus: z.string().optional(),
@@ -31,6 +32,7 @@ export async function GET(req: Request) {
     if (start > end) { const t = start; start = end; end = t; }
   }
   const filters = {
+    personName: parsed.data.personName?.trim(),
     zip: parsed.data.zip?.trim(),
     birthYear: parsed.data.birthYear ? parseInt(parsed.data.birthYear, 10) : undefined,
     veteranStatus: parsed.data.veteranStatus?.trim(),
@@ -52,6 +54,7 @@ export async function GET(req: Request) {
   const regs = await prisma.registration.findMany({
     where: ({
       id: { in: regIds },
+      ...(filters.personName ? { fullName: { contains: filters.personName, mode: 'insensitive' } } : {}),
       ...(filters.zip ? { zipCode: filters.zip } : {}),
       ...(typeof filters.birthYear === 'number' && !Number.isNaN(filters.birthYear) ? { birthYear: filters.birthYear } : {}),
       ...(filters.veteranStatus ? { veteranStatus: filters.veteranStatus } : {}),

@@ -18,8 +18,6 @@ export default function Home() {
         <div className="flex flex-col gap-3">
           <a className="px-4 py-3 rounded bg-black text-white" href="/register">Open Registration Form</a>
           <a className="px-4 py-3 rounded bg-black text-white" href="/activity">Open Activity Tracking</a>
-          <a className="px-4 py-3 rounded border" href="/admin/registrations">Admin: View Registrations</a>
-          <a className="px-4 py-3 rounded border" href="/admin/activity">Admin: View Activity</a>
         </div>
       </main>
     </div>

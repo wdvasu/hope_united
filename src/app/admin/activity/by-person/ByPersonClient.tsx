@@ -1,21 +1,32 @@
 "use client";
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { ACTIVITY_CATEGORIES } from '@/lib/activityCategories';
 
 type ApiItem = {
   registration: { id: string; fullName: string; zipCode: string | null };
   total: number;
+  uniqueDays: number;
   categories: Record<string, number>;
   details: Array<{ category: string; createdAt: string }>; // present from API but unused in UI
 };
 
 type ApiResponse = { day: string; start?: string; end?: string; items: ApiItem[]; totalPeople: number; totalVisits: number; totalUniqueVisits: number };
 
-export default function ByPersonClient() {
-  const today = new Date().toISOString().slice(0, 10);
-  const [startDay, setStartDay] = useState<string>(today);
-  const [endDay, setEndDay] = useState<string>(today);
+function ByPersonClient() {
+  const isInitialMount = useRef(true);
+  const [startDay, setStartDay] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('byPerson_startDay') || new Date().toISOString().slice(0, 10);
+    }
+    return new Date().toISOString().slice(0, 10);
+  });
+  const [endDay, setEndDay] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('byPerson_endDay') || new Date().toISOString().slice(0, 10);
+    }
+    return new Date().toISOString().slice(0, 10);
+  });
 
   // Filter state
   const [personName, setPersonName] = useState<string>("");
@@ -39,18 +50,25 @@ export default function ByPersonClient() {
   const load = async (sDay: string, eDay: string) => {
     setLoading(true);
     setError(null);
+    
+    // Persist to localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('byPerson_startDay', sDay);
+      localStorage.setItem('byPerson_endDay', eDay);
+    }
+    
     try {
-      const params = new URLSearchParams({ start: sDay, end: eDay });
-      if (personName) params.set('personName', personName);
-      if (zip) params.set('zip', zip);
-      if (birthYear) params.set('birthYear', birthYear);
-      if (veteranStatus) params.set('veteranStatus', veteranStatus);
-      if (sexualOrientation) params.set('sexualOrientation', sexualOrientation);
-      if (gender) params.set('gender', gender);
-      if (race) params.set('race', race);
-      if (ethnicity) params.set('ethnicity', ethnicity);
-      if (county) params.set('county', county);
-      const res = await fetch(`/api/reports/activities-by-person?${params.toString()}`);
+      const apiParams = new URLSearchParams({ start: sDay, end: eDay });
+      if (personName) apiParams.set('personName', personName);
+      if (zip) apiParams.set('zip', zip);
+      if (birthYear) apiParams.set('birthYear', birthYear);
+      if (veteranStatus) apiParams.set('veteranStatus', veteranStatus);
+      if (sexualOrientation) apiParams.set('sexualOrientation', sexualOrientation);
+      if (gender) apiParams.set('gender', gender);
+      if (race) apiParams.set('race', race);
+      if (ethnicity) apiParams.set('ethnicity', ethnicity);
+      if (county) apiParams.set('county', county);
+      const res = await fetch(`/api/reports/activities-by-person?${apiParams.toString()}`);
       if (!res.ok) throw new Error('Failed to load');
       const json = (await res.json()) as ApiResponse;
       setData(json);
@@ -77,35 +95,45 @@ export default function ByPersonClient() {
   };
 
   useEffect(() => {
-    load(startDay, endDay);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      console.log('[ByPersonClient] Initial mount - loading data');
+      load(startDay, endDay);
+    } else {
+      console.log('[ByPersonClient] Component remounted (should not happen)');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const rows = data?.items ?? [];
 
   // Column totals (recomputed whenever rows change)
-  const { grandTotal, categoryTotals } = useMemo(() => {
+  const { grandTotal, grandTotalUniqueDays, categoryTotals } = useMemo(() => {
     const catTotals: Record<string, number> = Object.fromEntries(
       ACTIVITY_CATEGORIES.map((c) => [c, 0])
     );
     let total = 0;
+    let totalUniqueDays = 0;
     for (const r of rows) {
       total += r.total;
+      totalUniqueDays += r.uniqueDays;
       for (const c of ACTIVITY_CATEGORIES) {
         catTotals[c] += r.categories[c] ?? 0;
       }
     }
-    return { grandTotal: total, categoryTotals: catTotals };
+    return { grandTotal: total, grandTotalUniqueDays: totalUniqueDays, categoryTotals: catTotals };
   }, [rows]);
 
   const csv = useMemo(() => {
-    const headers = ['Full Name', 'ZIP', 'Total Activity Visits', ...ACTIVITY_CATEGORIES];
+    const headers = ['Full Name', 'ZIP', 'Unique Day Visits', 'Total Activity Visits', ...ACTIVITY_CATEGORIES];
     const lines = [headers.join(',')];
     for (const r of rows) {
       const counts = ACTIVITY_CATEGORIES.map((c) => String(r.categories[c] ?? 0));
+      const isAnonymous = r.registration.id === 'anonymous';
       lines.push([
         csvEscape(r.registration.fullName),
-        csvEscape(r.registration.zipCode || ''),
+        isAnonymous ? 'N/A' : csvEscape(r.registration.zipCode || ''),
+        isAnonymous ? 'N/A' : String(r.uniqueDays),
         String(r.total),
         ...counts,
       ].join(','));
@@ -193,6 +221,7 @@ export default function ByPersonClient() {
               <tr className="bg-foreground/5">
                 <th className="text-left p-2 border">Person</th>
                 <th className="text-left p-2 border">ZIP</th>
+                <th className="text-right p-2 border">Unique Day Visits</th>
                 <th className="text-right p-2 border">Total Activity Visits</th>
                 {ACTIVITY_CATEGORIES.map((c) => (
                   <th key={c} className="text-right p-2 border">{c}</th>
@@ -203,7 +232,12 @@ export default function ByPersonClient() {
               {rows.map((r) => (
                   <tr key={r.registration.id}>
                     <td className="p-2 border whitespace-nowrap">{r.registration.fullName}</td>
-                    <td className="p-2 border whitespace-nowrap">{r.registration.zipCode}</td>
+                    <td className="p-2 border whitespace-nowrap">
+                      {r.registration.id === 'anonymous' ? 'N/A' : (r.registration.zipCode || '')}
+                    </td>
+                    <td className="p-2 border text-right">
+                      {r.registration.id === 'anonymous' ? 'N/A' : r.uniqueDays}
+                    </td>
                     <td className="p-2 border text-right">{r.total}</td>
                     {ACTIVITY_CATEGORIES.map((c) => (
                       <td key={c} className="p-2 border text-right">{r.categories[c] ?? 0}</td>
@@ -211,31 +245,32 @@ export default function ByPersonClient() {
                   </tr>
               ))}
               {rows.length === 0 && (
-                <tr><td className="p-2 border" colSpan={ACTIVITY_CATEGORIES.length + 3}>No data for this range.</td></tr>
+                <tr><td className="p-2 border" colSpan={ACTIVITY_CATEGORIES.length + 4}>No data for this range.</td></tr>
               )}
               {rows.length > 0 && (
                 <>
                   <tr className="bg-foreground/10 font-semibold">
                     <td className="p-2 border text-right" colSpan={2}>Totals</td>
+                    <td className="p-2 border text-right">{grandTotalUniqueDays}</td>
                     <td className="p-2 border text-right">{grandTotal}</td>
                     {ACTIVITY_CATEGORIES.map((c) => (
                       <td key={c} className="p-2 border text-right">{categoryTotals[c] ?? 0}</td>
                     ))}
                   </tr>
                   <tr className="bg-foreground/5 font-semibold">
-                    <td className="p-2 border">Total Unique Person Visits</td>
+                    <td className="p-2 border">Total People</td>
                     <td className="p-2 border">{data?.totalPeople ?? 0}</td>
-                    <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 1}></td>
+                    <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 2}></td>
                   </tr>
                   <tr className="bg-foreground/5 font-semibold">
-                    <td className="p-2 border">Total People</td>
+                    <td className="p-2 border">Total Unique Person Visits</td>
                     <td className="p-2 border">{data?.totalUniqueVisits ?? 0}</td>
-                    <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 1}></td>
+                    <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 2}></td>
                   </tr>
                   <tr className="bg-foreground/5 font-semibold">
                     <td className="p-2 border">Total Activity Visits</td>
                     <td className="p-2 border">{data?.totalVisits ?? 0}</td>
-                    <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 1}></td>
+                    <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 2}></td>
                   </tr>
                 </>
               )}
@@ -261,3 +296,5 @@ function Select({ value, onChange, options }: { value: string; onChange: (v:stri
     </select>
   );
 }
+
+export default ByPersonClient;

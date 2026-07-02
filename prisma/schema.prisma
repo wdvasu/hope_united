@@ -62,6 +62,7 @@ model Activity {
   id             String        @id @default(uuid())
   deviceId       String?
   category       String
+  attendeeCount  Int           @default(1)
   createdAt      DateTime      @default(now())
   createdIp      String?
   userAgent      String?

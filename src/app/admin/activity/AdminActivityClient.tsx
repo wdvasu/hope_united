@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ACTIVITY_CATEGORIES, ActivityCategory } from '@/lib/activityCategories';
 import { CollapsibleMonths } from './CollapsibleMonths';
 
-type ActivityEvent = { category: ActivityCategory; createdAt: string };
+type ActivityEvent = { category: ActivityCategory; createdAt: string; attendeeCount: number };
 type Adjustment = { category: ActivityCategory; day: string; value: number };
 
 export default function AdminActivityClient({ year, events, adjustments: initialAdjustments }: { year: number; events: ActivityEvent[]; adjustments: Adjustment[] }) {
@@ -24,7 +24,7 @@ export default function AdminActivityClient({ year, events, adjustments: initial
       const d = new Date(ev.createdAt);
       const key = toLocalKey(d);
       dayMap[cat] ||= {};
-      dayMap[cat][key] = (dayMap[cat][key] || 0) + 1;
+      dayMap[cat][key] = (dayMap[cat][key] || 0) + ev.attendeeCount;
     }
     for (const adj of adjustments) {
       const cat = adj.category;

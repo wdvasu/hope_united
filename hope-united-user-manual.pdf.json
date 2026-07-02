@@ -1,0 +1,482 @@
+{
+  "pageSize": "LETTER",
+  "pageMargins": [50, 60, 50, 60],
+  "defaultStyle": {
+    "font": "Roboto",
+    "fontSize": 11,
+    "lineHeight": 1.4
+  },
+  "styles": {
+    "title": {
+      "fontSize": 24,
+      "bold": true,
+      "margin": [0, 0, 0, 10]
+    },
+    "subtitle": {
+      "fontSize": 14,
+      "color": "#666666",
+      "margin": [0, 0, 0, 30]
+    },
+    "h1": {
+      "fontSize": 18,
+      "bold": true,
+      "margin": [0, 20, 0, 10],
+      "color": "#333333"
+    },
+    "h2": {
+      "fontSize": 14,
+      "bold": true,
+      "margin": [0, 15, 0, 8],
+      "color": "#444444"
+    },
+    "h3": {
+      "fontSize": 12,
+      "bold": true,
+      "margin": [0, 10, 0, 6],
+      "color": "#555555"
+    },
+    "sectionIntro": {
+      "margin": [0, 0, 0, 12],
+      "color": "#555555"
+    },
+    "step": {
+      "margin": [0, 0, 0, 8]
+    },
+    "note": {
+      "italics": true,
+      "color": "#666666",
+      "fontSize": 10,
+      "margin": [0, 5, 0, 10]
+    },
+    "fieldLabel": {
+      "bold": true,
+      "fontSize": 10,
+      "margin": [0, 4, 0, 2]
+    },
+    "feature": {
+      "margin": [0, 8, 0, 8]
+    }
+  },
+  "header": {
+    "text": "Hope United Activity Tracking System",
+    "alignment": "center",
+    "fontSize": 9,
+    "color": "#999999",
+    "margin": [0, 20, 0, 0]
+  },
+  "footer": {
+    "text": "Page 1",
+    "alignment": "center",
+    "fontSize": 9,
+    "color": "#999999",
+    "margin": [0, 0, 0, 20]
+  },
+  "content": [
+    {
+      "text": "Hope United",
+      "style": "title"
+    },
+    {
+      "text": "Activity Tracking System - User Manual",
+      "style": "subtitle"
+    },
+    {
+      "text": "Overview",
+      "style": "h1"
+    },
+    {
+      "text": "The Hope United Activity Tracking System helps you record and report on daily activities and attendee participation. The system supports both individual check-ins and group event tracking, with comprehensive reporting capabilities.",
+      "style": "sectionIntro"
+    },
+    {
+      "text": "System Access",
+      "style": "h1"
+    },
+    {
+      "text": "Main Navigation",
+      "style": "h2"
+    },
+    {
+      "text": "When you open the application, you'll see the home page with these options:",
+      "margin": [0, 0, 0, 8]
+    },
+    {
+      "ul": [
+        { "text": [{ "text": "Open Registration Form", "bold": true }, " - Register new participants in the system"], "style": "step" },
+        { "text": [{ "text": "Open Activity Tracking", "bold": true }, " - Log activities for registered participants"], "style": "step" }
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "For administrative functions, navigate directly to ", "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "/admin",
+      "bold": true,
+      "color": "#0066CC"
+    },
+    {
+      "text": " in your browser.",
+      "margin": [0, 0, 0, 0]
+    },
+    {
+      "text": "Registration",
+      "style": "h1",
+      "pageBreak": "before"
+    },
+    {
+      "text": "How to Register a New Participant",
+      "style": "h2"
+    },
+    {
+      "ol": [
+        "From the home page, click \"Open Registration Form\"",
+        "Scan the participant's QR code or enter their information manually",
+        "Complete all required fields including demographics and waiver agreement",
+        "Review and submit the registration",
+        "The participant is now in the system and can log activities"
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Note: Registration is a one-time process. Once registered, participants can check in for activities using their QR code or name.",
+      "style": "note"
+    },
+    {
+      "text": "Activity Tracking",
+      "style": "h1",
+      "pageBreak": "before"
+    },
+    {
+      "text": "Individual Check-In",
+      "style": "h2"
+    },
+    {
+      "text": "For participants checking themselves in:",
+      "margin": [0, 0, 0, 8]
+    },
+    {
+      "ol": [
+        "Click \"Open Activity Tracking\" from the home page",
+        "Scan your QR code or enter your name to log in",
+        "Select one or more activity categories that apply to your visit",
+        { "text": [{ "text": "Enter the number of attendees", "bold": true }, " (default is 1 for individual check-in)"], "margin": [0, 0, 0, 4] },
+        "Click \"Save Selected Activities\""
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Manual Activity Entry (Admin)",
+      "style": "h2"
+    },
+    {
+      "text": "For staff recording activities on behalf of participants:",
+      "margin": [0, 0, 0, 8]
+    },
+    {
+      "ol": [
+        "Navigate to /admin and click \"Manual Activity Entry\"",
+        "Select the date of the activity",
+        "Search for and select the participant by name",
+        "Choose one or more activity categories",
+        { "text": [{ "text": "Enter the number of attendees", "bold": true }, " - This is where you record group counts"], "margin": [0, 0, 0, 4] },
+        "Click \"Save Activities\""
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Recording Group Events",
+      "style": "h2"
+    },
+    {
+      "text": "When recording activities for group events (e.g., a Social Event with 50 people):",
+      "margin": [0, 0, 0, 8]
+    },
+    {
+      "ul": [
+        {
+          "text": [
+            "The ",
+            { "text": "Number of Attendees", "bold": true },
+            " field allows you to specify how many people attended"
+          ]
+        },
+        "For a group event with 50 people, enter \"50\" in the attendee count field",
+        "The system will count this as 50 people in all reports and totals",
+        "You can still track individual participants by name while also recording anonymous group attendance"
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Important: The attendee count ensures your reports show the total number of people who participated, not just the number of activity records created.",
+      "style": "note"
+    },
+    {
+      "text": "Activity Categories",
+      "style": "h2",
+      "pageBreak": "before"
+    },
+    {
+      "text": "The system tracks the following activity categories:",
+      "margin": [0, 0, 0, 8]
+    },
+    {
+      "columns": [
+        {
+          "ul": [
+            "Wellness",
+            "Recovery Meeting",
+            "Drop-In",
+            "Veteran Programming",
+            "Social Event",
+            "Volunteer",
+            "Peer Support",
+            "Family Support",
+            "Art"
+          ],
+          "width": "50%"
+        },
+        {
+          "ul": [
+            "Training/Focus Group",
+            "Tour/Outreach",
+            "Faith-Based",
+            "Personal Growth",
+            "Event",
+            "Board Meeting",
+            "Bus Pass",
+            "Virtual Reality",
+            "The Retreat Virtual Reality"
+          ],
+          "width": "50%"
+        }
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Participants can select multiple categories per visit if they participate in multiple activities.",
+      "style": "note"
+    },
+    {
+      "text": "Administrative Functions",
+      "style": "h1",
+      "pageBreak": "before"
+    },
+    {
+      "text": "Admin Dashboard",
+      "style": "h2"
+    },
+    {
+      "text": "Access the admin dashboard at /admin. Available functions:",
+      "margin": [0, 0, 0, 8]
+    },
+    {
+      "ul": [
+        {
+          "text": [{ "text": "Registrations", "bold": true }, " - View all registered participants"],
+          "style": "feature"
+        },
+        {
+          "text": [{ "text": "Activity Report", "bold": true }, " - View monthly activity summaries by category"],
+          "style": "feature"
+        },
+        {
+          "text": [{ "text": "Activity by Person (Date Range)", "bold": true }, " - Generate detailed reports for specific participants or date ranges"],
+          "style": "feature"
+        },
+        {
+          "text": [{ "text": "Manual Activity Entry", "bold": true }, " - Record activities on behalf of participants"],
+          "style": "feature"
+        },
+        {
+          "text": [{ "text": "Open Demo Kiosk", "bold": true }, " - Launch a demo session for testing"],
+          "style": "feature"
+        }
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Reports",
+      "style": "h1"
+    },
+    {
+      "text": "Activity Report",
+      "style": "h2"
+    },
+    {
+      "text": "The main activity report shows:",
+      "margin": [0, 0, 0, 8]
+    },
+    {
+      "ul": [
+        "Monthly totals for each activity category",
+        "Grand totals by category and month",
+        "Year-over-year comparisons (switch years using the year picker)",
+        "Detailed daily breakdowns (expand each month to see day-by-day counts)"
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "All totals reflect the actual number of people who attended based on the attendee count entered for each activity.",
+      "style": "note"
+    },
+    {
+      "text": "Activity by Person Report",
+      "style": "h2"
+    },
+    {
+      "text": "This report provides detailed information about individual participants:",
+      "margin": [0, 0, 0, 8]
+    },
+    {
+      "ul": [
+        "Filter by date range, name, ZIP code, or demographics",
+        "View total activities per person",
+        "See activity breakdown by category",
+        "View detailed activity history with timestamps",
+        "Export data for further analysis"
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "The report includes:",
+      "margin": [0, 0, 0, 8]
+    },
+    {
+      "ul": [
+        { "text": [{ "text": "Total People", "bold": true }, " - Number of unique participants"], "margin": [0, 0, 0, 4] },
+        { "text": [{ "text": "Total Visits", "bold": true }, " - Total attendance count (sum of all attendee counts)"], "margin": [0, 0, 0, 4] },
+        { "text": [{ "text": "Total Unique Person Visits", "bold": true }, " - Number of unique person-day combinations"], "margin": [0, 0, 0, 4] }
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Excel Export",
+      "style": "h2"
+    },
+    {
+      "text": "Click \"Download XLSX\" on the Activity Report page to export a spreadsheet with:",
+      "margin": [0, 0, 0, 8]
+    },
+    {
+      "ul": [
+        "All activity categories",
+        "Monthly counts",
+        "Grand totals",
+        "Formatted for easy viewing and analysis in Excel"
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Best Practices",
+      "style": "h1",
+      "pageBreak": "before"
+    },
+    {
+      "text": "For Accurate Reporting",
+      "style": "h2"
+    },
+    {
+      "ol": [
+        {
+          "text": [{ "text": "Always enter the correct number of attendees", "bold": true }, " when recording group activities. This ensures accurate people counts in reports."]
+        },
+        "Record activities on the day they occur when possible",
+        "Use the manual entry feature for backdating activities if needed",
+        "Select all applicable categories for each visit",
+        "Review reports regularly to ensure data accuracy"
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "For Group Events",
+      "style": "h2"
+    },
+    {
+      "ul": [
+        "Count all attendees before entering the activity",
+        "Choose the most relevant category (e.g., \"Social Event\" for community gatherings)",
+        "Enter the total count in the \"Number of Attendees\" field",
+        "You can optionally record individual named participants and still add anonymous group counts"
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "For Privacy and Data Security",
+      "style": "h2"
+    },
+    {
+      "ul": [
+        "Always log out of the admin dashboard when finished",
+        "Never share login credentials",
+        "Respect participant privacy when viewing reports",
+        "Use anonymous group counts when individual names are not needed"
+      ],
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Frequently Asked Questions",
+      "style": "h1",
+      "pageBreak": "before"
+    },
+    {
+      "text": "Q: What's the difference between Total Visits and Total Unique Person Visits?",
+      "style": "h3"
+    },
+    {
+      "text": "A: Total Visits counts the sum of all attendee counts entered (so a group event with 50 people counts as 50 visits). Total Unique Person Visits counts unique combinations of person and day (so if someone attends multiple activities on the same day, it only counts once).",
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Q: How do I record an event where I don't have names for all attendees?",
+      "style": "h3"
+    },
+    {
+      "text": "A: Use the manual activity entry and increase the \"Number of Attendees\" field to reflect the total count. The system will track the total number of people without requiring individual names.",
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Q: Can I edit or delete activities after they're entered?",
+      "style": "h3"
+    },
+    {
+      "text": "A: Currently, activities cannot be edited or deleted through the web interface. Contact your system administrator if you need to make corrections.",
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Q: What happens if I forget to log someone's activity?",
+      "style": "h3"
+    },
+    {
+      "text": "A: Use the Manual Activity Entry function in the admin dashboard. Select the correct date, find the participant, choose the categories, and save.",
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Q: How far back can I view activity data?",
+      "style": "h3"
+    },
+    {
+      "text": "A: The system stores all historical data. Use the year picker in the Activity Report to view different years, or use date range filters in the Activity by Person report.",
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Support",
+      "style": "h1"
+    },
+    {
+      "text": "For technical support or questions about using the system, contact your system administrator or IT support team.",
+      "margin": [0, 0, 0, 12]
+    },
+    {
+      "text": "Document Version: 1.0",
+      "fontSize": 9,
+      "color": "#999999",
+      "margin": [0, 30, 0, 0]
+    },
+    {
+      "text": "Last Updated: June 2026",
+      "fontSize": 9,
+      "color": "#999999"
+    }
+  ]
+}

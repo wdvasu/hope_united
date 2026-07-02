@@ -20,7 +20,14 @@ export default function AdminIndexPage() {
         <Link href="/admin/registrations" className="border rounded p-4 hover:bg-foreground/5">Registrations</Link>
         <Link href="/admin/activity" className="border rounded p-4 hover:bg-foreground/5">Activity Report</Link>
         <Link href="/admin/activity/by-person" className="border rounded p-4 hover:bg-foreground/5">Activity by Person (Date Range)</Link>
-        <Link href="/admin/activity/manual" className="border rounded p-4 hover:bg-foreground/5">Manual Activity Entry</Link>
+        <Link href="/admin/activity/manual" className="border rounded p-4 hover:bg-foreground/5">
+          Manual Activity Entry
+          <div className="text-sm text-foreground/70 mt-1">Record individual activities for registered participants (1 person at a time)</div>
+        </Link>
+        <Link href="/admin/activity/group" className="border rounded p-4 hover:bg-foreground/5">
+          Group Event Entry
+          <div className="text-sm text-foreground/70 mt-1">Record anonymous group activities without participant names</div>
+        </Link>
         <button onClick={openDemo} className="border rounded p-4 text-left hover:bg-foreground/5">
           Open Demo Kiosk (new window)
           <div className="text-sm text-foreground/70 mt-1">Uses real flows, no QR enrollment; writes to real database.</div>

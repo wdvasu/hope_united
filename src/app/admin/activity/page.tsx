@@ -14,8 +14,8 @@ type SearchParams = {
 //   return { start, end };
 // }
 
-type ActivityEvent = { category: ActivityCategory; createdAt: string };
-type RawActivity = { category: string; createdAt: Date };
+type ActivityEvent = { category: ActivityCategory; createdAt: string; attendeeCount: number };
+type RawActivity = { category: string; createdAt: Date; attendeeCount: number };
 type RawAdjustment = { day: Date; category: string; value: number };
 
 export default async function AdminActivityPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
@@ -28,7 +28,7 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
   const yearEnd = new Date(Date.UTC(year, 11, 31, 23, 59, 59, 999));
   const acts: RawActivity[] = await prisma.activity.findMany({
     where: { createdAt: { gte: yearStart, lte: yearEnd } },
-    select: { category: true, createdAt: true },
+    select: { category: true, createdAt: true, attendeeCount: true },
   });
   const adjustments: RawAdjustment[] = await prisma.activityAdjustment.findMany({
     where: { day: { gte: yearStart, lte: yearEnd } },
@@ -40,6 +40,7 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
     .map((a: RawActivity) => ({
       category: a.category as ActivityCategory,
       createdAt: a.createdAt.toISOString(),
+      attendeeCount: a.attendeeCount,
     }));
 
   return (

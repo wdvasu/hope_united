@@ -3,12 +3,15 @@ import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import { z } from 'zod';
 
+const activitySchema = z.object({
+  category: z.string().min(1).max(100),
+  attendeeCount: z.number().int().min(1),
+  createdAt: z.coerce.date(),
+  registrationId: z.null(),
+});
+
 const schema = z.object({
-  registrationId: z.string().min(1),
-  categories: z.array(z.string().min(1).max(100)).min(1),
-  attendeeCount: z.number().int().min(1).default(1),
-  at: z.coerce.date(),
-  notes: z.string().max(2000).nullable().optional(),
+  activities: z.array(activitySchema).min(1),
 });
 
 export async function POST(req: Request) {
@@ -25,21 +28,20 @@ export async function POST(req: Request) {
     const createdIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || undefined;
     const userAgent = req.headers.get('user-agent') || undefined;
 
-    const data = parsed.data.categories.map((c) => ({
+    const data = parsed.data.activities.map((act) => ({
       deviceId: session.deviceId,
-      category: c,
-      attendeeCount: parsed.data.attendeeCount,
-      createdAt: parsed.data.at,
+      category: act.category,
+      attendeeCount: act.attendeeCount,
+      createdAt: act.createdAt,
       createdIp: createdIp || null,
       userAgent: userAgent || null,
-      registrationId: parsed.data.registrationId,
-      // Notes are accepted by API but not persisted (no column on Activity)
+      registrationId: null, // Explicitly null for anonymous group events
     }));
 
     const result = await prisma.activity.createMany({ data });
     return NextResponse.json({ ok: true, count: result.count });
   } catch (e: unknown) {
-    console.error('Manual activity save failed:', e);
+    console.error('Group activity save failed:', e);
     const msg = (e as Error)?.message || 'Internal Server Error';
     return NextResponse.json({ error: msg }, { status: 500 });
   }

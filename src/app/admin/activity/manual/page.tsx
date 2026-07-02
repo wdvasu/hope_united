@@ -82,7 +82,7 @@ export default function ManualActivityPage() {
         }
       } catch {}
 
-      const payload = { registrationId: selected.id, categories: cats, at: atIso };
+      const payload = { registrationId: selected.id, categories: cats, attendeeCount: 1, at: atIso };
       let res = await fetch('/api/activity/manual', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
 
       // If still unauthorized, try once more to create session and retry

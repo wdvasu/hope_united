@@ -1,8 +1,10 @@
-
+import { Suspense } from 'react';
 import ByPersonClient from './ByPersonClient';
 
-export const dynamic = 'force-dynamic';
-
 export default function AdminByPersonPage() {
-  return <ByPersonClient />;
+  return (
+    <Suspense fallback={<div className="p-6">Loading...</div>}>
+      <ByPersonClient />
+    </Suspense>
+  );
 }

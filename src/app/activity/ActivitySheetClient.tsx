@@ -47,7 +47,7 @@ export default function ActivitySheetClient({ attendeeName }: { attendeeName: st
 
   const submit = async () => {
     setMessage(null);
-    const payload = { categories, at: new Date().toISOString() };
+    const payload = { categories, attendeeCount: 1, at: new Date().toISOString() };
     try {
       const res = await fetch('/api/activity', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (res.status === 401) {

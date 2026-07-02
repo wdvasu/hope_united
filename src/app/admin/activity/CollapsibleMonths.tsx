@@ -2,10 +2,10 @@
 import { useState } from 'react';
 import { ACTIVITY_CATEGORIES, ActivityCategory } from '@/lib/activityCategories';
 
-type ActivityEvent = { category: ActivityCategory; createdAt: string };
+type ActivityEvent = { category: ActivityCategory; createdAt: string; attendeeCount: number };
 type Adjustment = { category: ActivityCategory; day: string; value: number };
 
-export function CollapsibleMonths({ year, counts, events, adjustments, onAdjustmentSaved }: { year: number; counts: Record<string, number[]>; events: ActivityEvent[]; adjustments: Adjustment[]; onAdjustmentSaved?: (a: Adjustment)=>void }) {
+export function CollapsibleMonths({ year, events, adjustments, onAdjustmentSaved }: { year: number; counts: Record<string, number[]>; events: ActivityEvent[]; adjustments: Adjustment[]; onAdjustmentSaved?: (a: Adjustment)=>void }) {
   const [open, setOpen] = useState<boolean[]>(Array(12).fill(false));
   const [localAdjustments, setLocalAdjustments] = useState<Adjustment[]>(adjustments);
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -43,7 +43,7 @@ function MonthDetailTable({ year, monthIndex, events, adjustments, onSetAdjustme
     const d = new Date(ev.createdAt);
     if (d.getUTCFullYear() === year && d.getUTCMonth() === monthIndex) {
       const di = d.getUTCDate() - 1; // 0-based index
-      if (byCategory[ev.category]) byCategory[ev.category][di] += 1;
+      if (byCategory[ev.category]) byCategory[ev.category][di] += ev.attendeeCount;
     }
   }
   // apply absolute overrides

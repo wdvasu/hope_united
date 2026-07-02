@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   const yearEnd = new Date(Date.UTC(year, 11, 31, 23, 59, 59, 999));
   const acts = await prisma.activity.findMany({
     where: { createdAt: { gte: yearStart, lte: yearEnd } },
-    select: { category: true, createdAt: true },
+    select: { category: true, createdAt: true, attendeeCount: true },
   });
   const adjustments = await prisma.activityAdjustment.findMany({
     where: { day: { gte: yearStart, lte: yearEnd } },
@@ -31,7 +31,7 @@ export async function GET(req: Request) {
     const cat = a.category as ActivityCategory;
     if (!ACTIVITY_CATEGORIES.includes(cat)) continue;
     dayMap[cat] ||= {};
-    dayMap[cat][dayKey] = (dayMap[cat][dayKey] || 0) + 1;
+    dayMap[cat][dayKey] = (dayMap[cat][dayKey] || 0) + a.attendeeCount;
   }
   for (const adj of adjustments) {
     const d = new Date(adj.day);

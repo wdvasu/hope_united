@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 const baseSchema = z.object({
   notes: z.string().max(2000).nullable().optional(),
+  attendeeCount: z.number().int().min(1).default(1),
   at: z.string().transform((s) => new Date(s)),
 });
 
@@ -44,6 +45,7 @@ export async function POST(req: Request) {
   const data = categories.map((c) => ({
     deviceId,
     category: c,
+    attendeeCount: parsed.data.attendeeCount,
     createdAt: parsed.data.at,
     createdIp: createdIp || null,
     userAgent: userAgent || null,

@@ -154,11 +154,14 @@ export async function GET(req: Request) {
     anonymousItem.uniqueDays = 0;
   }
 
-  // Combine named and anonymous people
+  // Combine anonymous (first) and named people (sorted alphabetically)
+  const namedItems = Array.from(itemsMap.values()).sort((a, b) => 
+    a.registration.fullName.localeCompare(b.registration.fullName)
+  );
   const items = [
-    ...Array.from(itemsMap.values()),
     ...(anonymousItem ? [anonymousItem] : []),
-  ].sort((a, b) => a.registration.fullName.localeCompare(b.registration.fullName));
+    ...namedItems,
+  ];
 
   const totalVisits = items.reduce((sum, item) => sum + item.total, 0);
 

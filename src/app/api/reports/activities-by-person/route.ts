@@ -171,9 +171,10 @@ export async function GET(req: Request) {
   }
 
   // Combine anonymous (first) and named people (sorted alphabetically)
-  const namedItems = Array.from(itemsMap.values()).sort((a, b) => 
-    a.registration.fullName.localeCompare(b.registration.fullName)
-  );
+  // Only include people who actually have activities (total > 0)
+  const namedItems = Array.from(itemsMap.values())
+    .filter(item => item.total > 0)
+    .sort((a, b) => a.registration.fullName.localeCompare(b.registration.fullName));
   const items = [
     ...(anonymousItem ? [anonymousItem] : []),
     ...namedItems,

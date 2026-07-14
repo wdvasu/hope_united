@@ -81,8 +81,21 @@ export async function GET(req: Request) {
     orderBy: { createdAt: 'asc' },
   });
 
-  // Fetch anonymous group activities
-  const anonymousActivities = await prisma.activity.findMany({
+  // Determine if any demographic filters are applied
+  const hasFilters = !!(
+    filters.personName || 
+    filters.zip || 
+    filters.birthYear || 
+    filters.veteranStatus || 
+    filters.sexualOrientation || 
+    filters.gender || 
+    filters.race || 
+    filters.ethnicity || 
+    filters.county
+  );
+
+  // Fetch anonymous group activities only if no demographic filters are applied
+  const anonymousActivities = hasFilters ? [] : await prisma.activity.findMany({
     where: { registrationId: null, createdAt: { gte: start, lte: end } },
     select: { category: true, createdAt: true, attendeeCount: true },
     orderBy: { createdAt: 'asc' },

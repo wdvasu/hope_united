@@ -52,18 +52,19 @@ export async function GET(req: Request) {
 
   const regIds = Array.from(new Set(grouped.map((g: { registrationId: string | null }) => g.registrationId!).filter(Boolean))) as string[];
   
-  // Build where clause - only include filters that don't cause type issues
-  const whereClause: {
-    id: { in: string[] };
-    fullName?: { contains: string; mode: 'insensitive' };
-    zipCode?: string;
-    birthYear?: number;
-  } = {
+  // Build where clause - include all demographic filters
+  const whereClause: Record<string, unknown> = {
     id: { in: regIds },
   };
   if (filters.personName) whereClause.fullName = { contains: filters.personName, mode: 'insensitive' };
   if (filters.zip) whereClause.zipCode = filters.zip;
   if (typeof filters.birthYear === 'number' && !Number.isNaN(filters.birthYear)) whereClause.birthYear = filters.birthYear;
+  if (filters.veteranStatus) whereClause.veteranStatus = filters.veteranStatus;
+  if (filters.sexualOrientation) whereClause.sexualOrientation = filters.sexualOrientation;
+  if (filters.gender) whereClause.gender = filters.gender;
+  if (filters.race) whereClause.race = filters.race;
+  if (filters.ethnicity) whereClause.ethnicity = filters.ethnicity;
+  if (filters.county) whereClause.county = filters.county;
   
   const regs = await prisma.registration.findMany({
     where: whereClause,

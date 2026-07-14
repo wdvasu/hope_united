@@ -43,32 +43,34 @@ export async function GET(req: Request) {
     county: parsed.data.county?.trim(),
   } as const;
 
-  // Group counts per person and category, summing attendeeCount
-  const grouped = await prisma.activity.groupBy({
-    by: ['registrationId', 'category'],
-    where: { registrationId: { not: null }, createdAt: { gte: start, lte: end } },
-    _sum: { attendeeCount: true },
+  // Build registration filter clause first
+  const regWhereClause: Record<string, unknown> = {};
+  if (filters.personName) regWhereClause.fullName = { contains: filters.personName, mode: 'insensitive' };
+  if (filters.zip) regWhereClause.zipCode = filters.zip;
+  if (typeof filters.birthYear === 'number' && !Number.isNaN(filters.birthYear)) regWhereClause.birthYear = filters.birthYear;
+  if (filters.veteranStatus) regWhereClause.veteranStatus = filters.veteranStatus;
+  if (filters.sexualOrientation) regWhereClause.sexualOrientation = filters.sexualOrientation;
+  if (filters.gender) regWhereClause.gender = filters.gender;
+  if (filters.race) regWhereClause.race = filters.race;
+  if (filters.ethnicity) regWhereClause.ethnicity = filters.ethnicity;
+  if (filters.county) regWhereClause.county = filters.county;
+
+  // Get filtered registrations first
+  const regs = await prisma.registration.findMany({
+    where: regWhereClause,
+    select: { id: true, fullName: true, zipCode: true },
   });
 
-  const regIds = Array.from(new Set(grouped.map((g: { registrationId: string | null }) => g.registrationId!).filter(Boolean))) as string[];
-  
-  // Build where clause - include all demographic filters
-  const whereClause: Record<string, unknown> = {
-    id: { in: regIds },
-  };
-  if (filters.personName) whereClause.fullName = { contains: filters.personName, mode: 'insensitive' };
-  if (filters.zip) whereClause.zipCode = filters.zip;
-  if (typeof filters.birthYear === 'number' && !Number.isNaN(filters.birthYear)) whereClause.birthYear = filters.birthYear;
-  if (filters.veteranStatus) whereClause.veteranStatus = filters.veteranStatus;
-  if (filters.sexualOrientation) whereClause.sexualOrientation = filters.sexualOrientation;
-  if (filters.gender) whereClause.gender = filters.gender;
-  if (filters.race) whereClause.race = filters.race;
-  if (filters.ethnicity) whereClause.ethnicity = filters.ethnicity;
-  if (filters.county) whereClause.county = filters.county;
-  
-  const regs = await prisma.registration.findMany({
-    where: whereClause,
-    select: { id: true, fullName: true, zipCode: true },
+  const regIds = regs.map((r: { id: string }) => r.id);
+
+  // Group counts per person and category, summing attendeeCount - only for filtered registrations
+  const grouped = await prisma.activity.groupBy({
+    by: ['registrationId', 'category'],
+    where: { 
+      registrationId: { in: regIds },
+      createdAt: { gte: start, lte: end } 
+    },
+    _sum: { attendeeCount: true },
   });
   const regMap = new Map<string, { id: string; fullName: string; zipCode: string | null }>(regs.map((r: { id: string; fullName: string; zipCode: string | null }) => [r.id, r]));
 

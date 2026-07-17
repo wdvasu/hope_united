@@ -1,5 +1,6 @@
 "use client";
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function Home() {
   useEffect(() => {
@@ -12,12 +13,23 @@ export default function Home() {
   }, []);
   return (
     <div className="min-h-screen flex items-center justify-center p-8">
-      <main className="w-full max-w-xl space-y-6 text-center">
-        <h1 className="text-3xl font-semibold">Hope United</h1>
-        <p className="text-zinc-600">Choose an action to begin.</p>
-        <div className="flex flex-col gap-3">
-          <a className="px-4 py-3 rounded bg-black text-white" href="/register">Open Registration Form</a>
-          <a className="px-4 py-3 rounded bg-black text-white" href="/activity">Open Activity Tracking</a>
+      <main className="w-full max-w-2xl space-y-8 text-center text-[18px]">
+        <h1 className="text-3xl font-semibold">What would you like to do?</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link
+            href="/register"
+            className="block rounded-xl border border-foreground/20 px-6 py-8 hover:bg-foreground/5"
+          >
+            <div className="text-2xl font-medium mb-2">Registration</div>
+            <div className="text-foreground/70">Start a new participant registration</div>
+          </Link>
+          <Link
+            href="/activity"
+            className="block rounded-xl border border-foreground/20 px-6 py-8 hover:bg-foreground/5"
+          >
+            <div className="text-2xl font-medium mb-2">Daily Activity</div>
+            <div className="text-foreground/70">Record a daily activity entry</div>
+          </Link>
         </div>
       </main>
     </div>

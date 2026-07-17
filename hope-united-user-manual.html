@@ -174,11 +174,12 @@
     <h2>System Access</h2>
     
     <h3>Main Navigation</h3>
-    <p>When you open the application, you'll see the home page with these options:</p>
+    <p>When you open the application at http://[your-server]:3000, you'll see the home page with two main options displayed as cards:</p>
     <ul>
-        <li><strong>Open Registration Form</strong> - Register new participants in the system</li>
-        <li><strong>Open Activity Tracking</strong> - Log activities for registered participants</li>
+        <li><strong>Registration</strong> - Start a new participant registration</li>
+        <li><strong>Daily Activity</strong> - Record a daily activity entry (check in for activities)</li>
     </ul>
+    <p>Access the admin dashboard at /admin for reporting and management tools (staff only).</p>
     <p>For administrative functions, navigate directly to <span class="code">/admin</span> in your browser.</p>
     
     <div class="page-break"></div>
@@ -187,9 +188,17 @@
     
     <h3>How to Register a New Participant</h3>
     <ol>
-        <li>From the home page, click "Open Registration Form"</li>
+        <li>From the home page, click "Registration"</li>
         <li>Scan the participant's QR code or enter their information manually</li>
-        <li>Complete all required fields including demographics and waiver agreement</li>
+        <li>Complete all required fields including:
+            <ul>
+                <li>Full name and ZIP code</li>
+                <li>Demographic information (veteran status, sexual orientation, gender, race, ethnicity)</li>
+                <li>County (Summit, Stark, Portage, Cuyahoga, Medina, Other OH County, Out of State, or Refused)</li>
+                <li>Optional birth year</li>
+                <li>Waiver agreement</li>
+            </ul>
+        </li>
         <li>Review and submit the registration</li>
         <li>The participant is now in the system and can log activities</li>
     </ol>
@@ -234,10 +243,19 @@
     <ol>
         <li>Navigate to /admin and click "Group Event Entry"</li>
         <li>Select the date of the event</li>
-        <li>Choose one or more activity categories (e.g., "Social Event", "Training/Focus Group")</li>
+        <li>Choose one or more activity categories (e.g., "Social Event", "Training/Focus Group", "Community Service")</li>
         <li><strong>Enter the total number of attendees</strong> - This is the total count for the anonymous group (e.g., 50 people at a community picnic)</li>
         <li>Click "Save Group Event"</li>
     </ol>
+    
+    <h4>Viewing and Deleting Group Events</h4>
+    <p>The Group Event Entry page shows a "Recent Group Events" section displaying the last 50 entries:</p>
+    <ul>
+        <li>View date/time, category, and attendee count for each entry</li>
+        <li>Click the red "Delete" button to remove any erroneous entry</li>
+        <li>A confirmation dialog will appear before deletion</li>
+        <li>The list refreshes automatically after deletion or when new events are saved</li>
+    </ul>
     <p class="intro">This form is specifically designed for recording activities without linking to registered participants - perfect for large events, community gatherings, outside training events, or drop-in activities where you only have a headcount.</p>
     
     <div class="note">
@@ -260,9 +278,9 @@
             <li>Peer Support</li>
             <li>Family Support</li>
             <li>Art</li>
+            <li>Training/Focus Group</li>
         </ul>
         <ul>
-            <li>Training/Focus Group</li>
             <li>Tour/Outreach</li>
             <li>Faith-Based</li>
             <li>Personal Growth</li>
@@ -271,6 +289,7 @@
             <li>Bus Pass</li>
             <li>Virtual Reality</li>
             <li>The Retreat Virtual Reality</li>
+            <li>Community Service</li>
         </ul>
     </div>
     

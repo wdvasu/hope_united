@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import { z } from 'zod';
@@ -13,6 +13,39 @@ const activitySchema = z.object({
 const schema = z.object({
   activities: z.array(activitySchema).min(1),
 });
+
+export async function GET(req: NextRequest) {
+  try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const url = new URL(req.url);
+    const recent = url.searchParams.get('recent');
+
+    if (recent === 'true') {
+      // Get recent group activities (where registrationId is null)
+      const activities = await prisma.activity.findMany({
+        where: { registrationId: null },
+        orderBy: { createdAt: 'desc' },
+        take: 50,
+        select: {
+          id: true,
+          category: true,
+          attendeeCount: true,
+          createdAt: true,
+        },
+      });
+
+      return NextResponse.json({ activities });
+    }
+
+    return NextResponse.json({ activities: [] });
+  } catch (e: unknown) {
+    console.error('Group activity fetch failed:', e);
+    const msg = (e as Error)?.message || 'Internal Server Error';
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
+}
 
 export async function POST(req: Request) {
   try {

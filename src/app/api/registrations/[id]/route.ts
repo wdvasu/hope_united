@@ -14,7 +14,7 @@ const patchSchema = z.object({
   race: z.enum(['WHITE','BLACK_AFRICAN_AMERICAN','ASIAN','AMERICAN_INDIAN_ALASKA_NATIVE','NATIVE_HAWAIIAN_PACIFIC_ISLANDER','OTHER','REFUSED']).optional(),
   raceOther: z.string().nullable().optional(),
   ethnicity: z.enum(['HISPANIC_LATINO','NOT_HISPANIC_LATINO','REFUSED']).optional(),
-  county: z.enum(['SUMMIT','STARK','PORTAGE','CUYAHOGA','OTHER_OH_COUNTY','OUT_OF_STATE','REFUSED']).optional(),
+  county: z.enum(['SUMMIT','STARK','PORTAGE','CUYAHOGA','MEDINA','OTHER_OH_COUNTY','OUT_OF_STATE','REFUSED']).optional(),
   countyOther: z.string().nullable().optional(),
 }).strict();
 

@@ -61,6 +61,7 @@ export function FilterBar({
           <option value="STARK">Stark</option>
           <option value="PORTAGE">Portage</option>
           <option value="CUYAHOGA">Cuyahoga</option>
+          <option value="MEDINA">Medina</option>
           <option value="OTHER_OH_COUNTY">Other OH County</option>
           <option value="OUT_OF_STATE">Out of State</option>
           <option value="REFUSED">Refused</option>

@@ -17,6 +17,7 @@ export const ACTIVITY_CATEGORIES = [
   'Bus Pass',
   'Virtual Reality',
   'The Retreat Virtual Reality',
+  'Community Service',
 ] as const;
 
 export type ActivityCategory = typeof ACTIVITY_CATEGORIES[number];

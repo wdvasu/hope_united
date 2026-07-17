@@ -14,7 +14,7 @@ type ApiItem = {
 type ApiResponse = { day: string; start?: string; end?: string; items: ApiItem[]; totalPeople: number; totalVisits: number; totalUniqueVisits: number };
 
 function ByPersonClient() {
-  const isInitialMount = useRef(true);
+  const hasLoadedRef = useRef(false);
   const [startDay, setStartDay] = useState<string>(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('byPerson_startDay') || new Date().toISOString().slice(0, 10);
@@ -95,12 +95,10 @@ function ByPersonClient() {
   };
 
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      console.log('[ByPersonClient] Initial mount - loading data');
+    if (!hasLoadedRef.current) {
+      hasLoadedRef.current = true;
+      console.log('[ByPersonClient] Initial load');
       load(startDay, endDay);
-    } else {
-      console.log('[ByPersonClient] Component remounted (should not happen)');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -209,7 +207,7 @@ function ByPersonClient() {
         <label className="text-sm">Ethnicity</label>
         <Select value={ethnicity} onChange={setEthnicity} options={["","HISPANIC_LATINO","NOT_HISPANIC_LATINO","REFUSED"]} />
         <label className="text-sm">County</label>
-        <Select value={county} onChange={setCounty} options={["","SUMMIT","STARK","PORTAGE","CUYAHOGA","OTHER_OH_COUNTY","OUT_OF_STATE","REFUSED"]} />
+        <Select value={county} onChange={setCounty} options={["","SUMMIT","STARK","PORTAGE","CUYAHOGA","MEDINA","OTHER_OH_COUNTY","OUT_OF_STATE","REFUSED"]} />
         <button onClick={() => load(startDay, endDay)} className="border rounded px-3 py-1 hover:bg-foreground/5">Apply Filters</button>
       </div>
       {loading && <div>Loading…</div>}

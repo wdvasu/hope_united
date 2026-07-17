@@ -253,7 +253,7 @@ function EditModal({ row, onClose, onSave, saving }: { row: RegRow; onClose: ()=
           </Labeled>
 
           <Labeled label="County">
-            <Select value={county} onChange={setCounty} options={["SUMMIT","STARK","PORTAGE","CUYAHOGA","OTHER_OH_COUNTY","OUT_OF_STATE","REFUSED"]} />
+            <Select value={county} onChange={setCounty} options={["SUMMIT","STARK","PORTAGE","CUYAHOGA","MEDINA","OTHER_OH_COUNTY","OUT_OF_STATE","REFUSED"]} />
           </Labeled>
           {county==='OTHER_OH_COUNTY' && (
             <Labeled label="County Other"><input className="w-full border rounded px-3 py-2" value={countyOther} onChange={e=>setCountyOther(e.target.value)} /></Labeled>

@@ -3,14 +3,22 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ACTIVITY_CATEGORIES } from '@/lib/activityCategories';
 
+type RecentActivity = {
+  id: string;
+  category: string;
+  attendeeCount: number;
+  createdAt: string;
+};
+
 export default function GroupEventEntryPage() {
   const today = new Date().toISOString().slice(0,10);
   const [day, setDay] = useState<string>(today);
   const [cats, setCats] = useState<string[]>([]);
   const [attendeeCount, setAttendeeCount] = useState<number>(1);
   const [message, setMessage] = useState<string | null>(null);
+  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
 
-  // Ensure a device session exists so the API can attribute deviceId
+  // Ensure a device session exists and load recent activities
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -23,9 +31,23 @@ export default function GroupEventEntryPage() {
         // best-effort; UI will still show an error on submit if something blocks
       }
       if (cancelled) return;
+      loadRecentActivities();
     })();
     return () => { cancelled = true; };
   }, []);
+
+  const loadRecentActivities = async () => {
+    try {
+      // Get recent group activities (registrationId is null for group events)
+      const res = await fetch('/api/activity/group?recent=true');
+      if (res.ok) {
+        const data = await res.json();
+        setRecentActivities(data.activities || []);
+      }
+    } catch (e) {
+      console.error('Failed to load recent activities:', e);
+    }
+  };
 
   const toggle = (c: string) => setCats(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]);
 
@@ -60,9 +82,23 @@ export default function GroupEventEntryPage() {
       setMessage(`Saved ${j.count} group activities with ${attendeeCount} attendees each.`);
       setCats([]);
       setAttendeeCount(1);
+      loadRecentActivities();
     } catch (e) {
       const msg = (e as Error)?.message || '';
       setMessage(`Could not save. ${msg}`.trim());
+    }
+  };
+
+  const deleteActivity = async (id: string) => {
+    if (!confirm('Delete this activity entry?')) return;
+    try {
+      const res = await fetch(`/api/activity/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Delete failed');
+      setMessage('Activity deleted');
+      loadRecentActivities();
+    } catch (e) {
+      const msg = (e as Error)?.message || '';
+      setMessage(`Could not delete. ${msg}`.trim());
     }
   };
 
@@ -136,6 +172,43 @@ export default function GroupEventEntryPage() {
           {message}
         </div>
       )}
+
+      <div className="border-t pt-6 mt-8">
+        <h2 className="text-xl font-semibold mb-4">Recent Group Events (Last 50)</h2>
+        {recentActivities.length === 0 ? (
+          <p className="text-sm text-foreground/60">No recent group events</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full border rounded">
+              <thead>
+                <tr className="bg-foreground/5">
+                  <th className="text-left p-2 border">Date/Time</th>
+                  <th className="text-left p-2 border">Category</th>
+                  <th className="text-right p-2 border">Attendees</th>
+                  <th className="text-center p-2 border">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentActivities.map((activity) => (
+                  <tr key={activity.id}>
+                    <td className="p-2 border">{new Date(activity.createdAt).toLocaleString()}</td>
+                    <td className="p-2 border">{activity.category}</td>
+                    <td className="p-2 border text-right">{activity.attendeeCount}</td>
+                    <td className="p-2 border text-center">
+                      <button
+                        onClick={() => deleteActivity(activity.id)}
+                        className="px-3 py-1 text-sm rounded bg-red-600 text-white hover:bg-red-700"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

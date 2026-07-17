@@ -21,6 +21,7 @@ type County =
   | "STARK"
   | "PORTAGE"
   | "CUYAHOGA"
+  | "MEDINA"
   | "OTHER_OH_COUNTY"
   | "OUT_OF_STATE"
   | "REFUSED";
@@ -365,6 +366,7 @@ export default function RegisterPage() {
               ["STARK", "Stark"],
               ["PORTAGE", "Portage"],
               ["CUYAHOGA", "Cuyahoga"],
+              ["MEDINA", "Medina"],
               ["OTHER_OH_COUNTY", "Other OH County"],
               ["OUT_OF_STATE", "Out of State"],
               ["REFUSED", "Refused"],

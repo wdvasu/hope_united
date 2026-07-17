@@ -12,7 +12,7 @@ type SexualOrientation = 'HETEROSEXUAL' | 'GAY_LESBIAN' | 'BISEXUAL' | 'OTHER' |
 type Gender = 'FEMALE' | 'MALE' | 'TRANSGENDER' | 'NON_BINARY' | 'OTHER' | 'REFUSED';
 type Race = 'WHITE' | 'BLACK_AFRICAN_AMERICAN' | 'ASIAN' | 'AMERICAN_INDIAN_ALASKA_NATIVE' | 'NATIVE_HAWAIIAN_PACIFIC_ISLANDER' | 'OTHER' | 'REFUSED';
 type Ethnicity = 'HISPANIC_LATINO' | 'NOT_HISPANIC_LATINO' | 'REFUSED';
-type County = 'SUMMIT' | 'STARK' | 'PORTAGE' | 'CUYAHOGA' | 'OTHER_OH_COUNTY' | 'OUT_OF_STATE' | 'REFUSED';
+type County = 'SUMMIT' | 'STARK' | 'PORTAGE' | 'CUYAHOGA' | 'MEDINA' | 'OTHER_OH_COUNTY' | 'OUT_OF_STATE' | 'REFUSED';
 
 type RegistrationCreate = {
   uid: string;
@@ -159,6 +159,7 @@ const countyTable: Record<string,string> = {
   stark: 'STARK',
   portage: 'PORTAGE',
   cuyahoga: 'CUYAHOGA',
+  medina: 'MEDINA',
   other_oh_county: 'OTHER_OH_COUNTY',
   other: 'OTHER_OH_COUNTY',
   out_of_state: 'OUT_OF_STATE',

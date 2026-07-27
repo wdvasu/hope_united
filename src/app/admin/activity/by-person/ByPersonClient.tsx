@@ -282,7 +282,21 @@ function ByPersonClient() {
       {loading && <div>Loading…</div>}
       {error && <div className="text-red-600">{error}</div>}
       {!loading && !error && (
-        <div className="overflow-x-auto max-h-[70vh]">
+        <div className="overflow-x-auto max-h-[70vh] overflow-y-auto" style={{ scrollbarWidth: 'auto', scrollbarColor: 'auto' }}>
+          <style jsx>{`
+            div::-webkit-scrollbar {
+              -webkit-appearance: none;
+              width: 12px;
+              height: 12px;
+            }
+            div::-webkit-scrollbar-thumb {
+              background-color: rgba(0, 0, 0, 0.5);
+              border-radius: 6px;
+            }
+            div::-webkit-scrollbar-track {
+              background-color: rgba(0, 0, 0, 0.1);
+            }
+          `}</style>
           <table className="min-w-full border rounded relative">
             <thead className="sticky top-0 z-10">
               <tr className="bg-foreground/5">

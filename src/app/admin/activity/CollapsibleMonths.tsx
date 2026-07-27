@@ -59,20 +59,39 @@ function MonthDetailTable({ year, monthIndex, events, adjustments, onSetAdjustme
     totalsPerDay[di] = ACTIVITY_CATEGORIES.reduce((acc, c) => acc + byCategory[c][di], 0);
   }
   return (
-    <div className="p-3 overflow-x-auto">
-      <table className="min-w-[800px] text-xs">
-        <thead>
+    <div className="p-3 overflow-x-auto overflow-y-scroll max-h-[70vh] border rounded" style={{ scrollbarGutter: 'stable' }}>
+      <style jsx>{`
+        div::-webkit-scrollbar {
+          -webkit-appearance: none;
+          width: 14px;
+          height: 14px;
+        }
+        div::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.5);
+          border-radius: 7px;
+          border: 2px solid transparent;
+          background-clip: content-box;
+        }
+        div::-webkit-scrollbar-track {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+        div::-webkit-scrollbar-corner {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+      `}</style>
+      <table className="min-w-[800px] text-xs relative border-collapse">
+        <thead className="sticky top-0 z-10 bg-white">
           <tr>
-            <th className="text-left p-2">Category</th>
+            <th className="sticky left-0 z-20 bg-white text-left p-2 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">Category</th>
             {Array.from({ length: daysInMonth }, (_, d) => (
-              <th key={d} className="text-right p-2">{d + 1}</th>
+              <th key={d} className="text-right p-2 bg-white">{d + 1}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {ACTIVITY_CATEGORIES.map((c) => (
             <tr key={c} className="border-t">
-              <td className="p-2 whitespace-nowrap">{c}</td>
+              <td className="sticky left-0 z-10 bg-white p-2 whitespace-nowrap shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">{c}</td>
               {byCategory[c].map((n, di) => {
                 const dayStr = new Date(Date.UTC(year, monthIndex, di+1)).toISOString().slice(0,10);
                 return (
@@ -91,7 +110,7 @@ function MonthDetailTable({ year, monthIndex, events, adjustments, onSetAdjustme
             </tr>
           ))}
           <tr className="border-t bg-zinc-50 font-medium">
-            <td className="p-2">Daily Total</td>
+            <td className="sticky left-0 z-10 bg-zinc-50 p-2 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">Daily Total</td>
             {totalsPerDay.map((n, di) => (
               <td key={di} className="p-2 text-right tabular-nums">{n || ''}</td>
             ))}

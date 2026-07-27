@@ -282,25 +282,30 @@ function ByPersonClient() {
       {loading && <div>Loading…</div>}
       {error && <div className="text-red-600">{error}</div>}
       {!loading && !error && (
-        <div className="overflow-x-auto max-h-[70vh] overflow-y-auto" style={{ scrollbarWidth: 'auto', scrollbarColor: 'auto' }}>
+        <div className="overflow-auto max-h-[70vh] border" style={{ scrollbarWidth: 'auto', scrollbarGutter: 'stable' }}>
           <style jsx>{`
             div::-webkit-scrollbar {
               -webkit-appearance: none;
-              width: 12px;
-              height: 12px;
+              width: 14px;
+              height: 14px;
             }
             div::-webkit-scrollbar-thumb {
               background-color: rgba(0, 0, 0, 0.5);
-              border-radius: 6px;
+              border-radius: 7px;
+              border: 2px solid transparent;
+              background-clip: content-box;
             }
             div::-webkit-scrollbar-track {
               background-color: rgba(0, 0, 0, 0.1);
             }
+            div::-webkit-scrollbar-corner {
+              background-color: rgba(0, 0, 0, 0.1);
+            }
           `}</style>
-          <table className="min-w-full border rounded relative">
-            <thead className="sticky top-0 z-10">
+          <table className="min-w-full border-collapse relative">
+            <thead className="sticky top-0 z-10 bg-white">
               <tr className="bg-foreground/5">
-                <th className="sticky left-0 z-20 bg-foreground/5 text-left p-2 border">Person</th>
+                <th className="sticky left-0 z-20 bg-foreground/5 text-left p-2 border shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">Person</th>
                 <th className="text-left p-2 border">ZIP</th>
                 <th className="text-right p-2 border">Unique Day Visits</th>
                 <th className="text-right p-2 border">Total Activity Visits</th>
@@ -312,7 +317,7 @@ function ByPersonClient() {
             <tbody>
               {rows.map((r) => (
                   <tr key={r.registration.id}>
-                    <td className="sticky left-0 bg-white p-2 border whitespace-nowrap">
+                    <td className="sticky left-0 z-10 bg-white p-2 border whitespace-nowrap shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">
                       {r.registration.id === 'anonymous' ? (
                         r.registration.fullName
                       ) : (
@@ -342,7 +347,7 @@ function ByPersonClient() {
               {rows.length > 0 && (
                 <>
                   <tr className="bg-foreground/10 font-semibold">
-                    <td className="sticky left-0 bg-foreground/10 p-2 border text-right" colSpan={2}>Totals</td>
+                    <td className="sticky left-0 z-10 bg-foreground/10 p-2 border text-right shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]" colSpan={2}>Totals</td>
                     <td className="p-2 border text-right">{grandTotalUniqueDays}</td>
                     <td className="p-2 border text-right">{grandTotal}</td>
                     {ACTIVITY_CATEGORIES.map((c) => (
@@ -350,17 +355,17 @@ function ByPersonClient() {
                     ))}
                   </tr>
                   <tr className="bg-foreground/5 font-semibold">
-                    <td className="sticky left-0 bg-foreground/5 p-2 border">Total People</td>
+                    <td className="sticky left-0 z-10 bg-foreground/5 p-2 border shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">Total People</td>
                     <td className="p-2 border">{data?.totalPeople ?? 0}</td>
                     <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 2}></td>
                   </tr>
                   <tr className="bg-foreground/5 font-semibold">
-                    <td className="sticky left-0 bg-foreground/5 p-2 border">Total Person Visits</td>
+                    <td className="sticky left-0 z-10 bg-foreground/5 p-2 border shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">Total Person Visits</td>
                     <td className="p-2 border">{data?.totalUniqueVisits ?? 0}</td>
                     <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 2}></td>
                   </tr>
                   <tr className="bg-foreground/5 font-semibold">
-                    <td className="sticky left-0 bg-foreground/5 p-2 border">Total Activity Visits</td>
+                    <td className="sticky left-0 z-10 bg-foreground/5 p-2 border shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">Total Activity Visits</td>
                     <td className="p-2 border">{data?.totalVisits ?? 0}</td>
                     <td className="p-2 border text-right" colSpan={ACTIVITY_CATEGORIES.length + 2}></td>
                   </tr>

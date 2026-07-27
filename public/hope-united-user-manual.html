@@ -302,12 +302,14 @@
     <h2>Administrative Functions</h2>
     
     <h3>Admin Dashboard</h3>
-    <p>Access the admin dashboard at /admin. Available functions:</p>
+    <p>Access the admin dashboard at /admin. The header includes a <strong>📖 User Manual</strong> link that opens this document in a new tab for quick reference.</p>
+    
+    <p>Available functions:</p>
     
     <ul class="feature-list">
-        <li><strong>Registrations</strong> - View all registered participants</li>
-        <li><strong>Activity Report</strong> - View monthly activity summaries by category</li>
-        <li><strong>Activity by Person (Date Range)</strong> - Generate detailed reports for specific participants or date ranges</li>
+        <li><strong>Registrations</strong> - View, edit, and manage all registered participants (includes sticky headers and columns for easy navigation)</li>
+        <li><strong>Activity Report</strong> - View monthly activity summaries by category with day-by-day calendar breakdowns (includes sticky headers and category columns when expanded)</li>
+        <li><strong>Activity by Person (Date Range)</strong> - Generate detailed reports for specific participants or date ranges with drill-down editing capabilities</li>
         <li><strong>Manual Activity Entry</strong> - Record activities for specific registered participants</li>
         <li><strong>Group Event Entry</strong> - Record anonymous group activities without participant names</li>
         <li><strong>Open Demo Kiosk</strong> - Launch a demo session for testing</li>
@@ -324,6 +326,15 @@
         <li>Detailed daily breakdowns (expand each month to see day-by-day counts)</li>
     </ul>
     
+    <h4>Monthly Calendar Navigation</h4>
+    <p>When you expand a month to view the day-by-day calendar:</p>
+    <ul>
+        <li><strong>Sticky Headers</strong> - Day numbers (1-31) stay visible when scrolling down through activity categories</li>
+        <li><strong>Sticky Category Column</strong> - Activity category names stay locked on the left when scrolling right through dates</li>
+        <li><strong>Always-Visible Scrollbars</strong> - Both horizontal and vertical scrollbars shown for easy navigation through wide calendars</li>
+        <li>Click any cell to edit the count for that day/category combination</li>
+    </ul>
+    
     <div class="note">
         <strong>Note:</strong> All totals reflect the actual number of people who attended based on the attendee count entered for each activity.
     </div>
@@ -335,6 +346,7 @@
         <li>View total activities per person</li>
         <li>See activity breakdown by category</li>
         <li>View detailed activity history with timestamps</li>
+        <li><strong>Click on any person's name (blue underlined link) to drill down into their activity details</strong></li>
         <li>Export data for further analysis</li>
     </ul>
     
@@ -344,6 +356,38 @@
         <li><strong>Total Visits</strong> - Total attendance count (sum of all attendee counts)</li>
         <li><strong>Total Unique Person Visits</strong> - Number of unique person-day combinations</li>
     </ul>
+    
+    <h4>Table Navigation Features</h4>
+    <p>The Activity by Person report table includes enhanced navigation:</p>
+    <ul>
+        <li><strong>Sticky Headers</strong> - Column headers remain visible when scrolling down through long lists</li>
+        <li><strong>Sticky First Column</strong> - Person names stay locked on the left when scrolling right through activity categories</li>
+        <li><strong>Always-Visible Scrollbars</strong> - Both horizontal and vertical scrollbars are always shown for better navigation</li>
+        <li><strong>Max Height Display</strong> - Table is limited to 70% of screen height for comfortable viewing</li>
+    </ul>
+    
+    <h4>Editing Activity Dates</h4>
+    <p>If an activity was recorded with an incorrect date, you can easily fix it:</p>
+    <ol>
+        <li>In the Activity by Person report, click on the person's name (blue underlined link)</li>
+        <li>A modal window opens showing all activities for that person, grouped by day</li>
+        <li>Each day shows:
+            <ul>
+                <li>The date and number of activities that day</li>
+                <li>List of all activities with categories and timestamps</li>
+                <li>An "Edit Date" button</li>
+            </ul>
+        </li>
+        <li>Click the "Edit Date" button for the day you want to correct</li>
+        <li>Enter the new date in YYYY-MM-DD format (e.g., 2026-06-15)</li>
+        <li>All activities for that person on that day move to the new date</li>
+        <li>The original time-of-day for each activity is preserved</li>
+        <li>The report refreshes automatically to show the updated data</li>
+    </ol>
+    
+    <div class="note">
+        <strong>Example:</strong> If someone has 3 activities recorded on June 10th but they actually occurred on June 12th, click their name, find June 10th in the list, click "Edit Date", enter "2026-06-12", and all 3 activities move to June 12th with their original times intact.
+    </div>
     
     <h3>Excel Export</h3>
     <p>Click "Download XLSX" on the Activity Report page to export a spreadsheet with:</p>
@@ -356,6 +400,31 @@
     
     <div class="page-break"></div>
     
+    <h2>Navigating Large Tables</h2>
+    
+    <p>All major reports in the system include enhanced table navigation features for working with large datasets:</p>
+    
+    <h3>Sticky Headers and Columns</h3>
+    <ul>
+        <li><strong>Activity by Person Report</strong> - Person names stay locked on the left, column headers stay at the top</li>
+        <li><strong>Registrations Table</strong> - Actions and Full Name columns stay locked on the left, headers stay at the top</li>
+        <li><strong>Monthly Activity Calendar</strong> - Category names stay locked on the left, day numbers stay at the top</li>
+    </ul>
+    
+    <h3>Benefits of Sticky Navigation</h3>
+    <ul>
+        <li>Scroll through hundreds of rows without losing context of which person or category you're viewing</li>
+        <li>Scroll through dozens of activity categories while always seeing the person's name</li>
+        <li>Navigate large monthly calendars without losing track of which day or category you're editing</li>
+        <li>Always-visible scrollbars indicate when more data is available in any direction</li>
+    </ul>
+    
+    <div class="note">
+        <strong>Tip:</strong> When viewing reports with many columns, use your mouse or trackpad to scroll horizontally. The sticky first column(s) will remain visible so you always know which row you're looking at.
+    </div>
+    
+    <div class="page-break"></div>
+    
     <h2>Best Practices</h2>
     
     <h3>For Accurate Reporting</h3>
@@ -365,6 +434,7 @@
         <li>Use the manual entry feature for backdating activities if needed</li>
         <li>Select all applicable categories for each visit</li>
         <li>Review reports regularly to ensure data accuracy</li>
+        <li><strong>Use the bulk date editing feature</strong> to correct incorrect activity dates - click person names in the Activity by Person report to access the date editor</li>
     </ol>
     
     <h3>For Group Events</h3>
@@ -399,7 +469,10 @@
     <p><strong>A:</strong> Use "Group Event Entry" in the admin dashboard. Select the date, choose "Training/Focus Group" (or relevant category), enter "50" as the attendee count, and save. These 50 people will automatically be included in your daily total for that date, which rolls up into your monthly and yearly totals. You don't need to register them individually or enter 50 separate activities.</p>
     
     <h4>Q: Can I edit or delete activities after they're entered?</h4>
-    <p><strong>A:</strong> Currently, activities cannot be edited or deleted through the web interface. Contact your system administrator if you need to make corrections.</p>
+    <p><strong>A:</strong> Yes! You can edit activity dates through the Activity by Person report. Click on a person's name to view their activities grouped by day, then click "Edit Date" to move all activities from one day to another. The original time-of-day for each activity is preserved. Group events can be deleted from the Group Event Entry page using the red "Delete" button.</p>
+    
+    <h4>Q: What if I recorded activities on the wrong date?</h4>
+    <p><strong>A:</strong> Use the bulk date editing feature in the Activity by Person report. Click the person's name, find the incorrect date in the list, click "Edit Date", and enter the correct date. All activities for that person on that day will move to the new date while preserving their original times.</p>
     
     <h4>Q: What happens if I forget to log someone's activity?</h4>
     <p><strong>A:</strong> Use the Manual Activity Entry function in the admin dashboard. Select the correct date, find the participant, choose the categories, and save.</p>
@@ -411,8 +484,9 @@
     <p>For technical support or questions about using the system, contact your system administrator or IT support team.</p>
     
     <div class="version">
-        <p>Document Version: 1.0</p>
-        <p>Last Updated: June 2026</p>
+        <p>Document Version: 1.1</p>
+        <p>Last Updated: July 2026</p>
+        <p>Changes in v1.1: Added documentation for bulk date editing, sticky table headers/columns, enhanced table navigation features, and user manual link in admin header</p>
     </div>
     
     <footer>Hope United Activity Tracking System - User Manual</footer>

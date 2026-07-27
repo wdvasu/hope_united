@@ -23,9 +23,13 @@ export async function GET(req: NextRequest) {
     const recent = url.searchParams.get('recent');
 
     if (recent === 'true') {
-      // Get recent group activities (where registrationId is null)
+      // Get recent group activities (where registrationId is null and attendeeCount > 1)
+      // This filters out orphaned single-person activities from deleted registrations
       const activities = await prisma.activity.findMany({
-        where: { registrationId: null },
+        where: { 
+          registrationId: null,
+          attendeeCount: { gt: 1 }
+        },
         orderBy: { createdAt: 'desc' },
         take: 50,
         select: {

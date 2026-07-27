@@ -104,6 +104,19 @@ function ByPersonClient() {
     }
   };
 
+  const clearFilters = () => {
+    setPersonName("");
+    setZip("");
+    setBirthYear("");
+    setVeteranStatus("");
+    setSexualOrientation("");
+    setGender("");
+    setRace("");
+    setEthnicity("");
+    setCounty("");
+    setPersonSuggestions([]);
+  };
+
   useEffect(() => {
     if (!hasLoadedRef.current) {
       hasLoadedRef.current = true;
@@ -230,54 +243,73 @@ function ByPersonClient() {
         <button onClick={downloadCsv} className="border rounded px-3 py-1 hover:bg-foreground/5">Export CSV</button>
       </div>
       <div className="flex items-center gap-3 flex-wrap">
-        <label className="text-sm">Person Name</label>
-        <div className="relative">
-          <input
-            value={personName}
-            onChange={(e) => {
-              setPersonName(e.target.value);
-              searchPersonNames(e.target.value);
-              setShowPersonSuggestions(true);
-            }}
-            onFocus={() => setShowPersonSuggestions(true)}
-            onBlur={() => setTimeout(() => setShowPersonSuggestions(false), 200)}
-            className="border rounded px-2 py-1 w-60"
-            placeholder="Type to search..."
-          />
-          {showPersonSuggestions && personSuggestions.length > 0 && (
-            <div className="absolute z-10 w-60 bg-white border rounded shadow-lg mt-1 max-h-60 overflow-y-auto">
-              {personSuggestions.map((person) => (
-                <div
-                  key={person.id}
-                  className="px-3 py-2 hover:bg-foreground/5 cursor-pointer"
-                  onClick={() => {
-                    setPersonName(person.fullName);
-                    setShowPersonSuggestions(false);
-                  }}
-                >
-                  {person.fullName}
-                </div>
-              ))}
-            </div>
-          )}
+        <div className="flex items-center gap-2">
+          <label className="text-sm whitespace-nowrap">Person Name</label>
+          <div className="relative">
+            <input
+              value={personName}
+              onChange={(e) => {
+                setPersonName(e.target.value);
+                searchPersonNames(e.target.value);
+                setShowPersonSuggestions(true);
+              }}
+              onFocus={() => setShowPersonSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowPersonSuggestions(false), 200)}
+              className="border rounded px-2 py-1 w-60"
+              placeholder="Type to search..."
+            />
+            {showPersonSuggestions && personSuggestions.length > 0 && (
+              <div className="absolute z-10 w-60 bg-white border rounded shadow-lg mt-1 max-h-60 overflow-y-auto">
+                {personSuggestions.map((person) => (
+                  <div
+                    key={person.id}
+                    className="px-3 py-2 hover:bg-foreground/5 cursor-pointer"
+                    onClick={() => {
+                      setPersonName(person.fullName);
+                      setShowPersonSuggestions(false);
+                    }}
+                  >
+                    {person.fullName}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        <label className="text-sm">ZIP</label>
-        <input value={zip} onChange={(e)=>setZip(e.target.value)} className="border rounded px-2 py-1 w-28" placeholder="e.g. 44308" />
-        <label className="text-sm">Birth Year</label>
-        <input value={birthYear} onChange={(e)=>setBirthYear(e.target.value.replace(/[^0-9]/g,'').slice(0,4))} className="border rounded px-2 py-1 w-24" placeholder="YYYY" />
-        <label className="text-sm">Veteran</label>
-        <Select value={veteranStatus} onChange={setVeteranStatus} options={["","YES","NO","REFUSED"]} />
-        <label className="text-sm">Sexual Orientation</label>
-        <Select value={sexualOrientation} onChange={setSexualOrientation} options={["","HETEROSEXUAL","GAY_LESBIAN","BISEXUAL","OTHER","REFUSED"]} />
-        <label className="text-sm">Gender</label>
-        <Select value={gender} onChange={setGender} options={["","FEMALE","MALE","TRANSGENDER","NON_BINARY","OTHER","REFUSED"]} />
-        <label className="text-sm">Race</label>
-        <Select value={race} onChange={setRace} options={["","WHITE","BLACK_AFRICAN_AMERICAN","ASIAN","AMERICAN_INDIAN_ALASKA_NATIVE","NATIVE_HAWAIIAN_PACIFIC_ISLANDER","OTHER","REFUSED"]} />
-        <label className="text-sm">Ethnicity</label>
-        <Select value={ethnicity} onChange={setEthnicity} options={["","HISPANIC_LATINO","NOT_HISPANIC_LATINO","REFUSED"]} />
-        <label className="text-sm">County</label>
-        <Select value={county} onChange={setCounty} options={["","SUMMIT","STARK","PORTAGE","CUYAHOGA","MEDINA","OTHER_OH_COUNTY","OUT_OF_STATE","REFUSED"]} />
+        <div className="flex items-center gap-2">
+          <label className="text-sm whitespace-nowrap">ZIP</label>
+          <input value={zip} onChange={(e)=>setZip(e.target.value)} className="border rounded px-2 py-1 w-28" placeholder="e.g. 44308" />
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-sm whitespace-nowrap">Birth Year</label>
+          <input value={birthYear} onChange={(e)=>setBirthYear(e.target.value.replace(/[^0-9]/g,'').slice(0,4))} className="border rounded px-2 py-1 w-24" placeholder="YYYY" />
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-sm whitespace-nowrap">Veteran</label>
+          <Select value={veteranStatus} onChange={setVeteranStatus} options={["","YES","NO","REFUSED"]} />
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-sm whitespace-nowrap">Sexual Orientation</label>
+          <Select value={sexualOrientation} onChange={setSexualOrientation} options={["","HETEROSEXUAL","GAY_LESBIAN","BISEXUAL","OTHER","REFUSED"]} />
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-sm whitespace-nowrap">Gender</label>
+          <Select value={gender} onChange={setGender} options={["","FEMALE","MALE","TRANSGENDER","NON_BINARY","OTHER","REFUSED"]} />
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-sm whitespace-nowrap">Race</label>
+          <Select value={race} onChange={setRace} options={["","WHITE","BLACK_AFRICAN_AMERICAN","ASIAN","AMERICAN_INDIAN_ALASKA_NATIVE","NATIVE_HAWAIIAN_PACIFIC_ISLANDER","OTHER","REFUSED"]} />
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-sm whitespace-nowrap">Ethnicity</label>
+          <Select value={ethnicity} onChange={setEthnicity} options={["","HISPANIC_LATINO","NOT_HISPANIC_LATINO","REFUSED"]} />
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-sm whitespace-nowrap">County</label>
+          <Select value={county} onChange={setCounty} options={["","SUMMIT","STARK","PORTAGE","CUYAHOGA","MEDINA","OTHER_OH_COUNTY","OUT_OF_STATE","REFUSED"]} />
+        </div>
         <button onClick={() => load(startDay, endDay)} className="border rounded px-3 py-1 hover:bg-foreground/5">Apply Filters</button>
+        <button onClick={clearFilters} className="border rounded px-3 py-1 hover:bg-foreground/5 text-red-600 border-red-300">Clear Filters</button>
       </div>
       {loading && <div>Loading…</div>}
       {error && <div className="text-red-600">{error}</div>}

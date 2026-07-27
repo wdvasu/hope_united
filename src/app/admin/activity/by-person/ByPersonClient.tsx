@@ -13,7 +13,17 @@ type ApiItem = {
 
 type ApiResponse = { day: string; start?: string; end?: string; items: ApiItem[]; totalPeople: number; totalVisits: number; totalUniqueVisits: number };
 
+type DayActivity = {
+  day: string;
+  activities: Array<{ id: string; category: string; createdAt: string; attendeeCount: number }>;
+  count: number;
+};
+
 function ByPersonClient() {
+  const [selectedPerson, setSelectedPerson] = useState<{ id: string; name: string } | null>(null);
+  const [personDays, setPersonDays] = useState<DayActivity[]>([]);
+  const [loadingDetails, setLoadingDetails] = useState(false);
+  const [editMessage, setEditMessage] = useState<string | null>(null);
   const hasLoadedRef = useRef(false);
   const [startDay, setStartDay] = useState<string>(() => {
     if (typeof window !== 'undefined') {
@@ -149,6 +159,65 @@ function ByPersonClient() {
     URL.revokeObjectURL(url);
   };
 
+  const viewPersonDetails = async (personId: string, personName: string) => {
+    if (personId === 'anonymous') return; // Can't edit anonymous
+    setSelectedPerson({ id: personId, name: personName });
+    setLoadingDetails(true);
+    setEditMessage(null);
+    try {
+      const res = await fetch(`/api/activity/by-person-details?registrationId=${personId}&start=${startDay}&end=${endDay}`);
+      if (!res.ok) throw new Error('Failed to load details');
+      const json = await res.json();
+      setPersonDays(json.days || []);
+    } catch (e) {
+      setEditMessage('Failed to load activity details');
+      setPersonDays([]);
+    } finally {
+      setLoadingDetails(false);
+    }
+  };
+
+  const closeModal = () => {
+    setSelectedPerson(null);
+    setPersonDays([]);
+    setEditMessage(null);
+  };
+
+  const editDayDate = async (oldDate: string) => {
+    const newDate = prompt(`Change date for all activities on ${oldDate} to (YYYY-MM-DD):`, oldDate);
+    if (!newDate) return;
+    
+    // Validate date format
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(newDate)) {
+      setEditMessage('Invalid date format. Use YYYY-MM-DD');
+      return;
+    }
+
+    setEditMessage(null);
+    try {
+      const res = await fetch('/api/activity/bulk-update-date', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          registrationId: selectedPerson!.id,
+          oldDate,
+          newDate,
+        }),
+      });
+
+      if (!res.ok) throw new Error('Failed to update');
+      const json = await res.json();
+      setEditMessage(`Updated ${json.updated} activities from ${oldDate} to ${newDate}`);
+      
+      // Reload details and main report
+      await viewPersonDetails(selectedPerson!.id, selectedPerson!.name);
+      await load(startDay, endDay);
+    } catch (e) {
+      const msg = (e as Error)?.message || '';
+      setEditMessage(`Could not update: ${msg}`);
+    }
+  };
+
   return (
     <div className="max-w-screen-2xl mx-auto p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Activity by Person (Date Range)</h1>
@@ -229,7 +298,18 @@ function ByPersonClient() {
             <tbody>
               {rows.map((r) => (
                   <tr key={r.registration.id}>
-                    <td className="p-2 border whitespace-nowrap">{r.registration.fullName}</td>
+                    <td className="p-2 border whitespace-nowrap">
+                      {r.registration.id === 'anonymous' ? (
+                        r.registration.fullName
+                      ) : (
+                        <button
+                          onClick={() => viewPersonDetails(r.registration.id, r.registration.fullName)}
+                          className="text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                        >
+                          {r.registration.fullName}
+                        </button>
+                      )}
+                    </td>
                     <td className="p-2 border whitespace-nowrap">
                       {r.registration.id === 'anonymous' ? 'N/A' : (r.registration.zipCode || '')}
                     </td>
@@ -274,6 +354,62 @@ function ByPersonClient() {
               )}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Edit Modal */}
+      {selectedPerson && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={closeModal}>
+          <div className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold">Activities for {selectedPerson.name}</h2>
+              <button onClick={closeModal} className="text-2xl hover:text-red-600">&times;</button>
+            </div>
+
+            {editMessage && (
+              <div className={`mb-4 p-3 rounded ${editMessage.includes('Could not') || editMessage.includes('Failed') ? 'bg-red-50 text-red-800' : 'bg-green-50 text-green-800'}`}>
+                {editMessage}
+              </div>
+            )}
+
+            {loadingDetails ? (
+              <div className="text-center py-8">Loading...</div>
+            ) : personDays.length === 0 ? (
+              <div className="text-center py-8 text-gray-600">No activities found</div>
+            ) : (
+              <div className="space-y-4">
+                {personDays.map((dayData) => (
+                  <div key={dayData.day} className="border rounded p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="font-semibold">
+                        {new Date(dayData.day + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}
+                        <span className="ml-2 text-sm text-gray-600">({dayData.count} {dayData.count === 1 ? 'activity' : 'activities'})</span>
+                      </div>
+                      <button
+                        onClick={() => editDayDate(dayData.day)}
+                        className="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700"
+                      >
+                        Edit Date
+                      </button>
+                    </div>
+                    <div className="text-sm space-y-1">
+                      {dayData.activities.map((activity) => (
+                        <div key={activity.id} className="pl-4 text-gray-700">
+                          • {activity.category} ({new Date(activity.createdAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })})
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="mt-6 text-right">
+              <button onClick={closeModal} className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

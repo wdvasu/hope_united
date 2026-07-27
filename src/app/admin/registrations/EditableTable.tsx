@@ -103,12 +103,31 @@ export function EditableTable({ rows: initialRows }: { rows: RegRow[] }) {
 
   return (
     <>
-      <div className="overflow-x-auto border rounded">
-        <table className="min-w-[1100px] text-sm whitespace-nowrap leading-tight">
-          <thead className="bg-zinc-50">
-            <tr>
-              <th className="text-left px-2 py-1">Actions</th>
-              <th className="text-left px-2 py-1">Full Name</th>
+      <div className="overflow-x-auto overflow-y-scroll max-h-[70vh] border rounded" style={{ scrollbarGutter: 'stable' }}>
+        <style jsx>{`
+          div::-webkit-scrollbar {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+          }
+          div::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 7px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+          }
+          div::-webkit-scrollbar-track {
+            background-color: rgba(0, 0, 0, 0.1);
+          }
+          div::-webkit-scrollbar-corner {
+            background-color: rgba(0, 0, 0, 0.1);
+          }
+        `}</style>
+        <table className="min-w-[1100px] text-sm whitespace-nowrap leading-tight relative border-collapse">
+          <thead className="sticky top-0 z-10 bg-white">
+            <tr className="bg-zinc-50">
+              <th className="sticky left-0 z-20 bg-zinc-50 text-left px-2 py-1 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">Actions</th>
+              <th className="sticky left-[100px] z-20 bg-zinc-50 text-left px-2 py-1 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">Full Name</th>
               <th className="text-left px-2 py-1">Birth Year</th>
               <th className="text-left px-2 py-1">ZIP</th>
               <th className="text-left px-2 py-1">Veteran</th>
@@ -130,11 +149,11 @@ export function EditableTable({ rows: initialRows }: { rows: RegRow[] }) {
           <tbody>
             {rows.map((r) => (
               <tr key={r.id} className="border-t">
-                <td className="px-2 py-1 flex gap-2">
+                <td className="sticky left-0 z-10 bg-white px-2 py-1 flex gap-2 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">
                   <button className="px-2 py-1 rounded border" onClick={()=>setEditing(r)}>Edit</button>
                   <button className="px-2 py-1 rounded border text-red-600 border-red-300 disabled:opacity-50" disabled={deletingId===r.id} onClick={()=>onDelete(r.id)}>{deletingId===r.id?'Deleting…':'Delete'}</button>
                 </td>
-                <td className="px-2 py-1">{r.fullName}</td>
+                <td className="sticky left-[100px] z-10 bg-white px-2 py-1 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">{r.fullName}</td>
                 <td className="px-2 py-1">{r.birthYear ?? ''}</td>
                 <td className="px-2 py-1">{r.zipCode}</td>
                 <td className="px-2 py-1">{r.veteranStatus}</td>

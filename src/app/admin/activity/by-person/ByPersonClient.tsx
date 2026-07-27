@@ -282,7 +282,7 @@ function ByPersonClient() {
       {loading && <div>Loading…</div>}
       {error && <div className="text-red-600">{error}</div>}
       {!loading && !error && (
-        <div className="overflow-auto max-h-[70vh] border" style={{ scrollbarWidth: 'auto', scrollbarGutter: 'stable' }}>
+        <div className="overflow-x-auto overflow-y-scroll max-h-[70vh] border" style={{ scrollbarGutter: 'stable' }}>
           <style jsx>{`
             div::-webkit-scrollbar {
               -webkit-appearance: none;

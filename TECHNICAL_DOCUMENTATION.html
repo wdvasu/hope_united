@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Hope United Technical Documentation</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css" />
+  <style>
+    @media print {
+      body { margin: 0.5in; font-size: 10pt; }
+      h1 { page-break-before: always; }
+      h1:first-of-type { page-break-before: avoid; }
+      h2, h3 { page-break-after: avoid; }
+      pre, table { page-break-inside: avoid; }
+      code { font-size: 9pt; }
+    }
+    @media screen {
+      body { max-width: 900px; margin: 40px auto; padding: 20px; }
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.6; }
+    h1 { border-bottom: 2px solid #333; padding-bottom: 10px; }
+    h2 { border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 30px; }
+    code { background: #f5f5f5; padding: 2px 6px; border-radius: 3px; }
+    pre { background: #f8f8f8; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f0f0f0; font-weight: 600; }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Hope United - Technical Documentation</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a
+href="#hope-united-activity-tracking-system---technical-documentation"
+id="toc-hope-united-activity-tracking-system---technical-documentation">Hope
+United Activity Tracking System - Technical Documentation</a>
+<ul>
+<li><a href="#table-of-contents" id="toc-table-of-contents">Table of
+Contents</a></li>
+<li><a href="#system-overview" id="toc-system-overview">System
+Overview</a>
+<ul>
+<li><a href="#key-design-decisions" id="toc-key-design-decisions">Key
+Design Decisions</a></li>
+</ul></li>
+<li><a href="#technology-stack" id="toc-technology-stack">Technology
+Stack</a>
+<ul>
+<li><a href="#frontend" id="toc-frontend">Frontend</a></li>
+<li><a href="#backend" id="toc-backend">Backend</a></li>
+<li><a href="#development-tools" id="toc-development-tools">Development
+Tools</a></li>
+<li><a href="#production-environment-windows"
+id="toc-production-environment-windows">Production Environment
+(Windows)</a></li>
+</ul></li>
+<li><a href="#architecture" id="toc-architecture">Architecture</a>
+<ul>
+<li><a href="#directory-structure"
+id="toc-directory-structure">Directory Structure</a></li>
+<li><a href="#data-flow" id="toc-data-flow">Data Flow</a></li>
+</ul></li>
+<li><a href="#development-environment-setup"
+id="toc-development-environment-setup">Development Environment Setup</a>
+<ul>
+<li><a href="#prerequisites"
+id="toc-prerequisites">Prerequisites</a></li>
+<li><a href="#initial-setup" id="toc-initial-setup">Initial
+Setup</a></li>
+<li><a href="#available-scripts" id="toc-available-scripts">Available
+Scripts</a></li>
+</ul></li>
+<li><a href="#database-schema" id="toc-database-schema">Database
+Schema</a>
+<ul>
+<li><a href="#core-tables" id="toc-core-tables">Core Tables</a></li>
+</ul></li>
+<li><a href="#api-endpoints" id="toc-api-endpoints">API Endpoints</a>
+<ul>
+<li><a href="#activity-endpoints" id="toc-activity-endpoints">Activity
+Endpoints</a></li>
+<li><a href="#report-endpoints" id="toc-report-endpoints">Report
+Endpoints</a></li>
+<li><a href="#registration-endpoints"
+id="toc-registration-endpoints">Registration Endpoints</a></li>
+</ul></li>
+<li><a href="#frontend-components" id="toc-frontend-components">Frontend
+Components</a>
+<ul>
+<li><a href="#key-components" id="toc-key-components">Key
+Components</a></li>
+</ul></li>
+<li><a href="#key-features-implementation"
+id="toc-key-features-implementation">Key Features Implementation</a>
+<ul>
+<li><a href="#sticky-table-navigation"
+id="toc-sticky-table-navigation">1. Sticky Table Navigation</a></li>
+<li><a href="#bulk-date-editing" id="toc-bulk-date-editing">2. Bulk Date
+Editing</a></li>
+<li><a href="#anonymous-group-events" id="toc-anonymous-group-events">3.
+Anonymous Group Events</a></li>
+<li><a href="#demographic-filtering" id="toc-demographic-filtering">4.
+Demographic Filtering</a></li>
+<li><a href="#filter-layout-with-clear-button"
+id="toc-filter-layout-with-clear-button">5. Filter Layout with Clear
+Button</a></li>
+</ul></li>
+<li><a href="#deployment-process" id="toc-deployment-process">Deployment
+Process</a>
+<ul>
+<li><a href="#development-production-flow"
+id="toc-development-production-flow">Development → Production
+Flow</a></li>
+<li><a href="#windows-production-deployment"
+id="toc-windows-production-deployment">Windows Production
+Deployment</a></li>
+</ul></li>
+<li><a href="#common-maintenance-tasks"
+id="toc-common-maintenance-tasks">Common Maintenance Tasks</a>
+<ul>
+<li><a href="#adding-a-new-activity-category"
+id="toc-adding-a-new-activity-category">Adding a New Activity
+Category</a></li>
+<li><a href="#adding-a-new-demographic-filter"
+id="toc-adding-a-new-demographic-filter">Adding a New Demographic
+Filter</a></li>
+<li><a href="#modifying-report-calculations"
+id="toc-modifying-report-calculations">Modifying Report
+Calculations</a></li>
+<li><a href="#adding-a-new-report" id="toc-adding-a-new-report">Adding a
+New Report</a></li>
+</ul></li>
+<li><a href="#troubleshooting"
+id="toc-troubleshooting">Troubleshooting</a>
+<ul>
+<li><a href="#build-errors" id="toc-build-errors">Build Errors</a></li>
+<li><a href="#runtime-errors" id="toc-runtime-errors">Runtime
+Errors</a></li>
+<li><a href="#service-management-windows"
+id="toc-service-management-windows">Service Management
+(Windows)</a></li>
+<li><a href="#database-issues" id="toc-database-issues">Database
+Issues</a></li>
+</ul></li>
+<li><a href="#security-considerations"
+id="toc-security-considerations">Security Considerations</a>
+<ul>
+<li><a href="#authentication"
+id="toc-authentication">Authentication</a></li>
+<li><a href="#data-privacy" id="toc-data-privacy">Data Privacy</a></li>
+<li><a href="#input-validation" id="toc-input-validation">Input
+Validation</a></li>
+<li><a href="#dependency-management"
+id="toc-dependency-management">Dependency Management</a></li>
+</ul></li>
+<li><a href="#performance-optimization"
+id="toc-performance-optimization">Performance Optimization</a>
+<ul>
+<li><a href="#database-indexes" id="toc-database-indexes">Database
+Indexes</a></li>
+<li><a href="#query-optimization" id="toc-query-optimization">Query
+Optimization</a></li>
+<li><a href="#frontend-optimization"
+id="toc-frontend-optimization">Frontend Optimization</a></li>
+</ul></li>
+<li><a href="#version-history" id="toc-version-history">Version
+History</a>
+<ul>
+<li><a href="#version-1.1-july-2026"
+id="toc-version-1.1-july-2026">Version 1.1 (July 2026)</a></li>
+<li><a href="#version-1.0-june-2026"
+id="toc-version-1.0-june-2026">Version 1.0 (June 2026)</a></li>
+</ul></li>
+<li><a href="#contact-and-support" id="toc-contact-and-support">Contact
+and Support</a></li>
+<li><a href="#appendix-activity-categories"
+id="toc-appendix-activity-categories">Appendix: Activity
+Categories</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1
+id="hope-united-activity-tracking-system---technical-documentation">Hope
+United Activity Tracking System - Technical Documentation</h1>
+<p><strong>Version:</strong> 1.1<br />
+<strong>Last Updated:</strong> July 28, 2026<br />
+<strong>Author:</strong> Development Team</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#system-overview">System Overview</a></li>
+<li><a href="#technology-stack">Technology Stack</a></li>
+<li><a href="#architecture">Architecture</a></li>
+<li><a href="#development-environment-setup">Development Environment
+Setup</a></li>
+<li><a href="#database-schema">Database Schema</a></li>
+<li><a href="#api-endpoints">API Endpoints</a></li>
+<li><a href="#frontend-components">Frontend Components</a></li>
+<li><a href="#key-features-implementation">Key Features
+Implementation</a></li>
+<li><a href="#deployment-process">Deployment Process</a></li>
+<li><a href="#common-maintenance-tasks">Common Maintenance
+Tasks</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#security-considerations">Security Considerations</a></li>
+</ol>
+<hr />
+<h2 id="system-overview">System Overview</h2>
+<p>The Hope United Activity Tracking System is a full-stack web
+application designed to track participant registrations and daily
+activities. The system supports:</p>
+<ul>
+<li>Individual participant registration with demographic data</li>
+<li>Individual activity check-ins with QR code support</li>
+<li>Manual activity entry by staff</li>
+<li>Anonymous group event tracking (bulk entries)</li>
+<li>Comprehensive reporting with demographic filtering</li>
+<li>Activity date editing and corrections</li>
+<li>Excel exports for data analysis</li>
+</ul>
+<h3 id="key-design-decisions">Key Design Decisions</h3>
+<ul>
+<li><strong>Production Mode Only</strong>: System runs in production
+mode (<code>next start</code>) to avoid HMR (Hot Module Replacement)
+issues that caused page reloads and filter resets</li>
+<li><strong>No Authentication Layer</strong>: API endpoints rely on
+middleware authentication rather than individual endpoint checks</li>
+<li><strong>Sticky Table Navigation</strong>: Enhanced UX with sticky
+headers/columns for large datasets</li>
+<li><strong>Bulk Operations</strong>: Support for group events and bulk
+date editing to handle real-world use cases</li>
+</ul>
+<hr />
+<h2 id="technology-stack">Technology Stack</h2>
+<h3 id="frontend">Frontend</h3>
+<ul>
+<li><strong>Framework</strong>: Next.js 16.0.1 (App Router)</li>
+<li><strong>Language</strong>: TypeScript</li>
+<li><strong>Styling</strong>: Tailwind CSS</li>
+<li><strong>UI Components</strong>: Custom React components</li>
+<li><strong>State Management</strong>: React hooks (useState,
+useEffect)</li>
+</ul>
+<h3 id="backend">Backend</h3>
+<ul>
+<li><strong>Runtime</strong>: Node.js 20.20.0+</li>
+<li><strong>Framework</strong>: Next.js API Routes</li>
+<li><strong>Database ORM</strong>: Prisma 6.1.0</li>
+<li><strong>Database</strong>: PostgreSQL</li>
+<li><strong>Validation</strong>: Zod schemas</li>
+</ul>
+<h3 id="development-tools">Development Tools</h3>
+<ul>
+<li><strong>Package Manager</strong>: npm</li>
+<li><strong>Linting</strong>: ESLint</li>
+<li><strong>Type Checking</strong>: TypeScript compiler</li>
+</ul>
+<h3 id="production-environment-windows">Production Environment
+(Windows)</h3>
+<ul>
+<li><strong>Process Manager</strong>: NSSM (Non-Sucking Service
+Manager)</li>
+<li><strong>Port</strong>: 3000</li>
+<li><strong>Node Version</strong>: 20.20.0+</li>
+</ul>
+<hr />
+<h2 id="architecture">Architecture</h2>
+<h3 id="directory-structure">Directory Structure</h3>
+<pre><code>hope_united/
+├── src/
+│   ├── app/                      # Next.js App Router pages
+│   │   ├── page.tsx             # Home page (registration/activity cards)
+│   │   ├── register/            # Participant registration flow
+│   │   ├── activity/            # Individual check-in kiosk
+│   │   ├── start/               # Landing page
+│   │   ├── admin/               # Admin dashboard and reports
+│   │   │   ├── page.tsx         # Admin dashboard
+│   │   │   ├── registrations/  # Registration management
+│   │   │   ├── activity/        # Activity reports
+│   │   │   │   ├── page.tsx            # Main activity report (monthly calendar)
+│   │   │   │   ├── by-person/          # Activity by person report
+│   │   │   │   ├── manual/             # Manual activity entry
+│   │   │   │   └── group/              # Group event entry
+│   │   │   └── enroll/          # Staff enrollment
+│   │   └── api/                 # API endpoints
+│   │       ├── activity/        # Activity-related endpoints
+│   │       ├── registrations/   # Registration endpoints
+│   │       ├── reports/         # Report generation endpoints
+│   │       └── auth/            # Authentication endpoints
+│   ├── lib/                     # Shared utilities
+│   │   ├── db.ts               # Prisma client
+│   │   ├── auth.ts             # Authentication utilities
+│   │   └── activityCategories.ts # Activity category definitions
+│   └── middleware.ts            # Request middleware
+├── prisma/
+│   ├── schema.prisma            # Database schema
+│   └── migrations/              # Database migrations
+├── public/
+│   └── hope-united-user-manual.html  # User documentation
+├── .env                         # Environment variables (DATABASE_URL, etc.)
+└── package.json                 # Dependencies and scripts</code></pre>
+<h3 id="data-flow">Data Flow</h3>
+<pre><code>User Request → Next.js Middleware (Auth) → Page Component → API Route → Prisma → PostgreSQL
+                                                ↓
+                                        React State Updates
+                                                ↓
+                                            Re-render UI</code></pre>
+<hr />
+<h2 id="development-environment-setup">Development Environment
+Setup</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<ol type="1">
+<li><p><strong>Node.js 20.20.0 or higher</strong></p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check version</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> <span class="at">--version</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install via nvm (recommended)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">nvm</span> install 20.20.0</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">nvm</span> use 20.20.0</span></code></pre></div></li>
+<li><p><strong>PostgreSQL Database</strong></p>
+<ul>
+<li>Install PostgreSQL 16+ (Windows: use official installer)</li>
+<li>Create database: <code>hope_united</code></li>
+<li>Note connection details for <code>.env</code> file</li>
+</ul></li>
+<li><p><strong>Git</strong></p>
+<ul>
+<li>Clone repository: <code>git clone &lt;repository-url&gt;</code></li>
+</ul></li>
+</ol>
+<h3 id="initial-setup">Initial Setup</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Navigate to project directory</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> hope_united</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Install dependencies</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Create .env file with database connection</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;DATABASE_URL=postgresql://username:password@localhost:5432/hope_united&quot;</span> <span class="op">&gt;</span> .env</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Run database migrations</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="ex">npx</span> prisma migrate deploy</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Generate Prisma client</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="ex">npx</span> prisma generate</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Build the application</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run build</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. Start production server (port 3004 for local testing)</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="va">PORT</span><span class="op">=</span>3004 <span class="ex">npm</span> run start</span></code></pre></div>
+<h3 id="available-scripts">Available Scripts</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;dev&quot;</span><span class="fu">:</span> <span class="st">&quot;next dev&quot;</span><span class="fu">,</span>           <span class="er">//</span> <span class="er">Development</span> <span class="er">mode</span> <span class="er">(NOT</span> <span class="er">USED</span> <span class="er">-</span> <span class="er">causes</span> <span class="er">HMR</span> <span class="er">issues)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;build&quot;</span><span class="fu">:</span> <span class="st">&quot;next build&quot;</span><span class="fu">,</span>       <span class="er">//</span> <span class="er">Build</span> <span class="er">production</span> <span class="er">bundle</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;start&quot;</span><span class="fu">:</span> <span class="st">&quot;next start&quot;</span><span class="fu">,</span>       <span class="er">//</span> <span class="er">Start</span> <span class="er">production</span> <span class="er">server</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;lint&quot;</span><span class="fu">:</span> <span class="st">&quot;next lint&quot;</span>          <span class="er">//</span> <span class="er">Run</span> <span class="er">ESLint</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="database-schema">Database Schema</h2>
+<h3 id="core-tables">Core Tables</h3>
+<h4 id="registration"><code>Registration</code></h4>
+<p>Stores participant demographic information.</p>
+<pre class="prisma"><code>model Registration {
+  id                String    @id @default(uuid())
+  uid               String    @unique
+  fullName          String
+  birthYear         Int?
+  zipCode           String
+  veteranStatus     String
+  sexualOrientation String
+  sexualOther       String?
+  gender            String
+  genderOther       String?
+  race              String
+  raceOther         String?
+  ethnicity         String
+  county            County
+  countyOther       String?
+  waiverAgreed      Boolean
+  eSignatureAt      DateTime
+  eSignatureImage   String?   @db.Text
+  deviceId          String?
+  createdIp         String?
+  createdAt         DateTime  @default(now())
+  activities        Activity[]
+}</code></pre>
+<p><strong>Key Fields:</strong> - <code>uid</code>: Unique identifier
+for QR code scanning - <code>county</code>: Enum type (SUMMIT, STARK,
+PORTAGE, CUYAHOGA, MEDINA, OTHER_OH_COUNTY, OUT_OF_STATE, REFUSED) -
+<code>eSignatureImage</code>: Base64-encoded signature image -
+Demographics: All <code>REFUSED</code> option available for privacy</p>
+<h4 id="activity"><code>Activity</code></h4>
+<p>Records individual activity entries (both individual and group).</p>
+<pre class="prisma"><code>model Activity {
+  id             String       @id @default(uuid())
+  registrationId String?
+  category       String
+  attendeeCount  Int          @default(1)
+  createdAt      DateTime     @default(now())
+  registration   Registration? @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  
+  @@index([registrationId])
+  @@index([createdAt])
+  @@index([category])
+}</code></pre>
+<p><strong>Key Fields:</strong> - <code>registrationId</code>: Nullable
+- null for anonymous group events - <code>category</code>: Activity
+category (see activityCategories.ts) - <code>attendeeCount</code>:
+Number of attendees (default 1 for individual, N for groups) -
+<code>createdAt</code>: Timestamp of activity (can be backdated via
+manual entry)</p>
+<h4 id="activityadjustment"><code>ActivityAdjustment</code></h4>
+<p>Stores manual corrections to activity counts.</p>
+<pre class="prisma"><code>model ActivityAdjustment {
+  id        String   @id @default(uuid())
+  day       String   // YYYY-MM-DD format
+  category  String
+  value     Int
+  createdAt DateTime @default(now())
+  
+  @@unique([day, category])
+}</code></pre>
+<p><strong>Purpose:</strong> Allows staff to override calculated counts
+in monthly reports.</p>
+<h4 id="staff"><code>Staff</code></h4>
+<p>Admin user accounts.</p>
+<pre class="prisma"><code>model Staff {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         String   @default(&quot;ADMIN&quot;)
+  createdAt    DateTime @default(now())
+}</code></pre>
+<hr />
+<h2 id="api-endpoints">API Endpoints</h2>
+<h3 id="activity-endpoints">Activity Endpoints</h3>
+<h4 id="post-apiactivity"><code>POST /api/activity</code></h4>
+<p>Create individual activity entry.</p>
+<p><strong>Request Body:</strong></p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;uid&quot;</span><span class="fu">:</span> <span class="st">&quot;participant-uid&quot;</span><span class="fu">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;categories&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;Wellness&quot;</span><span class="ot">,</span> <span class="st">&quot;Drop-In&quot;</span><span class="ot">]</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;count&quot;</span><span class="fu">:</span> <span class="dv">2</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4
+id="post-apiactivitygroup"><code>POST /api/activity/group</code></h4>
+<p>Create group event (anonymous bulk entry).</p>
+<p><strong>Request Body:</strong></p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;day&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-07-15&quot;</span><span class="fu">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;categories&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;Training/Focus Group&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;attendeeCount&quot;</span><span class="fu">:</span> <span class="dv">50</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;created&quot;</span><span class="fu">:</span> <span class="dv">1</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="get-apiactivitygroup"><code>GET /api/activity/group</code></h4>
+<p>Get recent group events (last 50, filtered to attendeeCount &gt;
+1).</p>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;events&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;Training/Focus Group&quot;</span><span class="fu">,</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;attendeeCount&quot;</span><span class="fu">:</span> <span class="dv">50</span><span class="fu">,</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;createdAt&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-07-15T14:30:00Z&quot;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4
+id="delete-apiactivityid"><code>DELETE /api/activity/[id]</code></h4>
+<p>Delete a specific activity.</p>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4
+id="post-apiactivitymanual"><code>POST /api/activity/manual</code></h4>
+<p>Create activity for specific registered participant (staff use).</p>
+<p><strong>Request Body:</strong></p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;registrationId&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;categories&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;Wellness&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;day&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-07-15&quot;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4
+id="get-apiactivityby-person-details"><code>GET /api/activity/by-person-details</code></h4>
+<p>Get activities for a person grouped by day.</p>
+<p><strong>Query Params:</strong> - <code>registrationId</code>: UUID -
+<code>start</code>: YYYY-MM-DD - <code>end</code>: YYYY-MM-DD</p>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;days&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;day&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-07-15&quot;</span><span class="fu">,</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;count&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;activities&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;Wellness&quot;</span><span class="fu">,</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;createdAt&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-07-15T10:30:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;attendeeCount&quot;</span><span class="fu">:</span> <span class="dv">1</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4
+id="post-apiactivitybulk-update-date"><code>POST /api/activity/bulk-update-date</code></h4>
+<p>Move all activities for a person on one day to another date.</p>
+<p><strong>Request Body:</strong></p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;registrationId&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;oldDate&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-07-15&quot;</span><span class="fu">,</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;newDate&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-07-16&quot;</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;updated&quot;</span><span class="fu">:</span> <span class="dv">3</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Implementation:</strong></p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Preserves time-of-day when moving dates</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> activities <span class="op">=</span> <span class="cf">await</span> prisma<span class="op">.</span><span class="at">activity</span><span class="op">.</span><span class="fu">findMany</span>({</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  where<span class="op">:</span> {</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    registrationId<span class="op">,</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    createdAt<span class="op">:</span> { gte<span class="op">:</span> oldStart<span class="op">,</span> lte<span class="op">:</span> oldEnd }</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (<span class="kw">const</span> activity <span class="kw">of</span> activities) {</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> time <span class="op">=</span> activity<span class="op">.</span><span class="at">createdAt</span><span class="op">.</span><span class="fu">toISOString</span>()<span class="op">.</span><span class="fu">slice</span>(<span class="dv">11</span>)<span class="op">;</span> <span class="co">// HH:mm:ss.sssZ</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> newTimestamp <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>(newDate <span class="op">+</span> <span class="st">&#39;T&#39;</span> <span class="op">+</span> time)<span class="op">;</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> prisma<span class="op">.</span><span class="at">activity</span><span class="op">.</span><span class="fu">update</span>({</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    where<span class="op">:</span> { id<span class="op">:</span> activity<span class="op">.</span><span class="at">id</span> }<span class="op">,</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    data<span class="op">:</span> { createdAt<span class="op">:</span> newTimestamp }</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="report-endpoints">Report Endpoints</h3>
+<h4
+id="get-apireportsactivities-by-person"><code>GET /api/reports/activities-by-person</code></h4>
+<p>Generate activity by person report with demographic filtering.</p>
+<p><strong>Query Params:</strong> - <code>start</code>: YYYY-MM-DD
+(required) - <code>end</code>: YYYY-MM-DD (required) -
+<code>personName</code>: string (optional, contains search) -
+<code>zip</code>: string (optional, exact match) -
+<code>birthYear</code>: YYYY (optional) - <code>veteranStatus</code>:
+string (optional) - <code>sexualOrientation</code>: string (optional) -
+<code>gender</code>: string (optional) - <code>race</code>: string
+(optional) - <code>ethnicity</code>: string (optional) -
+<code>county</code>: string (optional)</p>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;day&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-07-15&quot;</span><span class="fu">,</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;start&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-07-01&quot;</span><span class="fu">,</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;end&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-07-31&quot;</span><span class="fu">,</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;totalPeople&quot;</span><span class="fu">:</span> <span class="dv">45</span><span class="fu">,</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;totalVisits&quot;</span><span class="fu">:</span> <span class="dv">230</span><span class="fu">,</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;totalUniqueVisits&quot;</span><span class="fu">:</span> <span class="dv">180</span><span class="fu">,</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;items&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;registration&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;fullName&quot;</span><span class="fu">:</span> <span class="st">&quot;John Doe&quot;</span><span class="fu">,</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;zipCode&quot;</span><span class="fu">:</span> <span class="st">&quot;44308&quot;</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;total&quot;</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;uniqueDays&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;categories&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;Wellness&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;Drop-In&quot;</span><span class="fu">:</span> <span class="dv">2</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Key Logic:</strong> - <code>totalPeople</code>: Count of
+unique registrations with activities (includes both individual and
+anonymous group activities when no filters applied; only people matching
+filters when filters applied) - <code>totalVisits</code>: Sum of all
+attendeeCount values - <code>totalUniqueVisits</code>: Count of unique
+(registrationId, date) pairs - Demographic filters applied BEFORE
+activity queries to ensure accurate counts</p>
+<h3 id="registration-endpoints">Registration Endpoints</h3>
+<h4 id="post-apiregistrations"><code>POST /api/registrations</code></h4>
+<p>Create new participant registration.</p>
+<h4 id="get-apiregistrations"><code>GET /api/registrations</code></h4>
+<p>List all registrations with optional filtering.</p>
+<h4
+id="patch-apiregistrationsid"><code>PATCH /api/registrations/[id]</code></h4>
+<p>Update registration details.</p>
+<h4
+id="delete-apiregistrationsid"><code>DELETE /api/registrations/[id]</code></h4>
+<p>Delete registration and all associated activities (CASCADE).</p>
+<hr />
+<h2 id="frontend-components">Frontend Components</h2>
+<h3 id="key-components">Key Components</h3>
+<h4 id="bypersonclient.tsx"><code>ByPersonClient.tsx</code></h4>
+<p><strong>Location:</strong>
+<code>src/app/admin/activity/by-person/ByPersonClient.tsx</code></p>
+<p><strong>Features:</strong> - Date range and demographic filtering -
+Person name autocomplete search - Sticky table headers and first column
+- Always-visible scrollbars - Drill-down modal for editing activity
+dates - CSV export - Clear Filters button</p>
+<p><strong>State Management:</strong></p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> [startDay<span class="op">,</span> setStartDay] <span class="op">=</span> <span class="fu">useState</span>(<span class="co">/* from localStorage */</span>)<span class="op">;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> [endDay<span class="op">,</span> setEndDay] <span class="op">=</span> <span class="fu">useState</span>(<span class="co">/* from localStorage */</span>)<span class="op">;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> [personName<span class="op">,</span> setPersonName] <span class="op">=</span> <span class="fu">useState</span>(<span class="st">&quot;&quot;</span>)<span class="op">;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ... other filter states</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> [data<span class="op">,</span> setData] <span class="op">=</span> <span class="fu">useState</span><span class="op">&lt;</span>ApiResponse <span class="op">|</span> <span class="dt">null</span><span class="op">&gt;</span>(<span class="kw">null</span>)<span class="op">;</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> [selectedPerson<span class="op">,</span> setSelectedPerson] <span class="op">=</span> <span class="fu">useState</span><span class="op">&lt;</span>{id<span class="op">,</span> name} <span class="op">|</span> <span class="dt">null</span><span class="op">&gt;</span>(<span class="kw">null</span>)<span class="op">;</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> [personDays<span class="op">,</span> setPersonDays] <span class="op">=</span> <span class="fu">useState</span><span class="op">&lt;</span>DayActivity[]<span class="op">&gt;</span>([])<span class="op">;</span></span></code></pre></div>
+<p><strong>Key Functions:</strong> - <code>load()</code>: Fetch report
+data with filters - <code>clearFilters()</code>: Reset all demographic
+filters - <code>viewPersonDetails()</code>: Open drill-down modal -
+<code>editDayDate()</code>: Bulk update activity dates</p>
+<p><strong>Sticky Table CSS:</strong></p>
+<pre class="tsx"><code>&lt;div className=&quot;overflow-x-auto overflow-y-scroll max-h-[70vh] border&quot;&gt;
+  &lt;table className=&quot;relative border-collapse&quot;&gt;
+    &lt;thead className=&quot;sticky top-0 z-10 bg-white&quot;&gt;
+      &lt;th className=&quot;sticky left-0 z-20 bg-white shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]&quot;&gt;
+        Person
+      &lt;/th&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;td className=&quot;sticky left-0 z-10 bg-white shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]&quot;&gt;
+        {name}
+      &lt;/td&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre>
+<h4 id="collapsiblemonths.tsx"><code>CollapsibleMonths.tsx</code></h4>
+<p><strong>Location:</strong>
+<code>src/app/admin/activity/CollapsibleMonths.tsx</code></p>
+<p><strong>Features:</strong> - Expandable monthly calendar view -
+Day-by-day activity counts by category - Editable cells for manual
+adjustments - Sticky headers (day numbers) and category column -
+Real-time updates via API</p>
+<p><strong>Implementation:</strong></p>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Groups activities by day and category</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> byCategory<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span>ActivityCategory<span class="op">,</span> <span class="dt">number</span>[]<span class="op">&gt;</span> <span class="op">=</span> <span class="co">/* ... */</span><span class="op">;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Applies manual adjustments</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (<span class="kw">const</span> adj <span class="kw">of</span> adjustments) {</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  byCategory[adj<span class="op">.</span><span class="at">category</span>][dayIndex] <span class="op">=</span> adj<span class="op">.</span><span class="at">value</span><span class="op">;</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Renders editable cells</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>EditableCell </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  value<span class="op">=</span>{count} </span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  onSave<span class="op">=</span>{(val) <span class="kw">=&gt;</span> <span class="fu">saveAdjustment</span>(day<span class="op">,</span> category<span class="op">,</span> val)} </span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="op">/&gt;</span></span></code></pre></div>
+<h4 id="editabletable.tsx"><code>EditableTable.tsx</code></h4>
+<p><strong>Location:</strong>
+<code>src/app/admin/registrations/EditableTable.tsx</code></p>
+<p><strong>Features:</strong> - Registration list with inline editing -
+Delete functionality with confirmation - Sticky headers and first two
+columns (Actions, Full Name) - Edit modal for demographic updates</p>
+<hr />
+<h2 id="key-features-implementation">Key Features Implementation</h2>
+<h3 id="sticky-table-navigation">1. Sticky Table Navigation</h3>
+<p><strong>Problem:</strong> Large tables with many columns lose context
+when scrolling.</p>
+<p><strong>Solution:</strong> - Sticky header row
+(<code>position: sticky; top: 0</code>) - Sticky first column(s)
+(<code>position: sticky; left: 0</code>) - Z-index layering (header: 10,
+sticky column in header: 20, sticky column in body: 10) - Shadow on
+sticky columns for visual separation - Always-visible scrollbars via
+webkit styling</p>
+<p><strong>Applied to:</strong> - Activity by Person report -
+Registrations table - Monthly activity calendar</p>
+<h3 id="bulk-date-editing">2. Bulk Date Editing</h3>
+<p><strong>Problem:</strong> Activities recorded on wrong date need
+correction.</p>
+<p><strong>Solution:</strong> 1. Click person name to view activities
+grouped by day 2. Each day shows all activities with timestamps 3. “Edit
+Date” button moves ALL activities from that day to new date 4. Preserves
+original time-of-day (only changes date component) 5. Auto-refreshes
+both detail view and main report</p>
+<p><strong>API Flow:</strong></p>
+<pre><code>User clicks person name
+  → GET /api/activity/by-person-details
+  → Display modal with days grouped
+
+User clicks &quot;Edit Date&quot; for a day
+  → Prompt for new date
+  → POST /api/activity/bulk-update-date
+  → Update all activities for that person on that day
+  → Refresh modal data
+  → Refresh main report</code></pre>
+<h3 id="anonymous-group-events">3. Anonymous Group Events</h3>
+<p><strong>Problem:</strong> Need to track group activities without
+individual participant names.</p>
+<p><strong>Solution:</strong> - <code>registrationId</code> is nullable
+in Activity table - Group Event Entry form accepts attendeeCount - One
+activity record created per category, null registrationId - Report
+queries handle both individual and anonymous activities - Recent events
+view filters out orphaned single-person activities (attendeeCount &gt;
+1)</p>
+<p><strong>Example:</strong></p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Create group event with 50 attendees</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> prisma<span class="op">.</span><span class="at">activity</span><span class="op">.</span><span class="fu">create</span>({</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  data<span class="op">:</span> {</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    registrationId<span class="op">:</span> <span class="dt">null</span><span class="op">,</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    category<span class="op">:</span> <span class="st">&quot;Training/Focus Group&quot;</span><span class="op">,</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    attendeeCount<span class="op">:</span> <span class="dv">50</span><span class="op">,</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    createdAt<span class="op">:</span> <span class="kw">new</span> <span class="bu">Date</span>(day)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co">// This contributes 50 to totalVisits for that day</span></span></code></pre></div>
+<h3 id="demographic-filtering">4. Demographic Filtering</h3>
+<p><strong>Problem:</strong> Need to generate reports for specific
+demographics without counting excluded people.</p>
+<p><strong>Solution:</strong> 1. Apply demographic filters to
+Registration table FIRST 2. Get list of matching registrationIds 3.
+Query activities only for those registrationIds 4. Calculate totalPeople
+based on filtered set</p>
+<p><strong>Implementation:</strong></p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Step 1: Filter registrations</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> regs <span class="op">=</span> <span class="cf">await</span> prisma<span class="op">.</span><span class="at">registration</span><span class="op">.</span><span class="fu">findMany</span>({</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  where<span class="op">:</span> {</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    zipCode<span class="op">:</span> filters<span class="op">.</span><span class="at">zip</span><span class="op">,</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    birthYear<span class="op">:</span> filters<span class="op">.</span><span class="at">birthYear</span><span class="op">,</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... other filters</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> regIds <span class="op">=</span> regs<span class="op">.</span><span class="fu">map</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">id</span>)<span class="op">;</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Step 2: Query activities for filtered people only</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> activities <span class="op">=</span> <span class="cf">await</span> prisma<span class="op">.</span><span class="at">activity</span><span class="op">.</span><span class="fu">findMany</span>({</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  where<span class="op">:</span> {</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    registrationId<span class="op">:</span> { <span class="kw">in</span><span class="op">:</span> regIds }<span class="op">,</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    createdAt<span class="op">:</span> { gte<span class="op">:</span> start<span class="op">,</span> lte<span class="op">:</span> end }</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co">// Step 3: Calculate totals from filtered set</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> totalPeople <span class="op">=</span> regIds<span class="op">.</span><span class="at">length</span><span class="op">;</span></span></code></pre></div>
+<h3 id="filter-layout-with-clear-button">5. Filter Layout with Clear
+Button</h3>
+<p><strong>Problem:</strong> Many filters wrap awkwardly; resetting
+requires clicking each one.</p>
+<p><strong>Solution:</strong> - Wrap each label+input in flex container
+with <code>whitespace-nowrap</code> - Labels always stay on same line as
+their input - “Clear Filters” button resets all state at once - Red
+border styling for visual distinction</p>
+<p><strong>Implementation:</strong></p>
+<pre class="tsx"><code>&lt;div className=&quot;flex items-center gap-2&quot;&gt;
+  &lt;label className=&quot;text-sm whitespace-nowrap&quot;&gt;ZIP&lt;/label&gt;
+  &lt;input value={zip} onChange={setZip} /&gt;
+&lt;/div&gt;
+
+&lt;button onClick={clearFilters} className=&quot;border-red-300 text-red-600&quot;&gt;
+  Clear Filters
+&lt;/button&gt;</code></pre>
+<hr />
+<h2 id="deployment-process">Deployment Process</h2>
+<h3 id="development-production-flow">Development → Production Flow</h3>
+<pre><code>Local Mac (Port 3004)          →    Windows Server (Port 3000)
+-------------------                 -----------------------
+1. Make code changes                1. Pull from GitHub
+2. npm run build                    2. npm run build
+3. PORT=3004 npm run start          3. nssm restart HopeUnited-Node
+4. Test on localhost:3004
+5. git add . &amp;&amp; git commit -m &quot;...&quot;
+6. git push</code></pre>
+<h3 id="windows-production-deployment">Windows Production
+Deployment</h3>
+<p><strong>Prerequisites:</strong> - Node.js 20.20.0+ installed -
+PostgreSQL 16+ installed and running - NSSM installed for service
+management - Repository cloned to <code>C:\HopeUnited</code></p>
+<p><strong>Initial Setup (One-time):</strong></p>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Navigate to project</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\HopeUnited</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Install dependencies</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>npm install</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Create .env file</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">echo</span> DATABASE_URL<span class="op">=</span>postgresql<span class="op">://</span>postgres<span class="op">:</span>password@localhost<span class="op">:</span><span class="dv">5432</span><span class="op">/</span>hope_united <span class="op">&gt;</span> <span class="op">.</span><span class="fu">env</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Run migrations</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>npx prisma migrate deploy</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Generate Prisma client</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>npx prisma generate</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Build application</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>npm run build</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. Install Windows service with NSSM</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>nssm install HopeUnited-Node <span class="st">&quot;C:\Program Files\nodejs\node.exe&quot;</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>nssm <span class="fu">set</span> HopeUnited-Node AppDirectory <span class="st">&quot;C:\HopeUnited&quot;</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>nssm <span class="fu">set</span> HopeUnited-Node AppParameters <span class="st">&quot;node_modules\.bin\next start&quot;</span></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>nssm <span class="fu">set</span> HopeUnited-Node AppEnvironmentExtra <span class="st">&quot;PORT=3000&quot;</span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>nssm <span class="fu">set</span> HopeUnited-Node <span class="fu">Start</span> SERVICE_AUTO_START</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>nssm <span class="fu">start</span> HopeUnited-Node</span></code></pre></div>
+<p><strong>Regular Updates:</strong></p>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\HopeUnited</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>git pull</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>npm run build</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>nssm restart HopeUnited-Node</span></code></pre></div>
+<p><strong>Database Migrations (if needed):</strong></p>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for new migrations</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>git pull</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply migrations</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>npx prisma migrate deploy</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Regenerate client (if schema changed)</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>npx prisma generate</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Rebuild and restart</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>npm run build</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>nssm restart HopeUnited-Node</span></code></pre></div>
+<p><strong>Adding New Enum Values (e.g., new County):</strong></p>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Manual SQL required for enum changes</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="op">&amp;</span> <span class="st">&quot;C:\Program Files\PostgreSQL\16\bin\psql.exe&quot;</span> <span class="op">-</span>U postgres <span class="op">-</span>d hope_united <span class="op">-</span>c <span class="st">&quot;ALTER TYPE \&quot;</span>County\<span class="st">&quot; ADD VALUE IF NOT EXISTS &#39;NEW_COUNTY&#39;;&quot;</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Then generate and rebuild</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>npx prisma generate</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>npm run build</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>nssm restart HopeUnited-Node</span></code></pre></div>
+<hr />
+<h2 id="common-maintenance-tasks">Common Maintenance Tasks</h2>
+<h3 id="adding-a-new-activity-category">Adding a New Activity
+Category</h3>
+<p><strong>1. Update constant:</strong>
+<code>src/lib/activityCategories.ts</code></p>
+<div class="sourceCode" id="cb34"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> ACTIVITY_CATEGORIES <span class="op">=</span> [</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ... existing</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;New Category&quot;</span><span class="op">,</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>] <span class="im">as</span> <span class="kw">const</span><span class="op">;</span></span></code></pre></div>
+<p><strong>2. Rebuild and deploy:</strong></p>
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run build</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Deploy to Windows</span></span></code></pre></div>
+<p><strong>Note:</strong> No database migration needed - categories
+stored as strings.</p>
+<h3 id="adding-a-new-demographic-filter">Adding a New Demographic
+Filter</h3>
+<p><strong>1. Add to Prisma schema (if new field):</strong>
+<code>prisma/schema.prisma</code></p>
+<pre class="prisma"><code>model Registration {
+  // ... existing fields
+  newField String?
+}</code></pre>
+<p><strong>2. Create migration:</strong></p>
+<div class="sourceCode" id="cb37"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npx</span> prisma migrate dev <span class="at">--name</span> add_new_field</span></code></pre></div>
+<p><strong>3. Update API route:</strong>
+<code>src/app/api/reports/activities-by-person/route.ts</code></p>
+<div class="sourceCode" id="cb38"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> querySchema <span class="op">=</span> z<span class="op">.</span><span class="fu">object</span>({</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ... existing</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  newField<span class="op">:</span> z<span class="op">.</span><span class="fu">string</span>()<span class="op">.</span><span class="fu">optional</span>()<span class="op">,</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Add to filter logic</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (filters<span class="op">.</span><span class="at">newField</span>) regWhereClause<span class="op">.</span><span class="at">newField</span> <span class="op">=</span> filters<span class="op">.</span><span class="at">newField</span><span class="op">;</span></span></code></pre></div>
+<p><strong>4. Update client component:</strong>
+<code>src/app/admin/activity/by-person/ByPersonClient.tsx</code></p>
+<div class="sourceCode" id="cb39"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> [newField<span class="op">,</span> setNewField] <span class="op">=</span> <span class="fu">useState</span>(<span class="st">&quot;&quot;</span>)<span class="op">;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Add to filters UI</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>div className<span class="op">=</span><span class="st">&quot;flex items-center gap-2&quot;</span><span class="op">&gt;</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">&lt;</span>label className<span class="op">=</span><span class="st">&quot;text-sm whitespace-nowrap&quot;</span><span class="op">&gt;</span>New Field<span class="op">&lt;/</span>label<span class="op">&gt;</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">&lt;</span>Select value<span class="op">=</span>{newField} onChange<span class="op">=</span>{setNewField} options<span class="op">=</span>{[<span class="op">...</span>]} <span class="op">/&gt;</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;/</span>div<span class="op">&gt;</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Add to load() API params</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (newField) apiParams<span class="op">.</span><span class="fu">set</span>(<span class="st">&#39;newField&#39;</span><span class="op">,</span> newField)<span class="op">;</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Add to clearFilters()</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="fu">setNewField</span>(<span class="st">&quot;&quot;</span>)<span class="op">;</span></span></code></pre></div>
+<p><strong>5. Update registration forms</strong> to capture the new
+field.</p>
+<h3 id="modifying-report-calculations">Modifying Report
+Calculations</h3>
+<p><strong>Example: Change how totalPeople is calculated</strong></p>
+<p><strong>Location:</strong>
+<code>src/app/api/reports/activities-by-person/route.ts</code></p>
+<div class="sourceCode" id="cb40"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Current logic (lines ~120-140)</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> totalPeople <span class="op">=</span> hasFilters </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">?</span> peopleWithActivities<span class="op">.</span><span class="at">size</span> </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">:</span> allPeopleCount <span class="op">+</span> (anonymousVisits <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">?</span> <span class="dv">1</span> <span class="op">:</span> <span class="dv">0</span>)<span class="op">;</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Modify as needed, e.g., always exclude anonymous:</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> totalPeople <span class="op">=</span> peopleWithActivities<span class="op">.</span><span class="at">size</span><span class="op">;</span></span></code></pre></div>
+<h3 id="adding-a-new-report">Adding a New Report</h3>
+<p><strong>1. Create page:</strong>
+<code>src/app/admin/reports/new-report/page.tsx</code></p>
+<p><strong>2. Create API endpoint:</strong>
+<code>src/app/api/reports/new-report/route.ts</code></p>
+<p><strong>3. Create client component:</strong>
+<code>src/app/admin/reports/new-report/NewReportClient.tsx</code></p>
+<p><strong>4. Add navigation link:</strong>
+<code>src/app/admin/page.tsx</code></p>
+<p><strong>5. Follow patterns from existing reports</strong> (by-person,
+activities-by-person, etc.)</p>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="build-errors">Build Errors</h3>
+<p><strong>Error: “Node.js version &gt;=20.9.0 is required”</strong></p>
+<div class="sourceCode" id="cb41"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> <span class="at">--version</span>  <span class="co"># Check current version</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nvm</span> use 20.20.0  <span class="co"># Switch to correct version</span></span></code></pre></div>
+<p><strong>Error: Module not found</strong></p>
+<div class="sourceCode" id="cb42"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> node_modules package-lock.json</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install</span></code></pre></div>
+<p><strong>Error: Prisma client out of sync</strong></p>
+<div class="sourceCode" id="cb43"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npx</span> prisma generate</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run build</span></code></pre></div>
+<h3 id="runtime-errors">Runtime Errors</h3>
+<p><strong>Error: “Can’t reach database server”</strong> - Check
+PostgreSQL is running - Verify DATABASE_URL in .env - Test connection:
+<code>psql -U postgres -d hope_united</code></p>
+<p><strong>Error: 500 on CSS/JS chunks</strong></p>
+<div class="sourceCode" id="cb44"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> .next</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run build</span></code></pre></div>
+<p><strong>Error: Filter reset after 70 seconds (HMR issue)</strong> -
+Ensure running production mode (<code>npm run start</code>), NOT dev
+mode - Dev mode causes HMR reconnection attempts → full page reload</p>
+<h3 id="service-management-windows">Service Management (Windows)</h3>
+<p><strong>Service won’t start:</strong></p>
+<div class="sourceCode" id="cb45"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check service status</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>nssm status HopeUnited-Node</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View service logs</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>nssm <span class="fu">set</span> HopeUnited-Node AppStdout C<span class="op">:</span>\HopeUnited\stdout<span class="op">.</span><span class="fu">log</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>nssm <span class="fu">set</span> HopeUnited-Node AppStderr C<span class="op">:</span>\HopeUnited\stderr<span class="op">.</span><span class="fu">log</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>nssm restart HopeUnited-Node</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="fu">type</span> C<span class="op">:</span>\HopeUnited\stderr<span class="op">.</span><span class="fu">log</span></span></code></pre></div>
+<p><strong>Port already in use:</strong></p>
+<div class="sourceCode" id="cb46"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find process on port 3000</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>netstat <span class="op">-</span>ano <span class="op">|</span> findstr <span class="op">:</span><span class="dv">3000</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Kill process (replace PID)</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>taskkill <span class="op">/</span>PID <span class="op">&lt;</span>PID<span class="op">&gt;</span> <span class="op">/</span>F</span></code></pre></div>
+<h3 id="database-issues">Database Issues</h3>
+<p><strong>Orphaned activities (deleted registrations):</strong> -
+Activities remain if registration deleted before CASCADE setup - Filter
+with <code>attendeeCount &gt; 1</code> in group events view (already
+implemented) - Clean up manually if needed:
+<code>sql   DELETE FROM "Activity" WHERE "registrationId" IS NOT NULL      AND "registrationId" NOT IN (SELECT id FROM "Registration");</code></p>
+<p><strong>Enum value not found:</strong></p>
+<div class="sourceCode" id="cb47"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Check existing values</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> enumlabel <span class="kw">FROM</span> pg_enum <span class="kw">WHERE</span> enumtypid <span class="op">=</span> <span class="st">&#39;County&#39;</span>:<span class="ch">:regtype</span>;</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- Add missing value</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TYPE</span> <span class="ot">&quot;County&quot;</span> <span class="kw">ADD</span> <span class="fu">VALUE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> <span class="st">&#39;MEDINA&#39;</span>;</span></code></pre></div>
+<hr />
+<h2 id="security-considerations">Security Considerations</h2>
+<h3 id="authentication">Authentication</h3>
+<p><strong>Current Implementation:</strong> - Middleware-based
+authentication (<code>src/middleware.ts</code>) - Session cookies -
+Admin routes protected at middleware level - Individual API endpoints do
+NOT check auth (rely on middleware)</p>
+<p><strong>Important:</strong> If adding new authenticated routes,
+ensure middleware covers the path.</p>
+<h3 id="data-privacy">Data Privacy</h3>
+<p><strong>Participant Data:</strong> - All demographic fields support
+“REFUSED” option - Signatures stored as base64 in database - No
+personally identifiable information exposed in logs - Anonymous group
+events have null <code>registrationId</code></p>
+<p><strong>Best Practices:</strong> - Never log
+<code>eSignatureImage</code> or other PII - Use parameterized queries
+(Prisma handles this) - Sanitize user inputs via Zod schemas - HTTPS
+required in production (configured at reverse proxy/IIS level)</p>
+<h3 id="input-validation">Input Validation</h3>
+<p><strong>All API endpoints use Zod schemas:</strong></p>
+<div class="sourceCode" id="cb48"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> schema <span class="op">=</span> z<span class="op">.</span><span class="fu">object</span>({</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  day<span class="op">:</span> z<span class="op">.</span><span class="fu">string</span>()<span class="op">.</span><span class="fu">regex</span>(<span class="ss">/</span><span class="sc">^\d{4}</span><span class="ss">-</span><span class="sc">\d{2}</span><span class="ss">-</span><span class="sc">\d{2}$</span><span class="ss">/</span>)<span class="op">,</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  categories<span class="op">:</span> z<span class="op">.</span><span class="fu">array</span>(z<span class="op">.</span><span class="fu">string</span>())<span class="op">,</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  attendeeCount<span class="op">:</span> z<span class="op">.</span><span class="fu">number</span>()<span class="op">.</span><span class="fu">int</span>()<span class="op">.</span><span class="fu">min</span>(<span class="dv">1</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> parsed <span class="op">=</span> schema<span class="op">.</span><span class="fu">safeParse</span>(body)<span class="op">;</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="op">!</span>parsed<span class="op">.</span><span class="at">success</span>) {</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> NextResponse<span class="op">.</span><span class="fu">json</span>({ error<span class="op">:</span> <span class="st">&#39;Invalid input&#39;</span> }<span class="op">,</span> { status<span class="op">:</span> <span class="dv">400</span> })<span class="op">;</span></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>SQL Injection Prevention:</strong> - Prisma ORM prevents SQL
+injection - Never use raw SQL without parameterization - If raw SQL
+needed, use Prisma’s <code>$queryRaw</code> with parameters</p>
+<h3 id="dependency-management">Dependency Management</h3>
+<p><strong>Regular Updates:</strong></p>
+<div class="sourceCode" id="cb49"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for outdated packages</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> outdated</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Update dependencies (test thoroughly after)</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> update</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Security audit</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> audit</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> audit fix</span></code></pre></div>
+<hr />
+<h2 id="performance-optimization">Performance Optimization</h2>
+<h3 id="database-indexes">Database Indexes</h3>
+<p><strong>Current indexes:</strong></p>
+<pre class="prisma"><code>model Activity {
+  @@index([registrationId])
+  @@index([createdAt])
+  @@index([category])
+}</code></pre>
+<p><strong>Add indexes if queries are slow:</strong></p>
+<div class="sourceCode" id="cb51"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create migration for new index</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npx</span> prisma migrate dev <span class="at">--name</span> add_index_to_field</span></code></pre></div>
+<h3 id="query-optimization">Query Optimization</h3>
+<p><strong>Use Prisma’s select to limit fields:</strong></p>
+<div class="sourceCode" id="cb52"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> regs <span class="op">=</span> <span class="cf">await</span> prisma<span class="op">.</span><span class="at">registration</span><span class="op">.</span><span class="fu">findMany</span>({</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  select<span class="op">:</span> { id<span class="op">:</span> <span class="kw">true</span><span class="op">,</span> fullName<span class="op">:</span> <span class="kw">true</span><span class="op">,</span> zipCode<span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span>  <span class="co">// Only needed fields</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  where<span class="op">:</span> { <span class="op">...</span> }</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<p><strong>Avoid N+1 queries:</strong></p>
+<div class="sourceCode" id="cb53"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co">// BAD: Separate query per activity</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (<span class="kw">const</span> activity <span class="kw">of</span> activities) {</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> reg <span class="op">=</span> <span class="cf">await</span> prisma<span class="op">.</span><span class="at">registration</span><span class="op">.</span><span class="fu">findUnique</span>({ where<span class="op">:</span> { id<span class="op">:</span> activity<span class="op">.</span><span class="at">registrationId</span> } })<span class="op">;</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="co">// GOOD: Single query with include</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> activities <span class="op">=</span> <span class="cf">await</span> prisma<span class="op">.</span><span class="at">activity</span><span class="op">.</span><span class="fu">findMany</span>({</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  include<span class="op">:</span> { registration<span class="op">:</span> <span class="kw">true</span> }</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h3 id="frontend-optimization">Frontend Optimization</h3>
+<p><strong>Sticky tables use CSS-only solution</strong> (no JavaScript
+scrolling) - Hardware-accelerated via <code>position: sticky</code> -
+Minimal performance impact</p>
+<p><strong>Large lists:</strong> - Consider pagination if reports exceed
+1000 rows - Current implementation loads all data (acceptable for
+typical use case)</p>
+<hr />
+<h2 id="version-history">Version History</h2>
+<h3 id="version-1.1-july-2026">Version 1.1 (July 2026)</h3>
+<ul>
+<li>Added bulk date editing feature</li>
+<li>Implemented sticky headers and columns on all major tables</li>
+<li>Added “Clear Filters” button</li>
+<li>Improved filter layout (labels stay with inputs)</li>
+<li>Fixed authentication issues on new endpoints</li>
+<li>Enhanced user manual with all new features</li>
+</ul>
+<h3 id="version-1.0-june-2026">Version 1.0 (June 2026)</h3>
+<ul>
+<li>Initial production release</li>
+<li>Registration and activity tracking</li>
+<li>Group event entry</li>
+<li>Monthly activity reports</li>
+<li>Activity by person reports</li>
+<li>Excel export functionality</li>
+<li>Manual activity entry</li>
+<li>Group event deletion</li>
+</ul>
+<hr />
+<h2 id="contact-and-support">Contact and Support</h2>
+<p>For questions about this documentation or the system:</p>
+<ol type="1">
+<li>Review this technical documentation</li>
+<li>Check user manual at <code>/hope-united-user-manual.html</code></li>
+<li>Examine code comments in relevant files</li>
+<li>Test changes on local development environment (port 3004) before
+deploying to production</li>
+</ol>
+<p><strong>Key Files for Reference:</strong> - Database schema:
+<code>prisma/schema.prisma</code> - Activity categories:
+<code>src/lib/activityCategories.ts</code> - Main activity report:
+<code>src/app/admin/activity/page.tsx</code> - Activity by person:
+<code>src/app/admin/activity/by-person/ByPersonClient.tsx</code> - API
+routes: <code>src/app/api/</code></p>
+<hr />
+<h2 id="appendix-activity-categories">Appendix: Activity Categories</h2>
+<p>Current categories (as of July 2026): - Wellness - Recovery Meeting -
+Drop-In - Veteran Programming - Social Event - Volunteer - Peer Support
+- Family Support - Art - Training/Focus Group - Tour/Outreach -
+Faith-Based - Personal Growth - Event - Board Meeting - Bus Pass -
+Virtual Reality - The Retreat Virtual Reality - Community Service</p>
+<p><strong>Adding new categories:</strong> Edit
+<code>src/lib/activityCategories.ts</code> and rebuild. No database
+migration required.</p>
+<hr />
+<p><strong>End of Technical Documentation</strong></p>
+</body>
+</html>
